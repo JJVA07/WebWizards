@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=PT+Sans+Narrow:wght@400;700&family=Pacifico&display=swap');
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+ 
+}
+body{
+
+    background: linear-gradient(to right, #2c3833, #2a7c5a);
+}
+.header{
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.header .logo{
+    cursor: pointer;
+    display: flex;
+}
+.header .logo img{
+    height:180px;
+    width: auto;
+    
+}
+.header .nav-links{
+    list-style: none;
+    font-family: "Nunito Sans", sans-serif;
+    box-sizing: border-box;
+}
+.header .nav-links li{
+    display: inline-block;
+    padding: 0 20px;
+}
+.header .nav-links li:hover{
+    transform: scale(1.1);
+}
+.header .nav-links a{
+    font-size: 20px;
+    color: black;
+    text-decoration: none;
+}
+.header .nav-links li a:hover{
+    color: burlywood;
+}
+.header .name {
+    font-size: 50px;
+    font-weight: 600;
+    color: rgb(48, 82, 82);
+    margin-left: 5;
+    margin-top: 60px;
+}
+.conoce {
+    font-family: "Pacifico", regular;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: 60px;
+    margin-top: 50px;
+}
+.parrafo{
+    font-family: "Nunito Sans", sans-serif;
+    text-align: justify;
+    font-size: 40px;
+    margin: 60px;
+}
+.mision {
+    font-family: "Pacifico", regular;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: 60px;
+    margin-top: 50px;
+}
+.parrafo2{
+    font-family: "Nunito Sans", sans-serif;
+    text-align: justify;
+    font-size: 40px;
+    margin: 60px;
+}
+.vision {
+    font-family: "Pacifico", regular;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: 60px;
+    margin-top: 50px;
+}
+.parrafo3{
+    font-family: "Nunito Sans", sans-serif;
+    text-align: justify;
+    font-size: 40px;
+    margin: 60px;
+}
+
+#Galeria {
+    padding: 10px;
+    background-color: #f5f5f5;
+    text-align: center;
+
+}
+
+#Galeria h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+#Galeria p {
+    font-size: 18px;
+}
+#Galeria img{
+    width: 500px; 
+    height: 400px; 
+    object-fit: cover; 
+    margin: 10px;
+    border-radius: 10px;
+}
+.footer {
+    color: white; 
+    text-align: left; 
+    padding: 20px;
+    font-size: 16px;
+}
