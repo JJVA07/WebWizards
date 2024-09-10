@@ -1,0 +1,65 @@
+/* Estilos para la galería de adopciones */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: opacity 0.3s;
+}
+
+.gallery-item .description {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%; /* Ajusta el ancho del cuadro de descripción */
+    max-width: 300px; /* Máximo ancho del cuadro de descripción */
+    background: rgba(0, 0, 0, 0.8); /* Fondo ligeramente más oscuro para mejor contraste */
+    color: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+    opacity: 0;
+    transition: opacity 0.3s;
+    text-align: center; /* Centra el texto */
+    font-size: 14px; /* Tamaño de fuente */
+    line-height: 1.4; /* Altura de línea */
+    border-radius: 8px; /* Esquinas redondeadas */
+}
+
+.gallery-item:hover .description {
+    opacity: 1;
+}
+
+.gallery-item:hover img {
+    opacity: 0.5;
+}
+
+/* Estilos para la paginación */
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    padding: 8px 16px;
+    margin: 0 2px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #333;
+    border-radius: 4px;
+}
+
+.pagination a:hover {
+    background-color: #ddd;
+}
