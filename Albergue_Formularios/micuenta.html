@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Mi cuenta</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+
+		<div id="wrapper">
+			<div id="main">
+				<div class="inner">
+
+					<header id="header">
+						<a href="temp.html" class="logo"><strong>Albergue</strong></a>
+					</header>
+
+					<section>
+						<header class="major">
+							<h2>Mi Cuenta</h2>
+						</header>
+
+						<div id="account-info">
+							<h3>Información Actual</h3>
+							<p><strong>Nombre del Albergue:</strong> <span id="display-shelter-name">PetWay</span></p>
+							<p><strong>Encargado:</strong> <span id="display-manager">Juan Pérez</span></p>
+							<p><strong>Correo Electrónico:</strong> <span id="display-email">juan.perez@example.com</span></p>
+							<p><strong>Teléfono:</strong> <span id="display-phone">(123) 456-7890</span></p>
+							<p><strong>Distrito:</strong> <span id="display-district">San Juan de Lurigancho</span></p>
+							<p><strong>Dirección:</strong> <span id="display-address">Mz F4 lote 34 av del muro</span></p>
+							<p><strong>Punto de acopio de donaciones:</strong> <span id="display-donation-point">PUCP</span></p>
+							<p><strong>URL de redes sociales:</strong> <span id="display-social-url">https://www.facebook.com/fernando.godoysalas.73</span></p>
+							<p><strong>Número de contacto de donaciones:</strong> <span id="display-donation-contact">907808088</span></p>
+						</div>
+
+						<header class="major">
+							<h3>Editar Información</h3>
+						</header>
+						<form id="edit-account-form">
+							<div>
+								<label for="edit-shelter-name">Nombre del Albergue:</label>
+								<input type="text" id="edit-shelter-name" name="shelter-name" required>
+							</div>
+							<div>
+								<label for="edit-manager">Encargado:</label>
+								<input type="text" id="edit-manager" name="manager" required>
+							</div>
+							<div>
+								<label for="edit-email">Correo Electrónico:</label>
+								<input type="email" id="edit-email" name="email" required>
+							</div>
+							<div>
+								<label for="edit-phone">Teléfono:</label>
+								<input type="text" id="edit-phone" name="phone" required>
+							</div>
+							<div>
+								<label for="edit-district">Distrito:</label>
+								<input type="text" id="edit-district" name="district" required>
+							</div>
+							<div>
+								<label for="edit-address">Dirección:</label>
+								<input type="text" id="edit-address" name="address" required>
+							</div>
+							<div>
+								<label for="edit-donation-point">Punto de acopio de donaciones:</label>
+								<input type="text" id="edit-donation-point" name="donation-point" required>
+							</div>
+							<div>
+								<label for="edit-social-url">URL de redes sociales:</label>
+								<input type="url" id="edit-social-url" name="social-url" required>
+							</div>
+							<div>
+								<label for="edit-donation-contact">Número de contacto de donaciones:</label>
+								<input type="text" id="edit-donation-contact" name="donation-contact" required>
+							</div>
+						</form>
+						<button type="button" id="save-changes-btn">Guardar Cambios</button>
+                        <p id="error-message" style="color: red; display: none;">Todos los campos deben ser completados.</p>
+
+					</section>
+				</div>
+			</div>
+
+			<div id="sidebar">
+				<div class="inner">
+					<nav id="menu">
+						<header class="major">
+							<h2>Menu</h2>
+						</header>
+						<ul>
+							<li><a href="Albergue.html">Inicio</a></li>
+							<li><a href="micuenta.html">Mi cuenta</a></li>
+							<li>
+								<span class="opener">Crear Publicaciones</span>
+								<ul>
+									<li><a href="Albergue_adopcion.html">Adopción</a></li>
+									<li><a href="Albergue_donacion.html">Donación</a></li>
+								</ul>
+							</li>
+							<li><a href="Hogares_Temporales.html">Hogares Temporales</a></li>
+							<li>
+								<span class="opener">Mi Actividad</span>
+								<ul>
+									<li><a href="publicaciones.html">Publicaciones</a></li>
+									<li><a href="Eventos_beneficos.html">Eventos Beneficos</a></li>
+                                    <li><a href="Hogares">Hogares Temporales</a></li>
+								</ul>
+							</li>
+							<li><a href="Albergue_eventos.html">Eventos Beneficos</a></li>
+							<li><a href="#">Cerrar Sesión</a></li>
+						</ul>
+					</nav>
+
+					<section>
+						<header class="major">
+							<h2>Contactanos</h2>
+						</header>
+						<p>Somos un albergue gosu con ganas de ayudar a perritos </p>
+						<ul class="contact">
+							<li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
+							<li class="icon solid fa-phone">(000) 000-0000</li>
+							<li class="icon solid fa-home">1234 Somewhere Road #8254<br />Nashville, TN 00000-0000</li>
+						</ul>
+					</section>
+				</div>
+			</div>
+		</div>
+
+
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+		<script>
+			document.getElementById('save-changes-btn').addEventListener('click', function() {
+				let shelterName = document.getElementById('edit-shelter-name').value;
+				let manager = document.getElementById('edit-manager').value;
+				let email = document.getElementById('edit-email').value;
+				let phone = document.getElementById('edit-phone').value;
+				let district = document.getElementById('edit-district').value;
+				let address = document.getElementById('edit-address').value;
+				let donationPoint = document.getElementById('edit-donation-point').value;
+				let socialUrl = document.getElementById('edit-social-url').value;
+				let donationContact = document.getElementById('edit-donation-contact').value;
+
+                if (!shelterName || !manager || !email || !phone || !district || !address || !donationPoint || !socialUrl || !donationContact) {
+                    document.getElementById('error-message').style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('error-message').style.display = 'none';
+
+				document.getElementById('display-shelter-name').textContent = shelterName;
+				document.getElementById('display-manager').textContent = manager;
+				document.getElementById('display-email').textContent = email;
+				document.getElementById('display-phone').textContent = phone;
+				document.getElementById('display-district').textContent = district;
+				document.getElementById('display-address').textContent = address;
+				document.getElementById('display-donation-point').textContent = donationPoint;
+				document.getElementById('display-social-url').textContent = socialUrl;
+				document.getElementById('display-donation-contact').textContent = donationContact;
+			});
+		</script>
+	</body>
+</html>
