@@ -1,0 +1,29 @@
+
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.image-section, .form-section {
+    width: 48%;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-section input, .form-section textarea, .form-section button {
+    margin-bottom: 10px; 
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;   
+}
+
+
+.form-section button {
+    align-self: flex-start; 
+}
