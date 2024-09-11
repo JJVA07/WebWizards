@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="nueva_cuenta_style.css"> <!-- Tu archivo CSS -->
+</head>
+<body>
+    <div class="wrapper">
+        <div class="form">
+            <div class="title">Regístrate</div>
+            <form>
+                <div class="input-container">
+                    <label for="nombres">Nombres</label>
+                    <input id="nombres" class="input" type="text" required />
+                </div>
+                <div class="input-container">
+                    <label for="apellidos">Apellidos</label>
+                    <input id="apellidos" class="input" type="text" required />
+                </div>
+                <div class="input-container">
+                    <label for="distrito">Distrito</label>
+                    <input id="distrito" class="input" type="text" required />
+                </div>
+                <div class="input-container">
+                    <label for="direccion">Dirección</label>
+                    <input id="direccion" class="input" type="text" required />
+                </div>
+                <div class="input-container">
+                    <label for="correo">Correo Gmail</label>
+                    <input id="correo" class="input" type="email" pattern="[a-zA-Z0-9._%+-]+@gmail\.com" title="Por favor, introduce una dirección de correo Gmail válida" required />
+                </div>
+                <button type="submit" class="submit">Enviar</button>
+                <a href="inicio_sesion.html" class="back-to-login">Regresar al inicio de sesión</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
