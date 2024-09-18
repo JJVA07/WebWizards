@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Solicitud de Hogares</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/cssprueba.css" />
+</head>
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+
+                <!-- Header -->
+                <header id="header">
+                    <h2>Coordinador Zonal</h2>
+                    <ul class="icons">
+                        <li class="user-icon">
+                            <a href="#" target="blank" id="user-bell">
+                                <img src="usuario.png" alt="usuario" style="width: 30px; height: 30px;">
+                            </a>
+                            <div id="user-dropdown" class="user-dropdown" style="display: none;">
+                                <h3>Opciones de Usuario</h3>
+                                <ul>
+                                    <li><a href="mi_cuenta.html">Ver Mi Cuenta</a></li>
+                                    <li><a href="#">Cerrar Sesión</a></li>
+                                </ul>
+                            </div>
+                            
+                        </li>
+                        
+                        <li>
+                            <a href="Coordinador.html">
+                                <img src="home.png" alt="icono" style="width: 30px; height: 30px;">
+                            </a>
+                        </li>
+                    </ul>
+                </header>
+                <section>
+                    <div id="solicitudes" class="section" style="display: block;">
+                        <div class="table-wrapper">
+                        <h2>Solicitud de Hogares</h2>
+                        <table id="myTable" class="display">
+                            <tbody>
+                                <tr>
+                                    <td>usuario1</td>
+                                    <td>usuario1@example.com</td>
+                                    <td>01/09/2024</td>
+                                    <td>1</td>
+                                    <td><button onclick="location.href='revisar_solicitud.html?id=usuario1'">Revisar</button></td>
+
+                                </tr>
+                                <tr>
+                                    <td>usuario2</td>
+                                    <td>usuario2@example.com</td>
+                                    <td>02/09/2024</td>
+                                    <td>0</td>
+                                    <td><button onclick="location.href='revisar_solicitud.html?id=usuario2'">Revisar</button></td>
+
+                                </tr>
+                                <tr>
+                                    <td>usuario3</td>
+                                    <td>usuario3@example.com</td>
+                                    <td>03/09/2024</td>
+                                    <td>2</td>
+                                    <td><button onclick="location.href='revisar_solicitud.html?id=usuario3'">Revisar</button></td>
+
+                                </tr>
+                                <tr>
+                                    <td>usuario4</td>
+                                    <td>usuario4@example.com</td>
+                                    <td>04/09/2024</td>
+                                    <td>3</td>
+                                    <td><button onclick="location.href='revisar_solicitud.html?id=usuario4'">Revisar</button></td>
+                                    <td><button onclick="location.href='#?id=usuario1'">Banear</button></td>
+
+                                </tr>
+                                <tr>
+                                    <td>usuario5</td>
+                                    <td>usuario5@example.com</td>
+                                    <td>05/09/2024</td>
+                                    <td>1</td>
+                                    <td><button onclick="location.href='revisar_solicitud.html?id=usuario5'">Revisar</button></td>
+
+                                </tr>
+                                <tr>
+                                    <td>usuario6</td>
+                                    <td>usuario6@example.com</td>
+                                    <td>06/09/2024</td>
+                                    <td>0</td>
+                                    <td><button onclick="location.href='revisar_solicitud.html?id=usuario5'">Revisar</button></td>
+                                </tr>
+                                <tr>
+                                    <td>usuario7</td>
+                                    <td>usuario7@example.com</td>
+                                    <td>07/09/2024</td>
+                                    <td>1</td>
+                                    <td><button onclick="location.href='revisar_solicitud.html?id=usuario7'">Revisar</button></td>
+
+                                </tr>
+                                <tr>
+                                    <td>usuario8</td>
+                                    <td>usuario8@example.com</td>
+                                    <td>08/09/2024</td>
+                                    <td>3</td>
+                                    <td><button onclick="location.href='revisar_solicitud.html?id=usuario8'">Revisar</button></td>
+                                    <td><button onclick="location.href='#?id=usuario1'">Banear</button></td>
+
+                                </tr>
+                                <tr>
+                                    <td>usuario9</td>
+                                    <td>usuario9@example.com</td>
+                                    <td>09/09/2024</td>
+                                    <td>2</td>
+                                    <td><button onclick="location.href='revisar_solicitud.html?id=usuario9'">Revisar</button></td>
+
+                                </tr>
+                                <tr>
+                                    <td>usuario10</td>
+                                    <td>usuario10@example.com</td>
+                                    <td>10/09/2024</td>
+                                    <td>0</td>
+                                    <td><button onclick="location.href='revisar_solicitud.html?id=usuario10'">Revisar</button></td>
+
+                                </tr>
+                            </tbody>
+                        
+                        </table>
+                    </div>
+                </section>
+                
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="inner">
+                <nav id="menu">
+                    <header class="major">
+                        <h2>Menu</h2>
+                    </header>
+                    <ul>
+                        <li><a href="mascotas_perdidas.html">MASCOTAS PERDIDAS</a></li>
+                        <li>
+                            <span class="opener">HOGARES TEMPORALES</span>
+                            <ul>
+                                <li><a href="Hogares_aprobados.html">HOGARES APROBADOS</a></li>
+                                <li><a href="Solicitudes_Hogares.html">SOLICITUDES DE HOGARES</a></li>
+                                <li><a href="Solicitudes_agendadas.html">SOLICITUDES AGENDADAS</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section contact">
+                <h2>Contáctanos</h2>
+            </div>
+            <div class="footer-section info">
+                <p>Somos un albergue gosu...</p>
+            </div>
+            <div class="footer-section details">
+                <ul>
+                    <li><strong>Correo:</strong> info@alberguegosu.com</li>
+                    <li><strong>Teléfono:</strong> +123 456 7890</li>
+                    <li><strong>Ubicación:</strong> Calle Ejemplo 123, Ciudad, País</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="https://cdn.datatables.net/2.1.6/js/jquery.dataTables.min.js"></script>
+    <script>
+$(document).ready(function() {
+            $('#myTable').DataTable();
+            
+            // Manejo de clics en los botones de revisión
+            $('#myTable').on('click', '.review-btn', function() {
+                var id = $(this).data('id');
+                window.location.href = 'revisar.html?id=' + id; // Redirección correcta
+            });
+        });
+    </script>
+
+</body>
+</html>

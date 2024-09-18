@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Revisar Solicitud</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/cssprueba.css" />
+    <style>
+        /* Agregar estilos para mantener la imagen a la izquierda */
+        .details-wrapper {
+            display: flex;
+            align-items: flex-start;
+        }
+        .pet-image {
+            margin-right: 20px; /* Espacio entre la imagen y los detalles */
+        }
+        .pet-image img {
+            max-width: 200px; /* Tamaño máximo de la imagen */
+            height: auto; /* Mantener la relación de aspecto */
+            display: block;
+        }
+        .pet-details {
+            flex: 1; /* Ocupa el espacio restante */
+        }
+        .pet-details p {
+            margin: 5px 0; /* Espacio entre las líneas de detalle */
+        }
+        #approve-btn, #disapprove-btn {
+            margin-top: 10px; /* Espacio superior para los botones */
+        }
+    </style>
+</head>
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+
+                <!-- Header -->
+                <header id="header">
+                    <h2>Detalles de Mascota</h2>
+                    <ul class="icons">
+                        <li class="user-icon">
+                            <a href="#" target="blank" id="user-bell">
+                                <img src="usuario.png" alt="usuario" style="width: 30px; height: 30px;">
+                            </a>
+                            <div id="user-dropdown" class="user-dropdown" style="display: none;">
+                                <h3>Opciones de Usuario</h3>
+                                <ul>
+                                    <li><a href="mi_cuenta.html">Ver Mi Cuenta</a></li>
+                                    <li><a href="#">Cerrar Sesión</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="Coordinador.html">
+                                <img src="home.png" alt="icono" style="width: 30px; height: 30px;">
+                            </a>
+                        </li>
+                    </ul>
+                </header>
+
+                <!-- Section -->
+                <section>
+                    <!-- Detalles de la Mascota -->
+                    <div class="details-wrapper">
+                        <div class="pet-image">
+                        <img src="crash_cumple.JPG" alt="#">   
+                        </div>
+                        <div class="pet-details">
+                            <h3>Nombre: <span id="pet-name">Rex</span></h3>
+                            <p>Edad: <span id="pet-age">5 años</span></p>
+                            <p>Género: <span id="pet-gender">Macho</span></p>
+                            <p>Tipo de mascota: <span id="pet-type">Perro</span></p>
+                            <p>Dirección: <span id="pet-address">Calle Ejemplo 123, Ciudad</span></p>
+                            <p>Metraje de la vivienda: <span id="pet-area">100 m²</span></p>
+                            <p>Contacto: <span id="pet-contact">+123 456 7890</span></p>
+                            <p>Cantidad de cuartos: <span id="pet-rooms">3</span></p>
+                            <p>Fecha y hora de solicitud: <input type="datetime-local" id="pet-datetime" value="2024-09-20T15:30"></p>
+                            <p>Vive solo: <span id="pet-lives-alone">No</span></p>
+                            <p>Trabajo remoto o presencial: <span id="pet-work-type">Remoto</span></p>
+                            <p>Tiene mascotas: <span id="pet-has-pets">Sí</span></p>
+                            <p>Hijos: <span id="pet-kids">2</span></p>
+                            <p>Rango del temporal: <span id="pet-temporary-range">1 mes</span></p>
+                            <button type="button" id="approve-btn">Aprobar</button>
+                            <button type="button" id="disapprove-btn">Desaprobar</button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="inner">
+
+                <!-- Menu -->
+                <nav id="menu">
+                    <header class="major">
+                        <h2>Menu</h2>
+                    </header>
+                    <ul>
+                        <li><a href="mascotas_perdidas.html">MASCOTAS PERDIDAS</a></li>
+                        <li>
+                            <span class="opener">HOGARES TEMPORALES</span>
+                            <ul>
+                                <li><a href="Hogares_aprobados.html">HOGARES APROBADOS</a></li>
+                                <li><a href="Solicitudes_Hogares.html">SOLICITUDES DE HOGARES</a></li>
+                                <li><a href="Solicitudes_agendadas.html">SOLICITUDES AGENDADAS</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section contact">
+                <h2>Contáctanos</h2>
+            </div>
+            <div class="footer-section info">
+                <p>Somos un albergue gosu...</p>
+            </div>
+            <div class="footer-section details">
+                <ul>
+                    <li><strong>Correo:</strong> info@alberguegosu.com</li>
+                    <li><strong>Teléfono:</strong> +123 456 7890</li>
+                    <li><strong>Ubicación:</strong> Calle Ejemplo 123, Ciudad, País</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        $(document).ready(function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var id = urlParams.get('id');
+            
+            // Aquí deberías obtener los detalles de la mascota desde el servidor utilizando el ID.
+            // Para este ejemplo, usaremos datos simulados.
+            var petDetails = {
+                1: { name: 'Rex', age: '5', breed: 'Pastor Alemán', size: 'Grande', distinctive: 'Cicatriz en la pata', contact: '+123 456 7890', location: 'Calle Ejemplo', date: '2024-09-20', description: 'Es muy amigable, pero puede estar asustado. Tiene una pequeña cicatriz en su pata trasera derecha.', reward: '$100', image: 'images/perro1.jpg' },
+                2: { name: 'Bella', age: '3', breed: 'Beagle', size: 'Mediano', distinctive: 'Collar rojo', contact: '+123 456 7890', location: 'Avenida Principal', date: '2024-09-22', description: 'Es muy cariñosa y juguetona.', reward: '$50', image: 'images/perro2.jpg' }
+                // Agrega más detalles simulados aquí
+            };
+
+            var pet = petDetails[id];
+            if (pet) {
+                $('#pet-name').text(pet.name);
+                $('#pet-age').text(pet.age);
+                $('#pet-breed').text(pet.breed);
+                $('#pet-size').text(pet.size);
+                $('#pet-distinctive').text(pet.distinctive);
+                $('#pet-contact').text(pet.contact);
+                $('#pet-location').text(pet.location);
+                $('#pet-date').text(pet.date);
+                $('#pet-description').text(pet.description);
+                $('#pet-reward').text(pet.reward);
+                $('#pet-image').attr('src', pet.image);
+            } else {
+                alert('Detalles de la mascota no encontrados.');
+            }
+
+            // Confirmación para aprobar o desaprobar
+            $('#approve-btn').click(function() {
+                if (confirm('¿Estás seguro de que deseas aprobar esta solicitud?')) {
+                    // Maneja la aprobación
+                    alert('Solicitud aprobada.');
+                }
+            });
+
+            $('#disapprove-btn').click(function() {
+                if (confirm('¿Estás seguro de que deseas desaprobar esta solicitud?')) {
+                    // Maneja la desaprobación
+                    alert('Solicitud desaprobada.');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

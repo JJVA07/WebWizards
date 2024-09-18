@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Solicitud Hogares</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/cssprueba.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.min.css" />
+</head>
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Main -->
+        <div id="main">
+            <div class="inner">
+
+                <!-- Header -->
+                <header id="header">
+                    <h2>Coordinador Zonal</h2>
+                    <ul class="icons">
+                        <li class="user-icon">
+                            <a href="#" target="blank" id="user-bell">
+                                <img src="usuario.png" alt="usuario" style="width: 30px; height: 30px;">
+                            </a>
+                            <div id="user-dropdown" class="user-dropdown" style="display: none;">
+                                <h3>Opciones de Usuario</h3>
+                                <ul>
+                                    <li><a href="mi_cuenta.html">Ver Mi Cuenta</a></li>
+                                    <li><a href="#">Cerrar Sesión</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="Coordinador.html">
+                                <img src="home.png" alt="icono" style="width: 30px; height: 30px;">
+                            </a>
+                        </li>
+                    </ul>
+                </header>
+
+                <!-- Section -->
+                <section>
+                    <!-- DataTable -->
+                    <div class="table-wrapper">
+                        <table id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Edad</th>
+                                    <th>Raza</th>
+                                    <th>Tamaño</th>
+                                    <th>Revisar</th> <!-- Nueva columna -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Rex</td>
+                                    <td>5</td>
+                                    <td>Pastor Alemán</td>
+                                    <td>Grande</td>
+                                    <td><button type="button" class="review-btn" data-id="1">Revisar</button></td> <!-- Botón para revisar -->
+                                </tr>
+                                <tr>
+                                    <td>Bella</td>
+                                    <td>3</td>
+                                    <td>Beagle</td>
+                                    <td>Mediano</td>
+                                    <td><button type="button" class="review-btn" data-id="2">Revisar</button></td> <!-- Botón para revisar -->
+                                </tr>
+                                <tr>
+                                    <td>ZFer</td>
+                                    <td>4</td>
+                                    <td>Chusco</td>
+                                    <td>Grande</td>
+                                    <td><button type="button" class="review-btn" data-id="2">Revisar</button></td> <!-- Botón para revisar -->
+                                </tr>
+                                <tr>
+                                    <td>ZAbad</td>
+                                    <td>8</td>
+                                    <td>Chusco</td>
+                                    <td>Pequeña</td>
+                                    <td><button type="button" class="review-btn" data-id="2">Revisar</button></td> <!-- Botón para revisar -->
+                                </tr>
+                                <!-- Agrega más filas aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="inner">
+                <!-- Menu -->
+                <nav id="menu">
+                    <header class="major">
+                        <h2>Menu</h2>
+                    </header>
+                    <ul>
+                        <li><a href="mascotas_perdidas.html">MASCOTAS PERDIDAS</a></li>
+                        <li>
+                            <span class="opener">HOGARES TEMPORALES</span>
+                            <ul>
+                                <li><a href="Hogares_aprobados.html">HOGARES APROBADOS</a></li>
+                                <li><a href="Solicitudes_Hogares.html">SOLICITUDES DE HOGARES</a></li>
+                                <li><a href="Solicitudes_agendadas.html">SOLICITUDES AGENDADAS</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section contact">
+                <h2>Contáctanos</h2>
+            </div>
+            <div class="footer-section info">
+                <p>Somos un albergue gosu...</p>
+            </div>
+            <div class="footer-section details">
+                <ul>
+                    <li><strong>Correo:</strong> info@alberguegosu.com</li>
+                    <li><strong>Teléfono:</strong> +123 456 7890</li>
+                    <li><strong>Ubicación:</strong> Calle Ejemplo 123, Ciudad, País</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+            
+            // Manejo de clics en los botones de revisión
+            $('#myTable').on('click', '.review-btn', function() {
+                var id = $(this).data('id');
+                window.location.href = 'detalle_mascota.html?id=' + id;
+            });
+        });
+    </script>
+
+</body>
+</html>

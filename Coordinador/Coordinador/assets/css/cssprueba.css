@@ -1,0 +1,89 @@
+/* Custom styles for the new layout */
+.custom-posts-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    transition: padding-left 0.3s; /* Transición suave para el sidebar */
+    padding-left: 0;
+  }
+  
+  .custom-post {
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    width: 30%; /* Mantén un ancho constante */
+    min-width: 300px; /* Asegura que las cards tengan un tamaño mínimo */
+    max-width: 400px; /* Evita que se hagan demasiado grandes */
+    padding: 30px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    height: 600px;
+    margin: 10px;
+  
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .custom-post-icon {
+    width: 40%;
+    height: 40%;
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
+  
+  .custom-post h3 {
+    font-size: 24px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .custom-post p {
+    font-size: 18px;
+    color: #666;
+    margin-top: 20px;
+    transition: all 0.3s; /* Transición para evitar saltos */
+  }
+  
+  /* Responsividad */
+  @media (max-width: 1200px) {
+    .custom-posts-container {
+        padding-left: 250px; /* Espacio para el sidebar cuando esté visible */
+    }
+  
+    .custom-post {
+        width: calc(45% - 20px); /* Ajuste de ancho con sidebar visible */
+        height: 550px;
+    }
+  
+    .custom-post-icon {
+        width: 35%;
+        height: 35%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .custom-posts-container {
+        padding-left: 0; /* Remover el padding cuando no hay espacio para el sidebar */
+    }
+  
+    .custom-post {
+        width: 90%; /* Una columna completa en pantallas más pequeñas */
+        height: auto; /* La altura será automática para mejor ajuste */
+    }
+  
+    .custom-post-icon {
+        width: 30%;
+        height: 30%;
+    }
+  
+    .custom-post h3 {
+        font-size: 20px;
+    }
+  
+    .custom-post p {
+        font-size: 16px;
+    }
+  }
