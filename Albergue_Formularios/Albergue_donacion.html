@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Publicar Donación</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+			<div id="wrapper">
+					<div id="main">
+						<div class="inner">
+							<header id="header">
+								<h2>Albergue</h2>
+								<ul class="icons">
+									<li class="user-icon">
+										<a href="#" target="_blank" id="user-bell">
+											<img src="usuario.png" alt="usuario" style="width: 45px; height: 45px;">
+										</a>
+										<div id="user-dropdown" class="user-dropdown" style="display: none;">
+											<h3>Opciones de Usuario</h3>
+											<ul>
+												<li><a href="micuenta.html">Ver Mi Cuenta</a></li>
+												<li><a href="#">Cerrar Sesión</a></li>
+											</ul>
+										</div>
+									</li>
+								</ul>   
+							</header>
+
+								<section>
+									<header class="major">
+										<h2>Publicar Donación</h2>
+									</header>
+
+									<div class="donation-form">
+										<form action="albergue.html" method="post">
+											<div class="form-group">
+												<label for="donation-point">Punto de eventos de donaciones:</label>
+												<input type="text" id="donation-point" name="donation-point" required>
+											</div>
+
+											<div class="form-group">
+												<label for="donation-type">Tipos de donaciones:</label>
+												<input type="text" id="donation-type" name="donation-type" required>
+											</div>
+
+											<div class="form-group">
+												<label for="donation-amount">Cantidad de donaciones:</label>
+												<input type="text" id="donation-amount" name="donation-amount" required>
+											</div>
+
+											<div class="form-group">
+												<label for="donation-dates">Fechas programadas para recepción:</label>
+												<input type="date" id="donation-dates" name="donation-dates" required>
+											</div>
+
+											<div class="form-group">
+												<label for="donation-times">Horas programadas para recepción:</label>
+												<input type="time" id="donation-times" name="donation-times" required>
+											</div>
+
+											<div class="form-group">
+												<label for="shelter-contact">Teléfono de contacto del albergue:</label>
+												<input type="tel" id="shelter-contact" name="shelter-contact" required>
+											</div>
+
+											<div class="form-group">
+												<label for="shelter-name">Nombre de contacto del albergue:</label>
+												<input type="text" id="shelter-name" name="shelter-name" required>
+											</div>
+
+											<div class="form-group">
+												<label for="funds-use">Dinero (debe especificar en qué se va a usar):</label>
+												<input type="text" id="funds-use" name="funds-use" required>
+											</div>
+
+											<div class="form-group">
+												<button type="submit" class="button primary">Publicar</button>
+											</div>
+										</form>
+									</div>
+								</section>
+						</div>
+					</div>
+
+					<div id="sidebar">
+						<div class="inner">
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="Albergue.html">Inicio</a></li>
+										<li><a href="micuenta.html">Mi cuenta</a></li>
+										
+										<li>
+											<span class="opener">Crear Publicaciones</span>
+											<ul>
+												<li><a href="Albergue_adopcion.html">Adopción</a></li>
+												<li><a href="Albergue_donacion.html">Donación</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Hogares Temporales</span>
+											<ul>
+												<li><a href="Hogares_temporales.html">Hogares disponibles</a></li>
+												<li><a href="Hogares.html">Mi actividad</a></li>
+											</ul>
+										</li>
+										<li>
+											<span class="opener">Mis Actividades</span>
+											<ul>
+												<li><a href="publicaciones.html">Publicaciones</a></li>
+												<li><a href="Eventos_beneficos.html">Eventos Beneficos</a></li>
+											</ul>
+										</li>
+										<li><a href="Albergue_eventos.html">Eventos Beneficos</a></li>
+										<li><a href="inicio_sesion.html">Cerrar Sesión</a></li>
+									</ul>
+								</nav>
+						</div>
+					</div>
+			</div>
+
+
+			<footer>
+				<div class="footer-content">
+					<div class="footer-section">
+						<h2>Contactanos</h2>
+					</div>
+					<div class="footer-section">
+						<p>Somos un albergue gosu con ganas de ayudar a perritos</p>
+					</div>
+					<div class="footer-section">
+						<ul class="contact-info">
+							<li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
+							<li class="icon solid fa-phone">(000) 000-0000</li>
+							<li class="icon solid fa-home">1234 Somewhere Road #8254<br />Nashville, TN 00000-0000</li>
+						</ul>
+					</div>
+				</div>
+			</footer>	
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

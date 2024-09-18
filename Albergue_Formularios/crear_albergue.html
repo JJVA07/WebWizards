@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Albergue</title>
+    <link rel="stylesheet" href="crear_albergue.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form">
+            <h1 class="title">REGISTRO</h1>
+            <form id="registrationForm" onsubmit="return validateForm()">
+                <div class="input-grid">
+                    <div class="input-container">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" class="input" required>
+                    </div>
+                    <div class="input-container">
+                        <label for="apellido">Apellido</label>
+                        <input type="text" id="apellido" class="input" required>
+                    </div>
+                    <div class="input-container">
+                        <label for="nombre-albergue">Nombre de Albergue</label>
+                        <input type="text" id="nombre-albergue" class="input" required>
+                    </div>
+                    <div class="input-container">
+                        <label for="correo">Correo electrónico</label>
+                        <input type="email" id="correo" class="input" required>
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="button registrarse">REGISTRAR SOLICITUD</button>
+                </div>
+            </form>
+            <div class="social-icons">
+                <div class="social-icon facebook"></div>
+                <div class="social-icon instagram"></div>
+                <div class="social-icon twitter"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    function validateForm() {
+        var inputs = document.getElementsByTagName('input');
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].hasAttribute('required') && inputs[i].value === '') {
+                alert('Por favor, complete todos los campos obligatorios.');
+                return false;
+            }
+        }
+        alert('Formulario enviado con éxito!');
+        return false;
+    }
+    </script>
+</body>
+</html>
