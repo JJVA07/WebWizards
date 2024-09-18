@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Mi cuenta</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+		<div id="wrapper">
+			<div id="main">
+				<div class="inner">
+
+					<header id="header">
+						<a href="temp.html" class="logo"><strong>Albergue</strong></a>
+					</header>
+
+					<section>
+						<header class="major">
+							<h2>Mi Cuenta</h2>
+						</header>
+
+						<div id="account-info">
+							<h3>Información Actual</h3>
+							<p><strong>Nombre del Albergue:</strong> <span id="display-shelter-name"></span></p>
+							<p><strong>Encargado:</strong> <span id="display-manager"></span></p>
+							<p><strong>Teléfono:</strong> <span id="display-phone"></span></p>
+							<p><strong>Distrito:</strong> <span id="display-district"></span></p>
+							<p><strong>Dirección:</strong> <span id="display-address"></span></p>
+							<p><strong>Punto de acopio de donaciones:</strong> <span id="display-donation-point"></span></p>
+							<p><strong>URL de redes sociales:</strong> <span id="display-social-url"></span></p>
+							<p><strong>Número de contacto de donaciones:</strong> <span id="display-donation-contact"></span></p>
+						</div>
+
+						<button type="button" id="edit-info-btn" onclick="redirectToEditPage()">Editar Información</button>
+					</section>
+				</div>
+			</div>
+
+			<div id="sidebar">
+				<div class="inner">
+					<nav id="menu">
+						<header class="major">
+							<h2>Menu</h2>
+						</header>
+						<ul>
+							<li><a href="Albergue.html">Inicio</a></li>
+							<li><a href="micuenta.html">Mi cuenta</a></li>
+							<li>
+								<span class="opener">Crear Publicaciones</span>
+								<ul>
+									<li><a href="Albergue_adopcion.html">Adopción</a></li>
+									<li><a href="Albergue_donacion.html">Donación</a></li>
+								</ul>
+							</li>
+							<li>
+								<span class="opener">Hogares Temporales</span>
+								<ul>
+									<li><a href="Hogares_temporales.html">Hogares disponibles</a></li>
+									<li><a href="Hogares.html">Mi actividad</a></li>
+								</ul>
+							</li>
+							<li>
+								<span class="opener">Mis Actividades</span>
+								<ul>
+									<li><a href="publicaciones.html">Publicaciones</a></li>
+									<li><a href="Eventos_beneficos.html">Eventos Beneficos</a></li>
+								</ul>
+							</li>
+							<li><a href="Albergue_eventos.html">Eventos Beneficos</a></li>
+							<li><a href="inicio_sesion.html">Cerrar Sesión</a></li>
+						</ul>
+					</nav>
+
+					<section>
+						<header class="major">
+							<h2>Contactanos</h2>
+						</header>
+						<p>Somos un albergue gosu con ganas de ayudar a perritos </p>
+						<ul class="contact">
+							<li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
+							<li class="icon solid fa-phone">(000) 000-0000</li>
+							<li class="icon solid fa-home">1234 Somewhere Road #8254<br />Nashville, TN 00000-0000</li>
+						</ul>
+					</section>
+				</div>
+			</div>
+		</div>
+
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+
+		<script>
+			window.addEventListener('load', function() {
+				document.getElementById('display-shelter-name').textContent = localStorage.getItem('shelterName') || 'PetWay';
+				document.getElementById('display-manager').textContent = localStorage.getItem('manager') || 'Juan Pérez';
+				document.getElementById('display-phone').textContent = localStorage.getItem('phone') || '(123) 456-7890';
+				document.getElementById('display-district').textContent = localStorage.getItem('district') || 'San Juan de Lurigancho';
+				document.getElementById('display-address').textContent = localStorage.getItem('address') || 'Mz F4 lote 34 av del muro';
+				document.getElementById('display-donation-point').textContent = localStorage.getItem('donationPoint') || 'PUCP';
+				document.getElementById('display-social-url').textContent = localStorage.getItem('socialUrl') || 'https://www.facebook.com/fernando.godoysalas.73';
+				document.getElementById('display-donation-contact').textContent = localStorage.getItem('donationContact') || '907808088';
+			});
+		</script>
+		
+		<script>
+			function redirectToEditPage() {
+				window.location.href = "editar_informacion.html";
+			}
+		</script>
+
+	</body>
+</html>
