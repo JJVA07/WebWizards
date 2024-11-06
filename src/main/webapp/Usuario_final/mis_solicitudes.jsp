@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -21,9 +22,9 @@
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto me-3 me-lg-4">
                 <li class="nav-item dropdown">
-                    
+
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                    
+
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="mi_cuenta.html">Mi cuenta</a></li>
                         <li><hr class="dropdown-divider" /></li>
@@ -38,7 +39,7 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark"  id="sidenavAccordion" style="background-color: rgb(27, 94, 87)">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                          
+
                             <div class="sb-sidenav-menu-heading">MENU</div>
                             <a class="nav-link  collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePublicaciones" aria-expanded="false" aria-controls="collapsePublicaciones">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-calendar"></i></div>
@@ -63,7 +64,7 @@
                                     <a class="nav-link" href="mis_publicaciones.html">Mis Publicaciones</a>
                                 </nav>
                             </div>
-                            
+
                             <a class="nav-link active" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTemporal" aria-expanded="true" aria-controls="collapseTemporal">
                                 <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
                                 Dueño Temporal
@@ -75,8 +76,8 @@
                                     <a class="nav-link active" href="mis_solicitudes.html">Mis Solicitudes</a>
                                 </nav>
                             </div>
-                            
-                            
+
+
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseDonaciones" aria-expanded="false" aria-controls="collapseDonaciones">
                                 <div class="sb-nav-link-icon"><i class="fas fa-donate"></i></div>
                                 Donaciones
@@ -88,7 +89,7 @@
                                     <a class="nav-link" href="mis_donaciones.html">Mis Donaciones</a>
                                 </nav>
                             </div>
-                            
+
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCrearPublicacion" aria-expanded="false" aria-controls="collapseCrearPublicacion">
                                 <div class="sb-nav-link-icon"><i class="fas fa-edit"></i></div>
                                 Crear Publicación
@@ -100,7 +101,7 @@
                                     <a class="nav-link" href="denuncias.html">Denuncias</a>
                                 </nav>
                             </div>
-                            
+
                             <a class="nav-link" href="adopcion.html">
                                 <div class="sb-nav-link-icon"><i class="fas fa-heart"></i></div>
                                 Adopción
@@ -116,9 +117,9 @@
                             <div class="row justify-content-center mt-3">
                                 <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center">
                                     <div class="card mb-4" style="width: 100%;">
-                                        
+
                                             <img src="../assets/img/hogar-temporal-sol1.jpg" class="card-img-top img-fluid" alt="Perrito perdido" style="height: 200px; object-fit: cover;">
-                                        
+
                                         <div class="card-body">
                                             <h5 class="card-title">Solicitud a Albergue - Las Cachorritas</h5>
                                             <p class="card-text" style="text-align: justify;">
@@ -135,7 +136,7 @@
                                         </div>
                                     </div>
                                 </div>
-        
+
                                 <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center">
                                     <div class="card mb-4" style="width: 100%;">
                                         <img src="../assets/img/hogar-temporal-sol2.jpg" class="card-img-top img-fluid" alt="Denuncia por maltrato" style="height: 200px; object-fit: cover;">
@@ -159,7 +160,7 @@
                         </div>
 
                 </main>
-                
+
                 <div class="d-flex justify-content-center mt-3">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
@@ -244,7 +245,6 @@
                 });
             });
         </script>
-        
+
     </body>
     </html>
-    
