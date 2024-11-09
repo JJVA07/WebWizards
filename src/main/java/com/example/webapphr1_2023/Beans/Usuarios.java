@@ -7,7 +7,7 @@ public class Usuarios {
     private String dni;
     private String direccion;
     private String correo;
-    private String contraseña;
+    private String contrasena;
     private Rol rol; // Relación con Rol
     private String nombreAlbergue;
     private Integer anioCreacion;
