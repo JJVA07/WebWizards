@@ -32,6 +32,14 @@ public class Usuarios {
     public Usuarios() {
     }
 
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
     public int getId() {
         return id;
     }
@@ -40,13 +48,6 @@ public class Usuarios {
         this.id = id;
     }
 
-    public String getContraseña() {
-        return contraseña;
-    }
-
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
-    }
 
     public String getApellido() {
         return apellido;
