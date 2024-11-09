@@ -40,8 +40,8 @@ public class PostulacionDao {
             preparedStatement.setInt(11, postulacion.getTiempoTemporal());
             preparedStatement.setDate(12, new java.sql.Date(postulacion.getFechaInicioTemporal().getTime()));
             preparedStatement.setDate(13, new java.sql.Date(postulacion.getFechaFinTemporal().getTime()));
-            preparedStatement.setInt(14, postulacion.getPostulacionEstadoIdPostulacionEstado());
-            preparedStatement.setInt(15, postulacion.getUsuariosId());
+            //preparedStatement.setInt(14, postulacion.getPostulacionEstadoIdPostulacionEstado());
+            //preparedStatement.setInt(15, postulacion.getUsuariosId());
             preparedStatement.setString(16, postulacion.getTieneMascotas());
             preparedStatement.setString(17, postulacion.getNombre());
             preparedStatement.setString(18, postulacion.getApellido());
@@ -49,12 +49,12 @@ public class PostulacionDao {
             preparedStatement.setString(20, postulacion.getGenero());
             preparedStatement.setString(21, postulacion.getCelular());
             preparedStatement.setString(22, postulacion.getDireccion());
-            preparedStatement.setInt(23, postulacion.getDistritoIdDistrito());
+            //preparedStatement.setInt(23, postulacion.getDistritoIdDistrito());
             preparedStatement.setString(24, postulacion.getVisitaInopinada());
             preparedStatement.setString(25, postulacion.getFechaInopinada());
             preparedStatement.setString(26, postulacion.getHoraInopinada());
             preparedStatement.setString(27, postulacion.getMotivoRechazo());
-            preparedStatement.setInt(28, postulacion.getMascotasIdMascotas());
+            //preparedStatement.setInt(28, postulacion.getMascotasIdMascotas());
             preparedStatement.executeUpdate();
         }
     }
@@ -83,8 +83,8 @@ public class PostulacionDao {
                 postulacion.setTiempoTemporal(rs.getInt("tiempo_temporal"));
                 postulacion.setFechaInicioTemporal(rs.getDate("fecha_inicio_temporal"));
                 postulacion.setFechaFinTemporal(rs.getDate("fecha_fin_temporal"));
-                postulacion.setPostulacionEstadoIdPostulacionEstado(rs.getInt("Postulacion_estado_idPostulacion_estado"));
-                postulacion.setUsuariosId(rs.getInt("Usuarios_ID"));
+                //postulacion.setPostulacionEstadoIdPostulacionEstado(rs.getInt("Postulacion_estado_idPostulacion_estado"));
+                //postulacion.setUsuariosId(rs.getInt("Usuarios_ID"));
                 postulacion.setTieneMascotas(rs.getString("tiene_mascotas"));
                 postulacion.setNombre(rs.getString("nombre"));
                 postulacion.setApellido(rs.getString("apellido"));
@@ -92,12 +92,12 @@ public class PostulacionDao {
                 postulacion.setGenero(rs.getString("genero"));
                 postulacion.setCelular(rs.getString("celular"));
                 postulacion.setDireccion(rs.getString("direccion"));
-                postulacion.setDistritoIdDistrito(rs.getInt("Distrito_idDistrito"));
+                //postulacion.setDistritoIdDistrito(rs.getInt("Distrito_idDistrito"));
                 postulacion.setVisitaInopinada(rs.getString("visita_inopinada"));
                 postulacion.setFechaInopinada(rs.getString("fecha_inopinada"));
                 postulacion.setHoraInopinada(rs.getString("hora_inopinada"));
                 postulacion.setMotivoRechazo(rs.getString("motivo_rechazo"));
-                postulacion.setMascotasIdMascotas(rs.getInt("mascotas_idMascotas"));
+                //postulacion.setMascotasIdMascotas(rs.getInt("mascotas_idMascotas"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -128,8 +128,8 @@ public class PostulacionDao {
                 postulacion.setTiempoTemporal(rs.getInt("tiempo_temporal"));
                 postulacion.setFechaInicioTemporal(rs.getDate("fecha_inicio_temporal"));
                 postulacion.setFechaFinTemporal(rs.getDate("fecha_fin_temporal"));
-                postulacion.setPostulacionEstadoIdPostulacionEstado(rs.getInt("Postulacion_estado_idPostulacion_estado"));
-                postulacion.setUsuariosId(rs.getInt("Usuarios_ID"));
+                //postulacion.setPostulacionEstadoIdPostulacionEstado(rs.getInt("Postulacion_estado_idPostulacion_estado"));
+                //postulacion.setUsuariosId(rs.getInt("Usuarios_ID"));
                 postulacion.setTieneMascotas(rs.getString("tiene_mascotas"));
                 postulacion.setNombre(rs.getString("nombre"));
                 postulacion.setApellido(rs.getString("apellido"));
@@ -137,12 +137,12 @@ public class PostulacionDao {
                 postulacion.setGenero(rs.getString("genero"));
                 postulacion.setCelular(rs.getString("celular"));
                 postulacion.setDireccion(rs.getString("direccion"));
-                postulacion.setDistritoIdDistrito(rs.getInt("Distrito_idDistrito"));
+                //postulacion.setDistritoIdDistrito(rs.getInt("Distrito_idDistrito"));
                 postulacion.setVisitaInopinada(rs.getString("visita_inopinada"));
                 postulacion.setFechaInopinada(rs.getString("fecha_inopinada"));
                 postulacion.setHoraInopinada(rs.getString("hora_inopinada"));
                 postulacion.setMotivoRechazo(rs.getString("motivo_rechazo"));
-                postulacion.setMascotasIdMascotas(rs.getInt("mascotas_idMascotas"));
+                //postulacion.setMascotasIdMascotas(rs.getInt("mascotas_idMascotas"));
                 postulaciones.add(postulacion);
             }
         } catch (SQLException e) {
@@ -180,8 +180,8 @@ public class PostulacionDao {
             statement.setInt(11, postulacion.getTiempoTemporal());
             statement.setDate(12, new java.sql.Date(postulacion.getFechaInicioTemporal().getTime()));
             statement.setDate(13, new java.sql.Date(postulacion.getFechaFinTemporal().getTime()));
-            statement.setInt(14, postulacion.getPostulacionEstadoIdPostulacionEstado());
-            statement.setInt(15, postulacion.getUsuariosId());
+            //statement.setInt(14, postulacion.getPostulacionEstadoIdPostulacionEstado());
+            //statement.setInt(15, postulacion.getUsuariosId());
             statement.setString(16, postulacion.getTieneMascotas());
             statement.setString(17, postulacion.getNombre());
             statement.setString(18, postulacion.getApellido());
@@ -189,12 +189,12 @@ public class PostulacionDao {
             statement.setString(20, postulacion.getGenero());
             statement.setString(21, postulacion.getCelular());
             statement.setString(22, postulacion.getDireccion());
-            statement.setInt(23, postulacion.getDistritoIdDistrito());
+            //statement.setInt(23, postulacion.getDistritoIdDistrito());
             statement.setString(24, postulacion.getVisitaInopinada());
             statement.setString(25, postulacion.getFechaInopinada());
             statement.setString(26, postulacion.getHoraInopinada());
             statement.setString(27, postulacion.getMotivoRechazo());
-            statement.setInt(28, postulacion.getMascotasIdMascotas());
+            //statement.setInt(28, postulacion.getMascotasIdMascotas());
             statement.setInt(29, postulacion.getIdPostulacion());
             rowUpdated = statement.executeUpdate() > 0;
         }

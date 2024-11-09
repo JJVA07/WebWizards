@@ -26,10 +26,10 @@ public class MascotasDao extends DaoBase {
                 mascota.setEdad(rs.getInt("edad"));
                 mascota.setGenero(rs.getString("genero"));
                 mascota.setDescripcion(rs.getString("descripcion"));
-                mascota.setMascotaEstadoIdMascotaEstado(rs.getString("mascotaEstadoIdMascotaEstado"));
+                //mascota.setMascotaEstadoIdMascotaEstado(rs.getString("mascotaEstadoIdMascotaEstado"));
                 mascota.setComentarioCoordinador(rs.getString("comentarioCoordinador"));
-                mascota.setUsuariosId(rs.getInt("usuariosId"));
-                mascota.setAlbergueId(rs.getInt("albergueId"));
+                //mascota.setUsuariosId(rs.getInt("usuariosId"));
+                //mascota.setAlbergueId(rs.getInt("albergueId"));
                 mascota.setMotivoRechazo(rs.getString("motivoRechazo"));
                 mascotas.add(mascota);
             }
