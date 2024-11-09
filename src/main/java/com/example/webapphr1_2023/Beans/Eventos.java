@@ -2,7 +2,6 @@ package com.example.webapphr1_2023.Beans;
 
 import java.sql.Time;
 import java.util.Date;
-
 public class Eventos {
     private int idEventos;
     private String nombreEvento;
@@ -12,42 +11,16 @@ public class Eventos {
     private int aforo;
     private String descripcion;
     private String vacantesDisponibles;
-    private int estadoEventosIdEstadoEventos;
-    private int lugaresIdLugar;
-    private int tipoDonacionIdTipoDonacion;
-    private int albergue;
+    private EstadoEventos estadoEventos; // Relación con EstadoEventos
+    private Lugares lugar; // Relación con Lugares
+    private Usuarios albergue; // Relación con Usuarios (albergue)
     private String razon;
     private String artistasInvitados;
     private byte[] foto;
     private String motivoRechazo;
-    private int donacionesIdDonaciones;
+    private Donaciones donaciones;
 
-    // Constructor vacío
     public Eventos() {
-    }
-
-    // Constructor con parámetros
-    public Eventos(int idEventos, String nombreEvento, Date fecha, Time hora, String lugarEvento, int aforo,
-                   String descripcion, String vacantesDisponibles, int estadoEventosIdEstadoEventos, int lugaresIdLugar,
-                   int tipoDonacionIdTipoDonacion, int albergue, String razon, String artistasInvitados,
-                   byte[] foto, String motivoRechazo, int donacionesIdDonaciones) {
-        this.idEventos = idEventos;
-        this.nombreEvento = nombreEvento;
-        this.fecha = fecha;
-        this.hora = hora;
-        this.lugarEvento = lugarEvento;
-        this.aforo = aforo;
-        this.descripcion = descripcion;
-        this.vacantesDisponibles = vacantesDisponibles;
-        this.estadoEventosIdEstadoEventos = estadoEventosIdEstadoEventos;
-        this.lugaresIdLugar = lugaresIdLugar;
-        this.tipoDonacionIdTipoDonacion = tipoDonacionIdTipoDonacion;
-        this.albergue = albergue;
-        this.razon = razon;
-        this.artistasInvitados = artistasInvitados;
-        this.foto = foto;
-        this.motivoRechazo = motivoRechazo;
-        this.donacionesIdDonaciones = donacionesIdDonaciones;
     }
 
     public int getIdEventos() {
@@ -58,20 +31,20 @@ public class Eventos {
         this.idEventos = idEventos;
     }
 
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
     public String getNombreEvento() {
         return nombreEvento;
     }
 
     public void setNombreEvento(String nombreEvento) {
         this.nombreEvento = nombreEvento;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 
     public Time getHora() {
@@ -90,20 +63,20 @@ public class Eventos {
         this.lugarEvento = lugarEvento;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
     public int getAforo() {
         return aforo;
     }
 
     public void setAforo(int aforo) {
         this.aforo = aforo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public String getVacantesDisponibles() {
@@ -114,35 +87,27 @@ public class Eventos {
         this.vacantesDisponibles = vacantesDisponibles;
     }
 
-    public int getEstadoEventosIdEstadoEventos() {
-        return estadoEventosIdEstadoEventos;
+    public EstadoEventos getEstadoEventos() {
+        return estadoEventos;
     }
 
-    public void setEstadoEventosIdEstadoEventos(int estadoEventosIdEstadoEventos) {
-        this.estadoEventosIdEstadoEventos = estadoEventosIdEstadoEventos;
+    public void setEstadoEventos(EstadoEventos estadoEventos) {
+        this.estadoEventos = estadoEventos;
     }
 
-    public int getLugaresIdLugar() {
-        return lugaresIdLugar;
+    public Lugares getLugar() {
+        return lugar;
     }
 
-    public void setLugaresIdLugar(int lugaresIdLugar) {
-        this.lugaresIdLugar = lugaresIdLugar;
+    public void setLugar(Lugares lugar) {
+        this.lugar = lugar;
     }
 
-    public int getTipoDonacionIdTipoDonacion() {
-        return tipoDonacionIdTipoDonacion;
-    }
-
-    public void setTipoDonacionIdTipoDonacion(int tipoDonacionIdTipoDonacion) {
-        this.tipoDonacionIdTipoDonacion = tipoDonacionIdTipoDonacion;
-    }
-
-    public int getAlbergue() {
+    public Usuarios getAlbergue() {
         return albergue;
     }
 
-    public void setAlbergue(int albergue) {
+    public void setAlbergue(Usuarios albergue) {
         this.albergue = albergue;
     }
 
@@ -178,11 +143,11 @@ public class Eventos {
         this.motivoRechazo = motivoRechazo;
     }
 
-    public int getDonacionesIdDonaciones() {
-        return donacionesIdDonaciones;
+    public Donaciones getDonaciones() {
+        return donaciones;
     }
 
-    public void setDonacionesIdDonaciones(int donacionesIdDonaciones) {
-        this.donacionesIdDonaciones = donacionesIdDonaciones;
+    public void setDonaciones(Donaciones donaciones) {
+        this.donaciones = donaciones;
     }
 }

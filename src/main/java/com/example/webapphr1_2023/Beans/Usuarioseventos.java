@@ -1,33 +1,26 @@
 package com.example.webapphr1_2023.Beans;
+public class UsuariosEventos {
+    private Usuarios usuario; // Relación con Usuarios
+    private Eventos evento; // Relación con Eventos
 
-public class Usuarioseventos {
-    private int usuariosId;
-    private int eventosIdEventos;
-
-    // Constructor vacío
-    public Usuarioseventos() {
+    public UsuariosEventos(Usuarios usuario, Eventos evento) {
+        this.usuario = usuario;
+        this.evento = evento;
     }
 
-    // Constructor con parámetros
-    public Usuarioseventos(int usuariosId, int eventosIdEventos) {
-        this.usuariosId = usuariosId;
-        this.eventosIdEventos = eventosIdEventos;
+    public Usuarios getUsuario() {
+        return usuario;
     }
 
-    // Getters y Setters
-    public int getUsuariosId() {
-        return usuariosId;
+    public void setUsuario(Usuarios usuario) {
+        this.usuario = usuario;
     }
 
-    public void setUsuariosId(int usuariosId) {
-        this.usuariosId = usuariosId;
+    public Eventos getEvento() {
+        return evento;
     }
 
-    public int getEventosIdEventos() {
-        return eventosIdEventos;
-    }
-
-    public void setEventosIdEventos(int eventosIdEventos) {
-        this.eventosIdEventos = eventosIdEventos;
+    public void setEvento(Eventos evento) {
+        this.evento = evento;
     }
 }

@@ -5,33 +5,16 @@ public class Mascotas {
     private String nombreMascota;
     private String raza;
     private int edad;
-    private String genero; // 'Macho' o 'Hembra'
+    private String genero;
     private String descripcion;
-    private int mascotaEstadoIdMascotaEstado;
+    private MascotaEstado mascotaEstado; // Relación con MascotaEstado
     private String comentarioCoordinador;
-    private Integer usuariosId;
-    private int albergueId;
+    private Usuarios usuario; // Relación con Usuarios (usuario responsable)
+    private Usuarios albergue; // Relación con Usuarios (albergue donde se encuentra la mascota)
     private String motivoRechazo;
+    private byte[] foto;
 
-    // Constructor vacío
     public Mascotas() {
-    }
-
-    // Constructor con parámetros
-    public Mascotas(int idMascotas, String nombreMascota, String raza, int edad, String genero, String descripcion,
-                    int mascotaEstadoIdMascotaEstado, String comentarioCoordinador, Integer usuariosId,
-                    int albergueId, String motivoRechazo) {
-        this.idMascotas = idMascotas;
-        this.nombreMascota = nombreMascota;
-        this.raza = raza;
-        this.edad = edad;
-        this.genero = genero;
-        this.descripcion = descripcion;
-        this.mascotaEstadoIdMascotaEstado = mascotaEstadoIdMascotaEstado;
-        this.comentarioCoordinador = comentarioCoordinador;
-        this.usuariosId = usuariosId;
-        this.albergueId = albergueId;
-        this.motivoRechazo = motivoRechazo;
     }
 
     public int getIdMascotas() {
@@ -42,14 +25,6 @@ public class Mascotas {
         this.idMascotas = idMascotas;
     }
 
-    public String getRaza() {
-        return raza;
-    }
-
-    public void setRaza(String raza) {
-        this.raza = raza;
-    }
-
     public String getNombreMascota() {
         return nombreMascota;
     }
@@ -58,12 +33,12 @@ public class Mascotas {
         this.nombreMascota = nombreMascota;
     }
 
-    public String getGenero() {
-        return genero;
+    public String getRaza() {
+        return raza;
     }
 
-    public void setGenero(String genero) {
-        this.genero = genero;
+    public void setRaza(String raza) {
+        this.raza = raza;
     }
 
     public int getEdad() {
@@ -74,6 +49,14 @@ public class Mascotas {
         this.edad = edad;
     }
 
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -82,12 +65,12 @@ public class Mascotas {
         this.descripcion = descripcion;
     }
 
-    public int getMascotaEstadoIdMascotaEstado() {
-        return mascotaEstadoIdMascotaEstado;
+    public MascotaEstado getMascotaEstado() {
+        return mascotaEstado;
     }
 
-    public void setMascotaEstadoIdMascotaEstado(int mascotaEstadoIdMascotaEstado) {
-        this.mascotaEstadoIdMascotaEstado = mascotaEstadoIdMascotaEstado;
+    public void setMascotaEstado(MascotaEstado mascotaEstado) {
+        this.mascotaEstado = mascotaEstado;
     }
 
     public String getComentarioCoordinador() {
@@ -98,20 +81,20 @@ public class Mascotas {
         this.comentarioCoordinador = comentarioCoordinador;
     }
 
-    public Integer getUsuariosId() {
-        return usuariosId;
+    public Usuarios getUsuario() {
+        return usuario;
     }
 
-    public void setUsuariosId(Integer usuariosId) {
-        this.usuariosId = usuariosId;
+    public void setUsuario(Usuarios usuario) {
+        this.usuario = usuario;
     }
 
-    public int getAlbergueId() {
-        return albergueId;
+    public Usuarios getAlbergue() {
+        return albergue;
     }
 
-    public void setAlbergueId(int albergueId) {
-        this.albergueId = albergueId;
+    public void setAlbergue(Usuarios albergue) {
+        this.albergue = albergue;
     }
 
     public String getMotivoRechazo() {
@@ -121,4 +104,13 @@ public class Mascotas {
     public void setMotivoRechazo(String motivoRechazo) {
         this.motivoRechazo = motivoRechazo;
     }
+
+    public byte[] getFoto() {
+        return foto;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
+    }
+// Getters y Setters
 }

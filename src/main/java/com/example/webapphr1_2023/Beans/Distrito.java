@@ -1,24 +1,17 @@
 package com.example.webapphr1_2023.Beans;
-
 public class Distrito {
     private int idDistrito;
     private String nombre;
-    private int zonaIdZona;
+    private Zona zona; // Relación con Zona
 
-    // Constructor vacío
-    public Distrito() {
-    }
-
-    // Constructor con parámetros
-    public Distrito(int idDistrito, String nombre, int zonaIdZona) {
-        this.idDistrito = idDistrito;
-        this.nombre = nombre;
-        this.zonaIdZona = zonaIdZona;
-    }
-
-    // Getters y Setters
     public int getIdDistrito() {
         return idDistrito;
+    }
+
+    public Distrito(int idDistrito, String nombre, Zona zona) {
+        this.idDistrito = idDistrito;
+        this.nombre = nombre;
+        this.zona = zona;
     }
 
     public void setIdDistrito(int idDistrito) {
@@ -33,11 +26,11 @@ public class Distrito {
         this.nombre = nombre;
     }
 
-    public int getZonaIdZona() {
-        return zonaIdZona;
+    public Zona getZona() {
+        return zona;
     }
 
-    public void setZonaIdZona(int zonaIdZona) {
-        this.zonaIdZona = zonaIdZona;
+    public void setZona(Zona zona) {
+        this.zona = zona;
     }
 }

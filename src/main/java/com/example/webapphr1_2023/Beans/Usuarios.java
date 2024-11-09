@@ -8,11 +8,11 @@ public class Usuarios {
     private String direccion;
     private String correo;
     private String contraseña;
-    private int rolIdRol;
+    private Rol rol; // Relación con Rol
     private String nombreAlbergue;
-    private int anioCreacion;
-    private Integer distritoIdDistrito;
-    private Integer zonaIdZona;
+    private Integer anioCreacion;
+    private Distrito distrito; // Relación con Distrito
+    private Zona zona; // Relación con Zona
     private Integer telefono;
     private Integer espaciosNuevosAnimales;
     private String urlFbig;
@@ -23,50 +23,13 @@ public class Usuarios {
     private Integer numeroYape;
     private byte[] codigoQr;
     private String fechaNacimiento;
-    private Integer estadoUsuarioIdEstadoUsuario;
+    private EstadoUsuario estadoUsuario; // Relación con EstadoUsuario
     private String motivoEliminado;
     private Integer cantidadAlbergados;
     private String fechaRegistro;
-    private int donacionesIdDonaciones;
+    private Donaciones donaciones; // Relación con Donaciones
 
-    // Constructor vacío
     public Usuarios() {
-    }
-
-    // Constructor con parámetros
-    public Usuarios(int id, String nombre, String apellido, String dni, String direccion, String correo, String contraseña,
-                    int rolIdRol, String nombreAlbergue, int anioCreacion, Integer distritoIdDistrito, Integer zonaIdZona,
-                    Integer telefono, Integer espaciosNuevosAnimales, String urlFbig, String puntoAcopioDonaciones,
-                    String direccionDonacion, String nombreDonaciones, Integer numeroDonaciones, Integer numeroYape,
-                    byte[] codigoQr, String fechaNacimiento, Integer estadoUsuarioIdEstadoUsuario, String motivoEliminado,
-                    Integer cantidadAlbergados, String fechaRegistro, int donacionesIdDonaciones) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.dni = dni;
-        this.direccion = direccion;
-        this.correo = correo;
-        this.contraseña = contraseña;
-        this.rolIdRol = rolIdRol;
-        this.nombreAlbergue = nombreAlbergue;
-        this.anioCreacion = anioCreacion;
-        this.distritoIdDistrito = distritoIdDistrito;
-        this.zonaIdZona = zonaIdZona;
-        this.telefono = telefono;
-        this.espaciosNuevosAnimales = espaciosNuevosAnimales;
-        this.urlFbig = urlFbig;
-        this.puntoAcopioDonaciones = puntoAcopioDonaciones;
-        this.direccionDonacion = direccionDonacion;
-        this.nombreDonaciones = nombreDonaciones;
-        this.numeroDonaciones = numeroDonaciones;
-        this.numeroYape = numeroYape;
-        this.codigoQr = codigoQr;
-        this.fechaNacimiento = fechaNacimiento;
-        this.estadoUsuarioIdEstadoUsuario = estadoUsuarioIdEstadoUsuario;
-        this.motivoEliminado = motivoEliminado;
-        this.cantidadAlbergados = cantidadAlbergados;
-        this.fechaRegistro = fechaRegistro;
-        this.donacionesIdDonaciones = donacionesIdDonaciones;
     }
 
     public int getId() {
@@ -77,12 +40,12 @@ public class Usuarios {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getContraseña() {
+        return contraseña;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
     }
 
     public String getApellido() {
@@ -91,6 +54,14 @@ public class Usuarios {
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getDni() {
@@ -117,12 +88,12 @@ public class Usuarios {
         this.correo = correo;
     }
 
-    public String getContraseña() {
-        return contraseña;
+    public Rol getRol() {
+        return rol;
     }
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 
     public String getNombreAlbergue() {
@@ -133,36 +104,28 @@ public class Usuarios {
         this.nombreAlbergue = nombreAlbergue;
     }
 
-    public int getRolIdRol() {
-        return rolIdRol;
-    }
-
-    public void setRolIdRol(int rolIdRol) {
-        this.rolIdRol = rolIdRol;
-    }
-
-    public int getAnioCreacion() {
+    public Integer getAnioCreacion() {
         return anioCreacion;
     }
 
-    public void setAnioCreacion(int anioCreacion) {
+    public void setAnioCreacion(Integer anioCreacion) {
         this.anioCreacion = anioCreacion;
     }
 
-    public Integer getDistritoIdDistrito() {
-        return distritoIdDistrito;
+    public Distrito getDistrito() {
+        return distrito;
     }
 
-    public void setDistritoIdDistrito(Integer distritoIdDistrito) {
-        this.distritoIdDistrito = distritoIdDistrito;
+    public void setDistrito(Distrito distrito) {
+        this.distrito = distrito;
     }
 
-    public Integer getZonaIdZona() {
-        return zonaIdZona;
+    public Zona getZona() {
+        return zona;
     }
 
-    public void setZonaIdZona(Integer zonaIdZona) {
-        this.zonaIdZona = zonaIdZona;
+    public void setZona(Zona zona) {
+        this.zona = zona;
     }
 
     public Integer getTelefono() {
@@ -197,6 +160,14 @@ public class Usuarios {
         this.puntoAcopioDonaciones = puntoAcopioDonaciones;
     }
 
+    public String getNombreDonaciones() {
+        return nombreDonaciones;
+    }
+
+    public void setNombreDonaciones(String nombreDonaciones) {
+        this.nombreDonaciones = nombreDonaciones;
+    }
+
     public String getDireccionDonacion() {
         return direccionDonacion;
     }
@@ -211,14 +182,6 @@ public class Usuarios {
 
     public void setNumeroDonaciones(Integer numeroDonaciones) {
         this.numeroDonaciones = numeroDonaciones;
-    }
-
-    public String getNombreDonaciones() {
-        return nombreDonaciones;
-    }
-
-    public void setNombreDonaciones(String nombreDonaciones) {
-        this.nombreDonaciones = nombreDonaciones;
     }
 
     public Integer getNumeroYape() {
@@ -245,12 +208,12 @@ public class Usuarios {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public Integer getEstadoUsuarioIdEstadoUsuario() {
-        return estadoUsuarioIdEstadoUsuario;
+    public EstadoUsuario getEstadoUsuario() {
+        return estadoUsuario;
     }
 
-    public void setEstadoUsuarioIdEstadoUsuario(Integer estadoUsuarioIdEstadoUsuario) {
-        this.estadoUsuarioIdEstadoUsuario = estadoUsuarioIdEstadoUsuario;
+    public void setEstadoUsuario(EstadoUsuario estadoUsuario) {
+        this.estadoUsuario = estadoUsuario;
     }
 
     public String getMotivoEliminado() {
@@ -277,11 +240,11 @@ public class Usuarios {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public int getDonacionesIdDonaciones() {
-        return donacionesIdDonaciones;
+    public Donaciones getDonaciones() {
+        return donaciones;
     }
 
-    public void setDonacionesIdDonaciones(int donacionesIdDonaciones) {
-        this.donacionesIdDonaciones = donacionesIdDonaciones;
+    public void setDonaciones(Donaciones donaciones) {
+        this.donaciones = donaciones;
     }
 }

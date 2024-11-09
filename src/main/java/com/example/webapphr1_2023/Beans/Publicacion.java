@@ -19,46 +19,13 @@ public class Publicacion {
     private String nombreMaltratador;
     private String direccionMaltrato;
     private Boolean denunciaPolicial;
-    private int tipoPublicacionTipoPublicacion;
+    private PublicacionEstado publicacionEstado; // Relación con PublicacionEstado
     private String motivoRechazo;
-    private int publicacionEstadoIdPublicacionEstado;
     private String fechaPublicacion;
     private String fechaEncontrado;
+    private Usuarios usuario; // Relación con Usuarios (usuario que realiza la publicación)
 
-    // Constructor vacío
     public Publicacion() {
-    }
-
-    // Constructor con parámetros
-    public Publicacion(int idPublicacion, String descripcion, byte[] foto, String nombre, Integer edad, String raza,
-                       String tamano, String distintivo, String descripcionAdicional, String lugarPerdida,
-                       String horaPerdida, String telefono, String nombreContacto, String recompensa,
-                       String tipoMaltrato, String nombreMaltratador, String direccionMaltrato, Boolean denunciaPolicial,
-                       int tipoPublicacionTipoPublicacion, String motivoRechazo, int publicacionEstadoIdPublicacionEstado,
-                       String fechaPublicacion, String fechaEncontrado) {
-        this.idPublicacion = idPublicacion;
-        this.descripcion = descripcion;
-        this.foto = foto;
-        this.nombre = nombre;
-        this.edad = edad;
-        this.raza = raza;
-        this.tamano = tamano;
-        this.distintivo = distintivo;
-        this.descripcionAdicional = descripcionAdicional;
-        this.lugarPerdida = lugarPerdida;
-        this.horaPerdida = horaPerdida;
-        this.telefono = telefono;
-        this.nombreContacto = nombreContacto;
-        this.recompensa = recompensa;
-        this.tipoMaltrato = tipoMaltrato;
-        this.nombreMaltratador = nombreMaltratador;
-        this.direccionMaltrato = direccionMaltrato;
-        this.denunciaPolicial = denunciaPolicial;
-        this.tipoPublicacionTipoPublicacion = tipoPublicacionTipoPublicacion;
-        this.motivoRechazo = motivoRechazo;
-        this.publicacionEstadoIdPublicacionEstado = publicacionEstadoIdPublicacionEstado;
-        this.fechaPublicacion = fechaPublicacion;
-        this.fechaEncontrado = fechaEncontrado;
     }
 
     public int getIdPublicacion() {
@@ -109,14 +76,6 @@ public class Publicacion {
         this.raza = raza;
     }
 
-    public String getTamano() {
-        return tamano;
-    }
-
-    public void setTamano(String tamano) {
-        this.tamano = tamano;
-    }
-
     public String getDistintivo() {
         return distintivo;
     }
@@ -125,12 +84,12 @@ public class Publicacion {
         this.distintivo = distintivo;
     }
 
-    public String getDescripcionAdicional() {
-        return descripcionAdicional;
+    public String getTamano() {
+        return tamano;
     }
 
-    public void setDescripcionAdicional(String descripcionAdicional) {
-        this.descripcionAdicional = descripcionAdicional;
+    public void setTamano(String tamano) {
+        this.tamano = tamano;
     }
 
     public String getLugarPerdida() {
@@ -139,6 +98,14 @@ public class Publicacion {
 
     public void setLugarPerdida(String lugarPerdida) {
         this.lugarPerdida = lugarPerdida;
+    }
+
+    public String getDescripcionAdicional() {
+        return descripcionAdicional;
+    }
+
+    public void setDescripcionAdicional(String descripcionAdicional) {
+        this.descripcionAdicional = descripcionAdicional;
     }
 
     public String getHoraPerdida() {
@@ -205,6 +172,14 @@ public class Publicacion {
         this.denunciaPolicial = denunciaPolicial;
     }
 
+    public PublicacionEstado getPublicacionEstado() {
+        return publicacionEstado;
+    }
+
+    public void setPublicacionEstado(PublicacionEstado publicacionEstado) {
+        this.publicacionEstado = publicacionEstado;
+    }
+
     public String getMotivoRechazo() {
         return motivoRechazo;
     }
@@ -213,20 +188,12 @@ public class Publicacion {
         this.motivoRechazo = motivoRechazo;
     }
 
-    public int getTipoPublicacionTipoPublicacion() {
-        return tipoPublicacionTipoPublicacion;
+    public String getFechaPublicacion() {
+        return fechaPublicacion;
     }
 
-    public void setTipoPublicacionTipoPublicacion(int tipoPublicacionTipoPublicacion) {
-        this.tipoPublicacionTipoPublicacion = tipoPublicacionTipoPublicacion;
-    }
-
-    public int getPublicacionEstadoIdPublicacionEstado() {
-        return publicacionEstadoIdPublicacionEstado;
-    }
-
-    public void setPublicacionEstadoIdPublicacionEstado(int publicacionEstadoIdPublicacionEstado) {
-        this.publicacionEstadoIdPublicacionEstado = publicacionEstadoIdPublicacionEstado;
+    public void setFechaPublicacion(String fechaPublicacion) {
+        this.fechaPublicacion = fechaPublicacion;
     }
 
     public String getFechaEncontrado() {
@@ -237,11 +204,13 @@ public class Publicacion {
         this.fechaEncontrado = fechaEncontrado;
     }
 
-    public String getFechaPublicacion() {
-        return fechaPublicacion;
+    public Usuarios getUsuario() {
+        return usuario;
     }
 
-    public void setFechaPublicacion(String fechaPublicacion) {
-        this.fechaPublicacion = fechaPublicacion;
+    public void setUsuario(Usuarios usuario) {
+        this.usuario = usuario;
     }
+
+    // Getters y Setters
 }

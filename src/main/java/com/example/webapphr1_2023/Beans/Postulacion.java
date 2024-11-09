@@ -17,8 +17,8 @@ public class Postulacion {
     private Integer tiempoTemporal;
     private Date fechaInicioTemporal;
     private Date fechaFinTemporal;
-    private int postulacionEstadoIdPostulacionEstado;
-    private int usuariosId;
+    private PostulacionEstado postulacionEstado; // Relación con PostulacionEstado
+    private Usuarios usuario; // Relación con Usuarios (usuario que hace la postulación)
     private String tieneMascotas;
     private String nombre;
     private String apellido;
@@ -26,54 +26,14 @@ public class Postulacion {
     private String genero;
     private String celular;
     private String direccion;
-    private Integer distritoIdDistrito;
+    private Distrito distrito; // Relación con Distrito
     private String visitaInopinada;
     private String fechaInopinada;
     private String horaInopinada;
     private String motivoRechazo;
-    private int mascotasIdMascotas;
+    private Mascotas mascota; // Relación con Mascotas
 
-    // Constructor vacío
     public Postulacion() {
-    }
-
-    // Constructor con parámetros
-    public Postulacion(int idPostulacion, Integer cantidadCuartos, Double metrajeVivienda, Integer cantidadMascotas,
-                       String tipoMascotas, Boolean tieneHijos, Boolean viveConDependientes, Boolean trabajaRemoto,
-                       byte[] fotosLugar, String personaReferencia, String telefonoReferencia, Integer tiempoTemporal,
-                       Date fechaInicioTemporal, Date fechaFinTemporal, int postulacionEstadoIdPostulacionEstado,
-                       int usuariosId, String tieneMascotas, String nombre, String apellido, String edad, String genero,
-                       String celular, String direccion, Integer distritoIdDistrito, String visitaInopinada,
-                       String fechaInopinada, String horaInopinada, String motivoRechazo, int mascotasIdMascotas) {
-        this.idPostulacion = idPostulacion;
-        this.cantidadCuartos = cantidadCuartos;
-        this.metrajeVivienda = metrajeVivienda;
-        this.cantidadMascotas = cantidadMascotas;
-        this.tipoMascotas = tipoMascotas;
-        this.tieneHijos = tieneHijos;
-        this.viveConDependientes = viveConDependientes;
-        this.trabajaRemoto = trabajaRemoto;
-        this.fotosLugar = fotosLugar;
-        this.personaReferencia = personaReferencia;
-        this.telefonoReferencia = telefonoReferencia;
-        this.tiempoTemporal = tiempoTemporal;
-        this.fechaInicioTemporal = fechaInicioTemporal;
-        this.fechaFinTemporal = fechaFinTemporal;
-        this.postulacionEstadoIdPostulacionEstado = postulacionEstadoIdPostulacionEstado;
-        this.usuariosId = usuariosId;
-        this.tieneMascotas = tieneMascotas;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.edad = edad;
-        this.genero = genero;
-        this.celular = celular;
-        this.direccion = direccion;
-        this.distritoIdDistrito = distritoIdDistrito;
-        this.visitaInopinada = visitaInopinada;
-        this.fechaInopinada = fechaInopinada;
-        this.horaInopinada = horaInopinada;
-        this.motivoRechazo = motivoRechazo;
-        this.mascotasIdMascotas = mascotasIdMascotas;
     }
 
     public int getIdPostulacion() {
@@ -132,20 +92,20 @@ public class Postulacion {
         this.viveConDependientes = viveConDependientes;
     }
 
-    public Boolean getTrabajaRemoto() {
-        return trabajaRemoto;
-    }
-
-    public void setTrabajaRemoto(Boolean trabajaRemoto) {
-        this.trabajaRemoto = trabajaRemoto;
-    }
-
     public byte[] getFotosLugar() {
         return fotosLugar;
     }
 
     public void setFotosLugar(byte[] fotosLugar) {
         this.fotosLugar = fotosLugar;
+    }
+
+    public Boolean getTrabajaRemoto() {
+        return trabajaRemoto;
+    }
+
+    public void setTrabajaRemoto(Boolean trabajaRemoto) {
+        this.trabajaRemoto = trabajaRemoto;
     }
 
     public String getPersonaReferencia() {
@@ -156,20 +116,20 @@ public class Postulacion {
         this.personaReferencia = personaReferencia;
     }
 
-    public String getTelefonoReferencia() {
-        return telefonoReferencia;
-    }
-
-    public void setTelefonoReferencia(String telefonoReferencia) {
-        this.telefonoReferencia = telefonoReferencia;
-    }
-
     public Integer getTiempoTemporal() {
         return tiempoTemporal;
     }
 
     public void setTiempoTemporal(Integer tiempoTemporal) {
         this.tiempoTemporal = tiempoTemporal;
+    }
+
+    public String getTelefonoReferencia() {
+        return telefonoReferencia;
+    }
+
+    public void setTelefonoReferencia(String telefonoReferencia) {
+        this.telefonoReferencia = telefonoReferencia;
     }
 
     public Date getFechaInicioTemporal() {
@@ -188,20 +148,20 @@ public class Postulacion {
         this.fechaFinTemporal = fechaFinTemporal;
     }
 
-    public int getPostulacionEstadoIdPostulacionEstado() {
-        return postulacionEstadoIdPostulacionEstado;
+    public PostulacionEstado getPostulacionEstado() {
+        return postulacionEstado;
     }
 
-    public void setPostulacionEstadoIdPostulacionEstado(int postulacionEstadoIdPostulacionEstado) {
-        this.postulacionEstadoIdPostulacionEstado = postulacionEstadoIdPostulacionEstado;
+    public void setPostulacionEstado(PostulacionEstado postulacionEstado) {
+        this.postulacionEstado = postulacionEstado;
     }
 
-    public int getUsuariosId() {
-        return usuariosId;
+    public Usuarios getUsuario() {
+        return usuario;
     }
 
-    public void setUsuariosId(int usuariosId) {
-        this.usuariosId = usuariosId;
+    public void setUsuario(Usuarios usuario) {
+        this.usuario = usuario;
     }
 
     public String getTieneMascotas() {
@@ -210,6 +170,14 @@ public class Postulacion {
 
     public void setTieneMascotas(String tieneMascotas) {
         this.tieneMascotas = tieneMascotas;
+    }
+
+    public String getEdad() {
+        return edad;
+    }
+
+    public void setEdad(String edad) {
+        this.edad = edad;
     }
 
     public String getNombre() {
@@ -228,14 +196,6 @@ public class Postulacion {
         this.apellido = apellido;
     }
 
-    public String getEdad() {
-        return edad;
-    }
-
-    public void setEdad(String edad) {
-        this.edad = edad;
-    }
-
     public String getGenero() {
         return genero;
     }
@@ -252,14 +212,6 @@ public class Postulacion {
         this.celular = celular;
     }
 
-    public Integer getDistritoIdDistrito() {
-        return distritoIdDistrito;
-    }
-
-    public void setDistritoIdDistrito(Integer distritoIdDistrito) {
-        this.distritoIdDistrito = distritoIdDistrito;
-    }
-
     public String getDireccion() {
         return direccion;
     }
@@ -274,6 +226,14 @@ public class Postulacion {
 
     public void setVisitaInopinada(String visitaInopinada) {
         this.visitaInopinada = visitaInopinada;
+    }
+
+    public Distrito getDistrito() {
+        return distrito;
+    }
+
+    public void setDistrito(Distrito distrito) {
+        this.distrito = distrito;
     }
 
     public String getFechaInopinada() {
@@ -300,11 +260,11 @@ public class Postulacion {
         this.motivoRechazo = motivoRechazo;
     }
 
-    public int getMascotasIdMascotas() {
-        return mascotasIdMascotas;
+    public Mascotas getMascota() {
+        return mascota;
     }
 
-    public void setMascotasIdMascotas(int mascotasIdMascotas) {
-        this.mascotasIdMascotas = mascotasIdMascotas;
+    public void setMascota(Mascotas mascota) {
+        this.mascota = mascota;
     }
 }
