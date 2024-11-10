@@ -1,5 +1,4 @@
 package com.example.webapphr1_2023.Beans;
-
 import java.sql.Time;
 import java.util.Date;
 public class Eventos {

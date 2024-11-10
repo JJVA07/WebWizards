@@ -12,7 +12,7 @@ public class UsuariosDao extends DaoBase {
         Usuarios usuario = null;
         String query = "SELECT Nombre, Apellido FROM Usuarios u " +
                 "JOIN Rol r ON u.Rol_idRol = r.idRol " +
-                "WHERE r.Nombre = 'usuario final' AND u.idUsuario = ?";
+                "WHERE r.Nombre = 'usuario final' AND u.ID = ?";
         try (Connection connection = getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, idUsuario);
