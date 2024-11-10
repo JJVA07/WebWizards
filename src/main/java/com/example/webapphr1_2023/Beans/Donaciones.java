@@ -14,7 +14,6 @@ public class Donaciones {
     private String puntoEntrega;
     private Usuarios usuario; // Relación con Usuarios (usuario que hace la donación)
     private Time horaEntrega;
-    private int tipoDonacionId; // atributo tipoDonacionId (no como objeto ya que no hay tabla relacionada)
     private String marca;
     private Usuarios usuarioAlbergue; // Relación con Usuarios (albergue receptor)
     private DonacionEstado donacionEstado; // Relación con DonacionEstado
@@ -79,13 +78,6 @@ public class Donaciones {
         this.horaEntrega = horaEntrega;
     }
 
-    public int getTipoDonacionId() {
-        return tipoDonacionId;
-    }
-
-    public void setTipoDonacionId(int tipoDonacionId) {
-        this.tipoDonacionId = tipoDonacionId;
-    }
 
     public String getMarca() {
         return marca;

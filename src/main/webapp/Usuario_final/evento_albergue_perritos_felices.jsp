@@ -168,9 +168,7 @@
                                                     
                                                     <h5 class="card-title">Propósito del evento</h5>
                                                     <p class="card-text">Todo lo recaudado se destinará exclusivamente a la compra de alimentos y medicamentos para los animales del albergue, así como a la mejora de sus instalaciones.</p>
-                            
-                                                    <h5 class="card-title">Recomendaciones</h5>
-                                                    <p class="card-text">Traer bloqueador solar y agua. Las mascotas que asistan deben estar con collar y correa en todo momento.</p>
+
                                                 </div>
                                             </div>
                                         </div>
