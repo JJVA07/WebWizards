@@ -1,6 +1,7 @@
 package com.example.webapphr1_2023.Controllers;
 
 import com.example.webapphr1_2023.Beans.Eventos;
+import com.example.webapphr1_2023.Daos.DonacionesDao;
 import com.example.webapphr1_2023.Daos.UsuariosDao;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -22,6 +23,7 @@ public class UsuarioServlet extends HttpServlet {
         String vista;
         RequestDispatcher rd;
         UsuariosDao userDao = new UsuariosDao();
+        DonacionesDao donacionesDao = new DonacionesDao();
 
         switch (action) {
             case "pagPrincipal":
@@ -52,6 +54,39 @@ public class UsuarioServlet extends HttpServlet {
 
 
                 vista = "src/main/webapp/Usuario_final/eventos.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "donar":
+                // Obtener los albergues y tipos de donación desde la base de datos
+                List<String> albergues = userDao.obtenerNombresAlbergues();
+                List<String> tiposDonacion = donacionesDao.obtenerTiposDonacion();
+
+                // Depurar valores obtenidos
+                if (albergues == null || albergues.isEmpty()) {
+                    System.out.println("No hay albergues disponibles en la base de datos.");
+                } else {
+                    System.out.println("Albergues disponibles: " + albergues);
+                }
+
+                if (tiposDonacion == null || tiposDonacion.isEmpty()) {
+                    System.out.println("No hay tipos de donación disponibles en la base de datos.");
+                } else {
+                    System.out.println("Tipos de donación disponibles: " + tiposDonacion);
+                }
+
+                // Pasar los datos al JSP
+                request.setAttribute("albergues", albergues);
+                request.setAttribute("tiposDonacion", tiposDonacion);
+
+                vista = "/Usuario_final/donar.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+
+            default:
+                // Acción por defecto en caso de que no haya coincidencias con las acciones especificadas
+                vista = "/Usuario_final/home.jsp";
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
