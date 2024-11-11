@@ -41,9 +41,9 @@ public class AlbergueDao extends DaoBase {
                     albergue.setTelefono(rs.getInt("Telefono"));
 
                     // Crear y asignar el objeto Distrito
-                    Distrito distrito = new Distrito();
-                    distrito.setNombre(rs.getString("Distrito"));
-                    albergue.setDistrito(distrito);
+                    //Distrito distrito = new Distrito();
+                    //distrito.setNombre(rs.getString("Distrito"));
+                    //albergue.setDistrito(distrito);
 
                     albergue.setDireccion(rs.getString("Direccion"));
                     albergue.setPuntoAcopioDonaciones(rs.getString("Punto_acopio_donaciones"));

@@ -80,7 +80,7 @@
                 </div>
 
                 <!-- Adopción -->
-                <a class="nav-link <%= "adopcion".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/adopcion.jsp">
+                <a class="nav-link <%= "adopcion".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=adopcion">
                     <div class="sb-nav-link-icon"><i class="fas fa-heart"></i></div>
                     Adopción
                 </a>

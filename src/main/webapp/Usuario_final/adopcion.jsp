@@ -44,7 +44,7 @@
                 <li><a class="dropdown-item" href="<%= request.getContextPath() %>/inicio_sesion.jsp">Cerrar Sesión</a></li>
             </ul>
         </li>
-        <a class="nav-link" id="navbarDropdown" href="<%= request.getContextPath() %>/home.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
+        <a class="nav-link" id="navbarDropdown" href="<%= request.getContextPath() %>/Usuario?action=pagPrincipal" role="button"><i class="fa-solid fa-paw"></i></a>
     </ul>
 </nav>
 
@@ -85,7 +85,7 @@
                             <div class="card-body text-center">
                                 <h5 class="card-title"><%= mascota.getNombreMascota() %></h5>
                                 <p class="card-text"><%= mascota.getDescripcion() %></p>
-                                <a href="<%= request.getContextPath() %>/formulario_adopcion.jsp" class="btn inscribirse-btn d-inline-flex align-items-center">
+                                <a href="<%= request.getContextPath() %>/Usuario?action=detalleMascota&id=<%= mascota.getIdMascotas() %>" class="btn inscribirse-btn d-inline-flex align-items-center">
                                     <i class="fas fa-info-circle" style="color: #808080; font-size: 2rem; margin-right: 0.5rem;"></i>
                                     <span style="color: #808080; font-size: 1.2rem;">Más detalles</span>
                                 </a>

@@ -1,5 +1,6 @@
 package com.example.webapphr1_2023.Daos;
 
+import com.example.webapphr1_2023.Beans.MascotaEstado;
 import com.example.webapphr1_2023.Beans.Mascotas;
 
 import java.sql.Connection;
@@ -40,5 +41,45 @@ public class MascotaDao extends DaoBase {
         System.out.println("Número de mascotas en adopción: " + mascotas.size());
 
         return mascotas;
+    }
+
+
+    // Consulta SQL para obtener una mascota específica por ID
+    private static final String SQL_SELECT_MASCOTA_BY_ID = "SELECT m.idMascotas, m.Nombre_Mascota, m.Descripcion, m.Foto, m.Edad, m.Raza, e.Estado " +
+            "FROM mascotas m " +
+            "JOIN mascota_estado e ON m.Mascota_estado_idMascota_estado = e.idMascota_estado " +
+            "WHERE m.idMascotas = ?";
+    // Método para obtener una mascota específica por ID
+    public Mascotas obtenerMascotaPorId(int id) {
+        Mascotas mascota = null;
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(SQL_SELECT_MASCOTA_BY_ID)) {
+
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    mascota = new Mascotas();
+                    mascota.setIdMascotas(rs.getInt("idMascotas"));
+                    mascota.setNombreMascota(rs.getString("Nombre_Mascota"));
+                    mascota.setDescripcion(rs.getString("Descripcion"));
+                    mascota.setFoto(rs.getBytes("Foto")); // Suponiendo que es un BLOB
+                    mascota.setEdad(rs.getInt("Edad"));
+                    mascota.setRaza(rs.getString("Raza"));
+
+                    // Crear un objeto MascotaEstado y establecer sus valores
+                    MascotaEstado estado = new MascotaEstado();
+                    estado.setIdMascotaEstado(rs.getInt("idMascota_estado"));
+                    estado.setEstado(rs.getString("Estado"));
+
+                    // Asignar el estado a la mascota
+                    mascota.setMascotaEstado(estado);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return mascota;
     }
 }
