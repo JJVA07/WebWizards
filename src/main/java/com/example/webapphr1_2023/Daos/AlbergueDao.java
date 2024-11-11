@@ -8,23 +8,47 @@ public class AlbergueDao extends DaoBase {
 
     public Usuarios obtenerAlbergue(int id) {
         Usuarios albergue = null;
-        String sql = "SELECT * FROM Usuario WHERE ID = ? AND rol = 2";
+
+        String sql = "SELECT " +
+                "    u.Nombre_albergue AS NombreDelAlbergue, " +
+                "    CONCAT(u.Nombre, ' ', u.Apellido) AS Encargado, " +
+                "    u.Telefono, " +
+                "    d.Nombre AS Distrito, " +
+                "    u.Direccion, " +
+                "    u.Punto_acopio_donaciones, " +
+                "    u.Url_fbig AS UrlRedesSociales, " +
+                "    u.Numero_donaciones AS NumeroContactoDonaciones " +
+                "FROM " +
+                "    Usuarios u " +
+                "JOIN " +
+                "    Distrito d ON u.Distrito_idDistrito = d.idDistrito " +
+                "WHERE " +
+                "    u.ID = ? " +
+                "    AND u.Rol_idRol = 2";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, id); // Usa el parámetro `id` en lugar de fijar el valor `7`
+            pstmt.setInt(1, 7);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     albergue = new Usuarios();
-                    albergue.setId(rs.getInt("ID")); // Asegúrate de que el nombre de columna sea correcto
-                    albergue.setNombre(rs.getString("nombre"));
-                    albergue.setTelefono(rs.getInt("telefono"));
-                    albergue.setDireccion(rs.getString("direccion"));
-                    albergue.setPuntoAcopioDonaciones(rs.getString("punto_acopio_donaciones"));
-                    albergue.setUrlFbig(rs.getString("url_redes_sociales"));
-                    albergue.setNumeroDonaciones(rs.getInt("contacto_donaciones"));
+
+                    // Asigna los valores obtenidos desde el ResultSet
+                    albergue.setNombreAlbergue(rs.getString("NombreDelAlbergue"));
+                    albergue.setNombre(rs.getString("Encargado"));
+                    albergue.setTelefono(rs.getInt("Telefono"));
+
+                    // Crear y asignar el objeto Distrito
+                    Distrito distrito = new Distrito();
+                    distrito.setNombre(rs.getString("Distrito"));
+                    albergue.setDistrito(distrito);
+
+                    albergue.setDireccion(rs.getString("Direccion"));
+                    albergue.setPuntoAcopioDonaciones(rs.getString("Punto_acopio_donaciones"));
+                    albergue.setUrlFbig(rs.getString("UrlRedesSociales"));
+                    albergue.setNumeroDonaciones(rs.getInt("NumeroContactoDonaciones"));
                 }
             }
         } catch (SQLException ex) {
