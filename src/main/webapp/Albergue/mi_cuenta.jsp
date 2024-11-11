@@ -21,12 +21,12 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="mi_cuenta.jsp">Mi cuenta</a></li>
+                <li><a class="dropdown-item" href="/WebAppHr1_2023_war/AlbergueServlet?action=cuenta">Mi cuenta</a></li>
                 <li><hr class="dropdown-divider" /></li>
                 <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li>
             </ul>
         </li>
-        <a class="nav-link" id="navbarDropdown" href="Albergue.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
+        <a class="nav-link" id="navbarDropdown" href="/WebAppHr1_2023_war/Albergue/Albergue.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
     </ul>
 </nav>
 
@@ -35,6 +35,7 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #581925;">
             <div class="sb-sidenav-menu">
                 <div class="nav">
+                    <!-- Crear Publicación -->
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                        data-bs-target="#collapseCrearPublicacion" aria-expanded="false" aria-controls="collapseCrearPublicacion">
                         <div class="sb-nav-link-icon"><i class="fas fa-edit"></i></div>
@@ -49,6 +50,7 @@
                         </nav>
                     </div>
 
+                    <!-- Publicaciones -->
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                        data-bs-target="#collapsePublicaciones" aria-expanded="false" aria-controls="collapsePublicaciones">
                         <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
@@ -64,6 +66,7 @@
                         </nav>
                     </div>
 
+                    <!-- Mis Actividades -->
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
                        data-bs-target="#collapseTemporal" aria-expanded="false" aria-controls="collapseTemporal">
                         <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
@@ -91,14 +94,14 @@
 
             <div id="account-info">
                 <h3>Información Actual</h3>
-                <p><strong>Nombre del Albergue:</strong> <span id="display-shelter-name"></span></p>
-                <p><strong>Encargado:</strong> <span id="display-manager"></span></p>
-                <p><strong>Teléfono:</strong> <span id="display-phone"></span></p>
-                <p><strong>Distrito:</strong> <span id="display-district"></span></p>
-                <p><strong>Dirección:</strong> <span id="display-address"></span></p>
-                <p><strong>Punto de acopio de donaciones:</strong> <span id="display-donation-point"></span></p>
-                <p><strong>URL de redes sociales:</strong> <span id="display-social-url"></span></p>
-                <p><strong>Número de contacto de donaciones:</strong> <span id="display-donation-contact"></span></p>
+                <p><strong>Nombre del Albergue:</strong> ${albergue.nombreAlbergue}</p>
+                <p><strong>Encargado:</strong> ${albergue.nombre}</p>
+                <p><strong>Teléfono:</strong> ${albergue.telefono}</p>
+                <p><strong>Distrito:</strong> ${albergue.distrito.nombre}</p>
+                <p><strong>Dirección:</strong> ${albergue.direccion}</p>
+                <p><strong>Punto de acopio de donaciones:</strong> ${albergue.puntoAcopioDonaciones}</p>
+                <p><strong>URL de redes sociales:</strong> <a href="${albergue.urlFbig}" target="_blank">${albergue.urlFbig}</a></p>
+                <p><strong>Número de contacto de donaciones:</strong> ${albergue.numeroDonaciones}</p>
             </div>
 
             <button type="button" id="edit-info-btn" class="btn btn-secondary mt-3 mb-3" onclick="redirectToEditPage()">Editar Información</button>
@@ -108,13 +111,6 @@
             <div class="container-fluid px-4">
                 <div class="d-flex align-items-center justify-content-between small">
                     <div class="text-muted" style="color: white !important;">© Huella Viva</div>
-                    <div>
-                        <a style="color: white;">Correo: </a> <a href="#" style="color: white;"> info@alberguegosu.com</a>
-                        <div></div>
-                        <a style="color: white;">Teléfono: </a><a href="#" style="color: white;"> +123 456 7890</a>
-                        <div></div>
-                        <a style="color: white;">Ubicación: </a><a href="#" style="color: white;"> Calle Ejemplo 123, Ciudad, País</a>
-                    </div>
                 </div>
             </div>
         </footer>
@@ -123,24 +119,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="<%= request.getContextPath() %>/js/scripts.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-<script src="<%= request.getContextPath() %>/assets/demo/chart-area-demo.js"></script>
-<script src="<%= request.getContextPath() %>/assets/demo/chart-bar-demo.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script src="<%= request.getContextPath() %>/js/datatables-simple-demo.js"></script>
-
 <script>
-    window.addEventListener('load', function() {
-        document.getElementById('display-shelter-name').textContent = localStorage.getItem('shelterName') || 'PetWay';
-        document.getElementById('display-manager').textContent = localStorage.getItem('manager') || 'Juan Pérez';
-        document.getElementById('display-phone').textContent = localStorage.getItem('phone') || '(123) 456-7890';
-        document.getElementById('display-district').textContent = localStorage.getItem('district') || 'San Juan de Lurigancho';
-        document.getElementById('display-address').textContent = localStorage.getItem('address') || 'Mz F4 lote 34 av del muro';
-        document.getElementById('display-donation-point').textContent = localStorage.getItem('donationPoint') || 'PUCP';
-        document.getElementById('display-social-url').textContent = localStorage.getItem('socialUrl') || 'https://www.facebook.com/fernando.godoysalas.73';
-        document.getElementById('display-donation-contact').textContent = localStorage.getItem('donationContact') || '907808088';
-    });
-
     function redirectToEditPage() {
         window.location.href = "editar_informacion.jsp";
     }

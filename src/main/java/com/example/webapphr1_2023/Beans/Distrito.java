@@ -10,12 +10,6 @@ public class Distrito {
         return idDistrito;
     }
 
-    public Distrito(int idDistrito, String nombre, Zona zona) {
-        this.idDistrito = idDistrito;
-        this.nombre = nombre;
-        this.zona = zona;
-    }
-
     public void setIdDistrito(int idDistrito) {
         this.idDistrito = idDistrito;
     }

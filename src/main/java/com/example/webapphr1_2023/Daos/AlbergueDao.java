@@ -56,4 +56,36 @@ public class AlbergueDao extends DaoBase {
         }
         return albergue;
     }
+
+    public void actualizarAlbergue(Usuarios albergue) {
+        String sql = "UPDATE Usuarios SET " +
+                "Nombre_albergue = ?, " +
+                "Telefono = ?, " +
+                "Direccion = ?, " +
+                "Punto_acopio_donaciones = ?, " +
+                "Url_fbig = ?, " +
+                "Numero_donaciones = ? " +
+                "WHERE ID = ? AND Rol_idRol = 2";  // ID dinámico y Rol_idRol se mantiene como filtro
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // Asignar los valores al PreparedStatement
+            pstmt.setString(1, albergue.getNombreAlbergue());
+            pstmt.setInt(2, albergue.getTelefono());
+            pstmt.setString(3, albergue.getDireccion());
+            pstmt.setString(4, albergue.getPuntoAcopioDonaciones());
+            pstmt.setString(5, albergue.getUrlFbig());
+            pstmt.setInt(6, albergue.getNumeroDonaciones());
+            pstmt.setInt(7, albergue.getId()); // ID dinámico
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+
 }
