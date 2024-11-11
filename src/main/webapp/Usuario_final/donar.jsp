@@ -62,13 +62,16 @@
                                     %>
                                     <option value="<%= albergue %>"><%= albergue %></option>
                                     <%
-                                        }
-                                    } else {
-                                    %>
-                                    <option value="" disabled>No hay albergues disponibles</option>
-                                    <%
+                                            }
                                         }
                                     %>
+                                </select>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="lugar-entrega">Lugar de Entrega:</label>
+                                <select id="lugar-entrega" name="lugar-entrega" class="form-select" required>
+                                    <option value="" disabled selected>Seleccione un lugar de entrega</option>
                                 </select>
                             </div>
 
@@ -94,18 +97,20 @@
                                 </select>
                             </div>
 
+                            <!-- Campos adicionales dinámicos -->
+                            <div id="extraInputContainer" class="form-group mb-3" style="display: none;">
+                                <label for="nombre-producto" id="nombreProductoLabel">Nombre del Producto:</label>
+                                <input type="text" id="nombre-producto" name="nombre-producto" class="form-control" required maxlength="100" />
+
+                                <label for="cantidad" id="extraInputLabel" class="mt-3">Cantidad:</label>
+                                <input type="number" id="cantidad" name="cantidad" class="form-control" min="0" required />
+                            </div>
+
                             <!-- Fecha de Entrega -->
                             <div class="form-group mb-3">
                                 <label for="fecha">Fecha de Entrega:</label>
                                 <input type="date" id="fecha" name="fecha" class="form-control" required>
                             </div>
-
-                            <!-- Lugar de Entrega -->
-                            <div class="form-group mb-3">
-                                <label for="lugar-entrega">Lugar de Entrega:</label>
-                                <input type="text" id="lugar-entrega" name="lugar-entrega" class="form-control" placeholder="Especifica el lugar de entrega" required>
-                            </div>
-
                             <!-- Botón con ícono de Font Awesome -->
                             <div class="text-center mt-2">
                                 <button type="button" class="btn postular-btn" style="background: none; border: none;">
@@ -141,13 +146,23 @@
             document.getElementById('tipo-donacion').addEventListener('change', function () {
                 const selectedOption = this.value;
                 const extraInputContainer = document.getElementById('extraInputContainer');
+                const nombreProductoLabel = document.getElementById('nombreProductoLabel');
                 const extraInputLabel = document.getElementById('extraInputLabel');
+                const cantidadInput = document.getElementById('cantidad');
 
-                if (selectedOption === 'croquetas') {
+                if (selectedOption === 'Alimentos') {
+                    nombreProductoLabel.textContent = 'Nombre del Producto:';
                     extraInputLabel.textContent = 'Cantidad en kg:';
+                    cantidadInput.setAttribute('step', '0.01');
+                    cantidadInput.setAttribute('min', '0');
+                    cantidadInput.setAttribute('max', '100');
                     extraInputContainer.style.display = 'block';
-                } else if (selectedOption === 'transferencias') {
-                    extraInputLabel.textContent = 'Monto de la donación:';
+                } else if (selectedOption === 'Medicinas' || selectedOption === 'Juguetes') {
+                    nombreProductoLabel.textContent = 'Nombre del Producto:';
+                    extraInputLabel.textContent = 'Cantidad:';
+                    cantidadInput.setAttribute('step', '1');
+                    cantidadInput.setAttribute('min', '0');
+                    cantidadInput.setAttribute('max', '500');
                     extraInputContainer.style.display = 'block';
                 } else {
                     extraInputContainer.style.display = 'none';
@@ -193,5 +208,80 @@
                 }
             });
         </script>
-    </body>
+
+        <script>
+            document.getElementById('albergue').addEventListener('change', function() {
+                const nombreAlbergue = this.value;
+                const lugarEntregaSelect = document.getElementById('lugar-entrega');
+
+                // Hacer una solicitud AJAX para obtener los puntos de acopio
+                fetch(`<%= request.getContextPath() %>/Usuario?action=donar&ajaxAction=getPuntosAcopio&nombreAlbergue=` + encodeURIComponent(nombreAlbergue))
+                    .then(response => response.json())
+                    .then(data => {
+                        // Limpiar las opciones actuales
+                        lugarEntregaSelect.innerHTML = `<option value="" disabled selected>Seleccione un lugar de entrega</option>`;
+
+                        // Añadir las nuevas opciones obtenidas del servidor
+                        if (data.length > 0) {
+                            data.forEach(punto => {
+                                const option = document.createElement('option');
+                                option.value = punto;
+                                option.textContent = punto;
+                                lugarEntregaSelect.appendChild(option);
+                            });
+                        } else {
+                            const option = document.createElement('option');
+                            option.value = "";
+                            option.textContent = "No hay puntos de acopio disponibles";
+                            lugarEntregaSelect.appendChild(option);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener los puntos de acopio:', error);
+                    });
+            });
+        </script>
+        <script>
+            document.getElementById('albergue').addEventListener('change', function () {
+                // Capturar el valor del albergue seleccionado
+                const nombreAlbergue = this.value;
+
+                // Construir la URL para la solicitud AJAX
+                const url = `/Usuario?action=donar&nombreAlbergue=${encodeURIComponent(nombreAlbergue)}`;
+
+                // Realizar la solicitud AJAX utilizando fetch
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json(); // Supongamos que el servlet devuelve un JSON
+                    })
+                    .then(data => {
+                        // Aquí manejamos la lista de puntos de acopio
+                        const puntoAcopioSelect = document.getElementById('lugar-entrega');
+                        puntoAcopioSelect.innerHTML = ''; // Limpiamos las opciones anteriores
+
+                        // Añadir una opción por defecto
+                        const defaultOption = document.createElement('option');
+                        defaultOption.value = '';
+                        defaultOption.textContent = 'Seleccione un lugar de entrega';
+                        defaultOption.disabled = true;
+                        defaultOption.selected = true;
+                        puntoAcopioSelect.appendChild(defaultOption);
+
+                        // Añadimos las nuevas opciones
+                        data.forEach(punto => {
+                            const option = document.createElement('option');
+                            option.value = punto;
+                            option.textContent = punto;
+                            puntoAcopioSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Hubo un problema con la solicitud:', error);
+                    });
+            });
+        </script>
+            </body>
 </html>

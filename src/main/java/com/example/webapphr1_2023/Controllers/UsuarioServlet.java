@@ -66,30 +66,37 @@ public class UsuarioServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
             case "donar":
-                // Obtener los albergues y tipos de donación desde la base de datos
-                List<String> albergues = userDao.obtenerNombresAlbergues();
-                List<String> tiposDonacion = donacionesDao.obtenerTiposDonacion();
+                String nombreAlbergue = request.getParameter("nombreAlbergue");
+                if (nombreAlbergue != null) {
+                    // AJAX request to get punto de acopio
+                    List<String> puntosAcopio = userDao.obtenerPuntosAcopioPorAlbergue(nombreAlbergue);
 
-                // Depurar valores obtenidos
-                if (albergues == null || albergues.isEmpty()) {
-                    System.out.println("No hay albergues disponibles en la base de datos.");
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+
+                    // Convertir la lista en formato JSON manualmente
+                    StringBuilder json = new StringBuilder("[");
+                    for (int i = 0; i < puntosAcopio.size(); i++) {
+                        json.append("\"").append(puntosAcopio.get(i)).append("\"");
+                        if (i < puntosAcopio.size() - 1) {
+                            json.append(",");
+                        }
+                    }
+                    json.append("]");
+
+                    response.getWriter().write(json.toString());
                 } else {
-                    System.out.println("Albergues disponibles: " + albergues);
+                    // Cargar la vista de donación si no se especifica "nombreAlbergue"
+                    List<String> albergues = userDao.obtenerNombresAlbergues();
+                    List<String> tiposDonacion = donacionesDao.obtenerTiposDonacion();
+
+                    request.setAttribute("albergues", albergues);
+                    request.setAttribute("tiposDonacion", tiposDonacion);
+
+                    vista = "/Usuario_final/donar.jsp";
+                    rd = request.getRequestDispatcher(vista);
+                    rd.forward(request, response);
                 }
-
-                if (tiposDonacion == null || tiposDonacion.isEmpty()) {
-                    System.out.println("No hay tipos de donación disponibles en la base de datos.");
-                } else {
-                    System.out.println("Tipos de donación disponibles: " + tiposDonacion);
-                }
-
-                // Pasar los datos al JSP
-                request.setAttribute("albergues", albergues);
-                request.setAttribute("tiposDonacion", tiposDonacion);
-
-                vista = "/Usuario_final/donar.jsp";
-                rd = request.getRequestDispatcher(vista);
-                rd.forward(request, response);
                 break;
 
             default:
