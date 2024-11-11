@@ -65,32 +65,32 @@ public class UsuarioServlet extends HttpServlet {
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
-//            case "donar":
-//                // Obtener los albergues y tipos de donación desde la base de datos
-//                List<String> albergues = userDao.obtenerNombresAlbergues();
-//                List<String> tiposDonacion = donacionesDao.obtenerTiposDonacion();
-//
-//                // Depurar valores obtenidos
-//                if (albergues == null || albergues.isEmpty()) {
-//                    System.out.println("No hay albergues disponibles en la base de datos.");
-//                } else {
-//                    System.out.println("Albergues disponibles: " + albergues);
-//                }
-//
-//                if (tiposDonacion == null || tiposDonacion.isEmpty()) {
-//                    System.out.println("No hay tipos de donación disponibles en la base de datos.");
-//                } else {
-//                    System.out.println("Tipos de donación disponibles: " + tiposDonacion);
-//                }
-//
-//                // Pasar los datos al JSP
-//                request.setAttribute("albergues", albergues);
-//                request.setAttribute("tiposDonacion", tiposDonacion);
-//
-//                vista = "/Usuario_final/donar.jsp";
-//                rd = request.getRequestDispatcher(vista);
-//                rd.forward(request, response);
-//                break;
+            case "donar":
+                // Obtener los albergues y tipos de donación desde la base de datos
+                List<String> albergues = userDao.obtenerNombresAlbergues();
+                List<String> tiposDonacion = donacionesDao.obtenerTiposDonacion();
+
+                // Depurar valores obtenidos
+                if (albergues == null || albergues.isEmpty()) {
+                    System.out.println("No hay albergues disponibles en la base de datos.");
+                } else {
+                    System.out.println("Albergues disponibles: " + albergues);
+                }
+
+                if (tiposDonacion == null || tiposDonacion.isEmpty()) {
+                    System.out.println("No hay tipos de donación disponibles en la base de datos.");
+                } else {
+                    System.out.println("Tipos de donación disponibles: " + tiposDonacion);
+                }
+
+                // Pasar los datos al JSP
+                request.setAttribute("albergues", albergues);
+                request.setAttribute("tiposDonacion", tiposDonacion);
+
+                vista = "/Usuario_final/donar.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
 
             default:
                 // Acción por defecto en caso de que no haya coincidencias con las acciones especificadas
