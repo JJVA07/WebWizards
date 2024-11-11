@@ -10,37 +10,48 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet(name= "AlbergueServlet", urlPatterns = {"/AlbergueServlet"})
+@WebServlet(name = "AlbergueServlet", urlPatterns = {"/AlbergueServlet"})
+@MultipartConfig
 public class AlbergueServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-
-        String idParam = request.getParameter("ID");
-        int id = 0;
-
-        try {
-            id = Integer.parseInt(idParam); // Convierte el parámetro a entero
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            response.sendRedirect("error.jsp"); // Redirige a una página de error si el ID no es válido
-            return;
-        }
+        String action = request.getParameter("action") == null ? "pagPrincipal" : request.getParameter("action");
+        String vista;
+        RequestDispatcher rd;
         AlbergueDao albergueDao = new AlbergueDao();
-        Usuarios albergue = albergueDao.obtenerAlbergue(id);
 
-        if (albergue != null) {
-            // Si el albergue existe, pasa el objeto `albergue` a la página JSP
-            request.setAttribute("albergue", albergue);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("albergue/detalleAlbergue.jsp");
-            dispatcher.forward(request, response);
-        } else {
-            // Si no se encontró el albergue, redirige a una página de error
-            response.sendRedirect("error.jsp");
+        switch (action) {
+            case "pagPrincipal":
+                // Redirige a la página principal del albergue
+                vista = "/Albergue/Albergue.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+
+            case "cuenta":
+                // Obtener el albergue específico (por ejemplo, con ID 7)
+                int albergueId = 7; // Puedes cambiar el ID según sea necesario o hacerlo dinámico
+                Usuarios albergue = albergueDao.obtenerAlbergue(albergueId);
+
+                // Si se obtuvo la información del albergue, se pasa como atributo a la vista
+                if (albergue != null) {
+                    request.setAttribute("albergue", albergue);
+                }
+
+                // Redirige a la vista `mi_cuenta.jsp` para mostrar la información
+                vista = "/Albergue/mi_cuenta.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+
+            default:
+                // Página por defecto
+                vista = "/Albergue/Albergue.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
         }
     }
-
 }
