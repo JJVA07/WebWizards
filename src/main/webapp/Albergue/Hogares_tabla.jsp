@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="sidebar.jsp" %> <!-- Incluir sidebar en todas las vistas -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,30 +9,74 @@
     <meta name="author" content="" />
     <title>Tabla - Hogares Temporales</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" />
+    <link href="<%= request.getContextPath() %>/css/styles.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-<nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: rgb(220,53,69);">
-    <a class="navbar-brand ps-3" href="${pageContext.request.contextPath}/Albergue.jsp">Albergue</a>
+<nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #581925;">
+    <a class="navbar-brand ps-3" href="Albergue.jsp">Albergue</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <ul class="navbar-nav ms-auto me-3 me-lg-4">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/mi_cuenta.jsp">Mi cuenta</a></li>
+                <li><a class="dropdown-item" href="mi_cuenta.jsp">Mi cuenta</a></li>
                 <li><hr class="dropdown-divider" /></li>
                 <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li>
             </ul>
         </li>
-        <a class="nav-link" id="navbarDropdown" href="${pageContext.request.contextPath}/Albergue.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
+        <a class="nav-link" id="navbarDropdown" href="Albergue.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
     </ul>
 </nav>
 
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
-        <jsp:include page="sidebar.jsp" /> <!-- Incluir sidebar.jsp -->
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #581925;">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCrearPublicacion" aria-expanded="false" aria-controls="collapseCrearPublicacion">
+                        <div class="sb-nav-link-icon"><i class="fas fa-edit"></i></div>
+                        Crear Publicación
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseCrearPublicacion" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="Albergue_adopcion.jsp">Adopción</a>
+                            <a class="nav-link" href="Albergue_donacion.jsp">Donación</a>
+                            <a class="nav-link" href="Albergue_eventos.jsp">Eventos Benéficos</a>
+                        </nav>
+                    </div>
+
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePublicaciones" aria-expanded="false" aria-controls="collapsePublicaciones">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        Publicaciones
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapsePublicaciones" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="Adopciones_publicaciones.jsp">Adopciones</a>
+                            <a class="nav-link" href="Donaciones_publicaciones.jsp">Donaciones</a>
+                            <a class="nav-link" href="Hogares_publicaciones.jsp">Hogares Temporales</a>
+                            <a class="nav-link" href="Eventos_publicaciones.jsp">Eventos Benéficos</a>
+                        </nav>
+                    </div>
+
+                    <a class="nav-link collapsed active" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTemporal" aria-expanded="true" aria-controls="collapseTemporal">
+                        <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+                        Mis Actividades
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse show" id="collapseTemporal" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="Adopciones_tabla.jsp">Adopciones</a>
+                            <a class="nav-link" href="Donaciones_tabla.jsp">Donaciones</a>
+                            <a class="nav-link active" href="Hogares_tabla.jsp">Hogares Temporales</a>
+                            <a class="nav-link" href="Eventos_tabla.jsp">Eventos Benéficos</a>
+                        </nav>
+                    </div>
+                </div>
+        </nav>
     </div>
 
     <div id="layoutSidenav_content">
@@ -60,28 +103,25 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <!-- Generar filas dinámicamente para cada hogar temporal -->
-                                <c:forEach var="home" items="${homeList}">
-                                    <tr>
-                                        <td>${home.name}</td>
-                                        <td>${home.age}</td>
-                                        <td>${home.gender}</td>
-                                        <td>${home.stayDuration}</td>
-                                        <td>${home.specialConditions}</td>
-                                        <td>${home.contactName}, ${home.contactPhone}</td>
-                                        <td>
-                                            <div class="dropdown">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    Acciones
-                                                </button>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/EditHomeServlet?id=${home.id}">Editar</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/DeleteHomeServlet?id=${home.id}">Borrar</a></li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
+                                <tr>
+                                    <td>Firulais</td>
+                                    <td>3 años</td>
+                                    <td>Macho</td>
+                                    <td>2 meses</td>
+                                    <td>Requiere medicamento diario</td>
+                                    <td>Juan Pérez, 123-4567890</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Acciones
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <li><a class="dropdown-item" href="#">Editar</a></li>
+                                                <li><a class="dropdown-item text-danger" href="#">Borrar</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -107,8 +147,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="${pageContext.request.contextPath}/js/scripts.js"></script>
+<script src="<%= request.getContextPath() %>/js/scripts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script src="${pageContext.request.contextPath}/js/datatables-simple-demo.js"></script>
+<script src="<%= request.getContextPath() %>/js/datatables-simple-demo.js"></script>
 </body>
 </html>

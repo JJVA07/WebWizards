@@ -1,4 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.Base64" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.webapphr1_2023.Beans.Mascotas" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,8 +15,8 @@
 
     <!-- CSS externo de librerías y estilos locales -->
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet">
-    <link href="<%= request.getContextPath() %>/assets/css/styles.css" rel="stylesheet">
-    <link href="<%= request.getContextPath() %>/assets/css/styles_2.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/css/styles.css" rel="stylesheet">
+    <link href="<%= request.getContextPath() %>/css/styles_2.css" rel="stylesheet">
 
     <!-- Font Awesome -->
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -46,33 +50,9 @@
 
 <!-- Layout principal con la barra lateral -->
 <div id="layoutSidenav">
-    <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color:rgb(27, 94, 87)">
-            <div class="sb-sidenav-menu">
-                <div class="nav">
-                    <div class="sb-sidenav-menu-heading">MENU</div>
-                    <!-- Ejemplo de enlaces con submenús -->
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseEventos" aria-expanded="false" aria-controls="collapseEventos">
-                        <div class="sb-nav-link-icon"><i class="fa-solid fa-calendar"></i></div>
-                        Eventos
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapseEventos" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="<%= request.getContextPath() %>/eventos.jsp">Eventos</a>
-                            <a class="nav-link" href="<%= request.getContextPath() %>/mis_eventos.jsp">Mis eventos</a>
-                        </nav>
-                    </div>
 
-                    <!-- Otros enlaces y submenús -->
-                    <a class="nav-link active" href="<%= request.getContextPath() %>/adopcion.jsp">
-                        <div class="sb-nav-link-icon"><i class="fas fa-heart"></i></div>
-                        Adopción
-                    </a>
-                </div>
-            </div>
-        </nav>
-    </div>
+    <!-- Incluir el sidebar común -->
+    <jsp:include page="/WEB-INF/sidebar.jsp" />
 
     <div id="layoutSidenav_content">
         <main>
@@ -84,14 +64,27 @@
                     </li>
                 </ol>
 
-                <!-- Ejemplo de contenido dinámico de adopción de mascotas -->
+                <!-- Contenido dinámico de adopción de mascotas -->
                 <div class="row">
+                    <%
+                        List<Mascotas> mascotas = (List<Mascotas>) request.getAttribute("mascotas");
+                        if (mascotas != null && !mascotas.isEmpty()) {
+                            for (Mascotas mascota : mascotas) {
+                                String base64Image = "";
+                                if (mascota.getFoto() != null) { // Verifica que Foto no sea null
+                                    base64Image = Base64.getEncoder().encodeToString(mascota.getFoto());
+                                }
+                    %>
                     <div class="col-md-3">
                         <div class="card mb-4">
-                            <img src="<%= request.getContextPath() %>/assets/img/perro_adopcion1.jpeg" class="card-img-top img-fluid" alt="Perro 1">
+                            <% if (!base64Image.isEmpty()) { %>
+                            <img src="data:image/jpeg;base64,<%= base64Image %>" class="card-img-top img-fluid" alt="<%= mascota.getNombreMascota() %>">
+                            <% } else { %>
+                            <img src="<%= request.getContextPath() %>/path/to/default-image.jpg" class="card-img-top img-fluid" alt="Imagen no disponible">
+                            <% } %>
                             <div class="card-body text-center">
-                                <h5 class="card-title">Max</h5>
-                                <p class="card-text">Max es un perro juguetón que adora correr en el parque.</p>
+                                <h5 class="card-title"><%= mascota.getNombreMascota() %></h5>
+                                <p class="card-text"><%= mascota.getDescripcion() %></p>
                                 <a href="<%= request.getContextPath() %>/formulario_adopcion.jsp" class="btn inscribirse-btn d-inline-flex align-items-center">
                                     <i class="fas fa-info-circle" style="color: #808080; font-size: 2rem; margin-right: 0.5rem;"></i>
                                     <span style="color: #808080; font-size: 1.2rem;">Más detalles</span>
@@ -99,7 +92,12 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Replicar y modificar para otras mascotas -->
+                    <%
+                        }
+                    } else {
+                    %>
+                    <p class="text-center">No hay mascotas en adopción en este momento.</p>
+                    <% } %>
                 </div>
             </div>
         </main>
