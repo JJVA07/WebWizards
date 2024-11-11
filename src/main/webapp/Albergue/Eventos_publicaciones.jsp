@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="sidebar.jsp" %> <!-- Incluir sidebar en todas las vistas -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,68 +9,128 @@
     <meta name="author" content="" />
     <title>Publicación - Evento Benéfico</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" />
+    <link href="<%= request.getContextPath() %>/css/styles.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-<nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: rgb(220,53,69);">
-    <a class="navbar-brand ps-3" href="${pageContext.request.contextPath}/Albergue.jsp">Albergue</a>
+<nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #581925;">
+    <a class="navbar-brand ps-3" href="Albergue.jsp">Albergue</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <ul class="navbar-nav ms-auto me-3 me-lg-4">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/mi_cuenta.jsp">Mi cuenta</a></li>
+                <li><a class="dropdown-item" href="mi_cuenta.jsp">Mi cuenta</a></li>
                 <li><hr class="dropdown-divider" /></li>
                 <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li>
             </ul>
         </li>
-        <a class="nav-link" id="navbarDropdown" href="${pageContext.request.contextPath}/Albergue.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
+        <a class="nav-link" id="navbarDropdown" href="Albergue.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
     </ul>
 </nav>
 
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
-        <jsp:include page="sidebar.jsp" /> <!-- Incluir sidebar.jsp -->
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #581925;">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                       data-bs-target="#collapseCrearPublicacion" aria-expanded="false" aria-controls="collapseCrearPublicacion">
+                        <div class="sb-nav-link-icon"><i class="fas fa-edit"></i></div>
+                        Crear Publicación
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseCrearPublicacion" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="Albergue_adopcion.jsp">Adopción</a>
+                            <a class="nav-link" href="Albergue_donacion.jsp">Donación</a>
+                            <a class="nav-link" href="Albergue_eventos.jsp">Eventos Benéficos</a>
+                        </nav>
+                    </div>
+
+                    <a class="nav-link collapsed active" href="#" data-bs-toggle="collapse"
+                       data-bs-target="#collapsePublicaciones" aria-expanded="true" aria-controls="collapsePublicaciones">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        Publicaciones
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse show" id="collapsePublicaciones" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="Adopciones_publicaciones.jsp">Adopciones</a>
+                            <a class="nav-link" href="Donaciones_publicaciones.jsp">Donaciones</a>
+                            <a class="nav-link" href="Hogares_publicaciones.jsp">Hogares Temporales</a>
+                            <a class="nav-link active" href="Eventos_publicaciones.jsp">Eventos Benéficos</a>
+                        </nav>
+                    </div>
+
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                       data-bs-target="#collapseTemporal" aria-expanded="false" aria-controls="collapseTemporal">
+                        <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+                        Mis Actividades
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseTemporal" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="Adopciones_tabla.jsp">Adopciones</a>
+                            <a class="nav-link" href="Donaciones_tabla.jsp">Donaciones</a>
+                            <a class="nav-link" href="Hogares_tabla.jsp">Hogares Temporales</a>
+                            <a class="nav-link" href="Eventos_tabla.jsp">Eventos Benéficos</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </nav>
     </div>
 
     <div id="layoutSidenav_content">
         <div class="container-fluid">
-
-            <!-- Page Heading -->
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-gray-800">Publicaciones - Eventos Benéficos</h1>
             </div>
 
             <div class="container mt-4">
                 <div class="row justify-content-center">
-                    <!-- Generar tarjetas de eventos dinámicamente -->
-                    <c:forEach var="event" items="${eventList}">
-                        <div class="col-md-4 mb-4">
-                            <div class="card shadow bg-white">
-                                <a href="${pageContext.request.contextPath}/Evento.jsp?id=${event.id}">
-                                    <img src="${pageContext.request.contextPath}/assets/img/${event.image}" alt="Imagen del Evento" class="card-img-top img-fluid">
-                                </a>
-                                <div class="card-body text-center">
-                                    <h5 class="card-title">${event.title}</h5>
-                                    <p class="card-text">
-                                            ${event.description}
-                                    </p>
-                                    <div class="d-flex justify-content-center">
-                                        <!-- Botón de edición -->
-                                        <a href="${pageContext.request.contextPath}/EditEventServlet?id=${event.id}" class="me-5">
-                                            <i class="fa-solid fa-pen-to-square fa-2x" style="color: #6c757d;"></i>
-                                        </a>
-                                        <!-- Botón de eliminación -->
-                                        <a href="${pageContext.request.contextPath}/DeleteEventServlet?id=${event.id}">
-                                            <i class="fa-solid fa-trash fa-2x text-danger"></i>
-                                        </a>
-                                    </div>
+                    <%-- Ejemplo de tarjeta de evento --%>
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow bg-white">
+                            <a href="evento1.jsp">
+                                <img src="<%= request.getContextPath() %>/assets/img/Evento1.jpeg" alt="Imagen del Evento" class="card-img-top img-fluid">
+                            </a>
+                            <div class="card-body text-center">
+                                <h5 class="card-title">¡Únete a nuestro evento para ayudar!</h5>
+                                <p class="card-text">
+                                    Estamos emocionados de invitarte a nuestro próximo Patatón en beneficio de los perros rescatados. Este evento será una oportunidad para reunir a la comunidad, realizar actividades y lo más importante, ayudar a nuestros peludos amigos.
+                                </p>
+                                <div class="d-flex justify-content-center">
+                                    <a href="Editar_eventos.jsp" class="me-5">
+                                        <i class="fa-solid fa-pen-to-square fa-2x" style="color: #6c757d;"></i>
+                                    </a>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                                        <i class="fa-solid fa-trash fa-2x text-danger"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </c:forEach>
+                    </div>
+
+                    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Estás seguro de que deseas eliminar esta publicación?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Eliminar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -111,13 +170,23 @@
             </footer>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="${pageContext.request.contextPath}/js/scripts.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="${pageContext.request.contextPath}/assets/demo/chart-area-demo.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/demo/chart-bar-demo.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-    <script src="${pageContext.request.contextPath}/js/datatables-simple-demo.js"></script>
+<script>
+    function confirmDelete() {
+        console.log("Publicación eliminada");
+        const modal = document.getElementById('confirmDeleteModal');
+        const bootstrapModal = bootstrap.Modal.getInstance(modal);
+        bootstrapModal.hide();
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="<%= request.getContextPath() %>/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="<%= request.getContextPath() %>/assets/demo/chart-area-demo.js"></script>
+<script src="<%= request.getContextPath() %>/assets/demo/chart-bar-demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="<%= request.getContextPath() %>/js/datatables-simple-demo.js"></script>
 </body>
 </html>
+
