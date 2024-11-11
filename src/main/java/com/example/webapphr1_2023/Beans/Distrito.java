@@ -1,4 +1,6 @@
 package com.example.webapphr1_2023.Beans;
+
+
 public class Distrito {
     private int idDistrito;
     private String nombre;
