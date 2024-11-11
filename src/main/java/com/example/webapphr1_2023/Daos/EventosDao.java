@@ -12,8 +12,8 @@ public class EventosDao extends DaoBase{
 
     public List<Eventos> obtenerEventosActivosPaginados(int offset, int limit) {
         List<Eventos> eventosList = new ArrayList<>();
-        String query = "SELECT Nombre_Evento, Foto, Descripcion FROM Eventos e " +
-                "JOIN Estado_Eventos es ON e.idEstado_eventos = es.idEstado_eventos " +
+        String query = "SELECT Nombre_Evento, Foto, Descripcion FROM eventos e " +
+                "JOIN estado_eventos es ON e.idEstado_eventos = es.idEstado_eventos " +
                 "WHERE es.Estado_eventos = 'activo' " +
                 "ORDER BY e.Fecha DESC, e.Hora DESC " +
                 "LIMIT ? OFFSET ?";
