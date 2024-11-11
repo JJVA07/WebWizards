@@ -241,47 +241,6 @@
                     });
             });
         </script>
-        <script>
-            document.getElementById('albergue').addEventListener('change', function () {
-                // Capturar el valor del albergue seleccionado
-                const nombreAlbergue = this.value;
 
-                // Construir la URL para la solicitud AJAX
-                const url = `/Usuario?action=donar&nombreAlbergue=${encodeURIComponent(nombreAlbergue)}`;
-
-                // Realizar la solicitud AJAX utilizando fetch
-                fetch(url)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json(); // Supongamos que el servlet devuelve un JSON
-                    })
-                    .then(data => {
-                        // Aquí manejamos la lista de puntos de acopio
-                        const puntoAcopioSelect = document.getElementById('lugar-entrega');
-                        puntoAcopioSelect.innerHTML = ''; // Limpiamos las opciones anteriores
-
-                        // Añadir una opción por defecto
-                        const defaultOption = document.createElement('option');
-                        defaultOption.value = '';
-                        defaultOption.textContent = 'Seleccione un lugar de entrega';
-                        defaultOption.disabled = true;
-                        defaultOption.selected = true;
-                        puntoAcopioSelect.appendChild(defaultOption);
-
-                        // Añadimos las nuevas opciones
-                        data.forEach(punto => {
-                            const option = document.createElement('option');
-                            option.value = punto;
-                            option.textContent = punto;
-                            puntoAcopioSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Hubo un problema con la solicitud:', error);
-                    });
-            });
-        </script>
-            </body>
+    </body>
 </html>
