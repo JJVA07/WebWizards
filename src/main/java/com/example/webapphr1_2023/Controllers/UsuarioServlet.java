@@ -2,6 +2,7 @@ package com.example.webapphr1_2023.Controllers;
 
 import com.example.webapphr1_2023.Beans.Eventos;
 import com.example.webapphr1_2023.Beans.Mascotas;
+import com.example.webapphr1_2023.Beans.Publicacion;
 import com.example.webapphr1_2023.Daos.DonacionesDao;
 import com.example.webapphr1_2023.Daos.MascotaDao;
 import com.example.webapphr1_2023.Daos.UsuariosDao;
@@ -13,7 +14,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import com.example.webapphr1_2023.Daos.EventosDao;
+import jakarta.servlet.http.Part;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @WebServlet(name ="UsuarioServlet" , value = "/Usuario")
@@ -92,13 +96,37 @@ public class UsuarioServlet extends HttpServlet {
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
+            case "detalleMascota":
+                int idMascota = Integer.parseInt(request.getParameter("id"));
+                MascotaDao mascotaDaoDetalles = new MascotaDao();
+                Mascotas mascotaDetalles = mascotaDaoDetalles.obtenerMascotaPorId(idMascota);
 
+                request.setAttribute("mascota", mascotaDetalles);
+                vista = "/Usuario_final/formulario_adopcion.jsp";
+                request.setAttribute("paginaActiva", "detalleMascota");
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
             default:
                 // Acción por defecto en caso de que no haya coincidencias con las acciones especificadas
                 vista = "/Usuario_final/home.jsp";
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
+        }
+    }
+
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
+        UsuariosDao userDao = new UsuariosDao();
+
+        switch (action) {
+            case "enviarSolicitud":
+                //falta
+
         }
     }
 }
