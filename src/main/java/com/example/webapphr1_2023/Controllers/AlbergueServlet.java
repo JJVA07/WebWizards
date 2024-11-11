@@ -17,6 +17,8 @@ public class AlbergueServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+
         String idParam = request.getParameter("ID");
         int id = 0;
 
