@@ -40,6 +40,7 @@ public class UsuarioServlet extends HttpServlet {
 
                 // Pasar la lista de mascotas a la vista
                 request.setAttribute("mascotas", mascotas);
+                request.setAttribute("paginaActiva", "adopcion");
                 vista = "/Usuario_final/adopcion.jsp";
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
