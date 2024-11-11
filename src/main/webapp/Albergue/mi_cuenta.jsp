@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ include file="sidebar.jsp" %> <!-- Incluir sidebar en todas las vistas -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,49 +9,96 @@
     <meta name="author" content="" />
     <title>Mi cuenta</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="${pageContext.request.contextPath}/css/styles.css" rel="stylesheet" />
+    <link href="<%= request.getContextPath() %>/css/styles.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-<nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: rgb(220,53,69);">
-    <a class="navbar-brand ps-3" href="${pageContext.request.contextPath}/Albergue.jsp">Albergue</a>
+<nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #581925;">
+    <a class="navbar-brand ps-3" href="Albergue.jsp">Albergue</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <ul class="navbar-nav ms-auto me-3 me-lg-4">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/mi_cuenta.jsp">Mi cuenta</a></li>
+                <li><a class="dropdown-item" href="mi_cuenta.jsp">Mi cuenta</a></li>
                 <li><hr class="dropdown-divider" /></li>
                 <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li>
             </ul>
         </li>
-        <a class="nav-link" id="navbarDropdown" href="${pageContext.request.contextPath}/Albergue.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
+        <a class="nav-link" id="navbarDropdown" href="Albergue.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
     </ul>
 </nav>
 
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
-        <jsp:include page="sidebar.jsp" /> <!-- Incluir sidebar.jsp -->
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #581925;">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                       data-bs-target="#collapseCrearPublicacion" aria-expanded="false" aria-controls="collapseCrearPublicacion">
+                        <div class="sb-nav-link-icon"><i class="fas fa-edit"></i></div>
+                        Crear Publicación
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseCrearPublicacion" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="Albergue_adopcion.jsp">Adopción</a>
+                            <a class="nav-link" href="Albergue_donacion.jsp">Donación</a>
+                            <a class="nav-link" href="Albergue_eventos.jsp">Eventos Benéficos</a>
+                        </nav>
+                    </div>
+
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                       data-bs-target="#collapsePublicaciones" aria-expanded="false" aria-controls="collapsePublicaciones">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        Publicaciones
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapsePublicaciones" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="Adopciones_publicaciones.jsp">Adopciones</a>
+                            <a class="nav-link" href="Donaciones_publicaciones.jsp">Donaciones</a>
+                            <a class="nav-link" href="Hogares_publicaciones.jsp">Hogares Temporales</a>
+                            <a class="nav-link" href="Eventos_publicaciones.jsp">Eventos Benéficos</a>
+                        </nav>
+                    </div>
+
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                       data-bs-target="#collapseTemporal" aria-expanded="false" aria-controls="collapseTemporal">
+                        <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+                        Mis Actividades
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseTemporal" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="Adopciones_tabla.jsp">Adopciones</a>
+                            <a class="nav-link" href="Donaciones_tabla.jsp">Donaciones</a>
+                            <a class="nav-link" href="Hogares_tabla.jsp">Hogares Temporales</a>
+                            <a class="nav-link" href="Eventos_tabla.jsp">Eventos Benéficos</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </nav>
     </div>
 
     <div id="layoutSidenav_content">
         <div class="container-fluid mt-5">
-            <!-- Page Heading -->
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-gray-800">Mi cuenta</h1>
             </div>
 
             <div id="account-info">
                 <h3>Información Actual</h3>
-                <p><strong>Nombre del Albergue:</strong> ${shelter.name}</p>
-                <p><strong>Encargado:</strong> ${shelter.manager}</p>
-                <p><strong>Teléfono:</strong> ${shelter.phone}</p>
-                <p><strong>Distrito:</strong> ${shelter.district}</p>
-                <p><strong>Dirección:</strong> ${shelter.address}</p>
-                <p><strong>Punto de acopio de donaciones:</strong> ${shelter.donationPoint}</p>
-                <p><strong>URL de redes sociales:</strong> <a href="${shelter.socialUrl}" target="_blank">${shelter.socialUrl}</a></p>
-                <p><strong>Número de contacto de donaciones:</strong> ${shelter.donationContact}</p>
+                <p><strong>Nombre del Albergue:</strong> <span id="display-shelter-name"></span></p>
+                <p><strong>Encargado:</strong> <span id="display-manager"></span></p>
+                <p><strong>Teléfono:</strong> <span id="display-phone"></span></p>
+                <p><strong>Distrito:</strong> <span id="display-district"></span></p>
+                <p><strong>Dirección:</strong> <span id="display-address"></span></p>
+                <p><strong>Punto de acopio de donaciones:</strong> <span id="display-donation-point"></span></p>
+                <p><strong>URL de redes sociales:</strong> <span id="display-social-url"></span></p>
+                <p><strong>Número de contacto de donaciones:</strong> <span id="display-donation-contact"></span></p>
             </div>
 
             <button type="button" id="edit-info-btn" class="btn btn-secondary mt-3 mb-3" onclick="redirectToEditPage()">Editar Información</button>
@@ -76,16 +122,27 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="${pageContext.request.contextPath}/js/scripts.js"></script>
+<script src="<%= request.getContextPath() %>/js/scripts.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-<script src="${pageContext.request.contextPath}/assets/demo/chart-area-demo.js"></script>
-<script src="${pageContext.request.contextPath}/assets/demo/chart-bar-demo.js"></script>
+<script src="<%= request.getContextPath() %>/assets/demo/chart-area-demo.js"></script>
+<script src="<%= request.getContextPath() %>/assets/demo/chart-bar-demo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script src="${pageContext.request.contextPath}/js/datatables-simple-demo.js"></script>
+<script src="<%= request.getContextPath() %>/js/datatables-simple-demo.js"></script>
 
 <script>
+    window.addEventListener('load', function() {
+        document.getElementById('display-shelter-name').textContent = localStorage.getItem('shelterName') || 'PetWay';
+        document.getElementById('display-manager').textContent = localStorage.getItem('manager') || 'Juan Pérez';
+        document.getElementById('display-phone').textContent = localStorage.getItem('phone') || '(123) 456-7890';
+        document.getElementById('display-district').textContent = localStorage.getItem('district') || 'San Juan de Lurigancho';
+        document.getElementById('display-address').textContent = localStorage.getItem('address') || 'Mz F4 lote 34 av del muro';
+        document.getElementById('display-donation-point').textContent = localStorage.getItem('donationPoint') || 'PUCP';
+        document.getElementById('display-social-url').textContent = localStorage.getItem('socialUrl') || 'https://www.facebook.com/fernando.godoysalas.73';
+        document.getElementById('display-donation-contact').textContent = localStorage.getItem('donationContact') || '907808088';
+    });
+
     function redirectToEditPage() {
-        window.location.href = "${pageContext.request.contextPath}/editar_informacion.jsp";
+        window.location.href = "editar_informacion.jsp";
     }
 </script>
 </body>
