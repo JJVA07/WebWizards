@@ -61,7 +61,7 @@ public class UsuarioServlet extends HttpServlet {
                 request.setAttribute("totalPaginas", totalPaginas);
 
 
-                vista = "src/main/webapp/Usuario_final/eventos.jsp";
+                vista = "/Usuario_final/eventos.jsp";
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
@@ -88,6 +88,7 @@ public class UsuarioServlet extends HttpServlet {
                 request.setAttribute("tiposDonacion", tiposDonacion);
 
                 vista = "/Usuario_final/donar.jsp";
+                request.setAttribute("paginaActiva", "donar");
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
