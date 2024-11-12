@@ -1,9 +1,6 @@
 package com.example.webapphr1_2023.Controllers;
 
-import com.example.webapphr1_2023.Beans.Eventos;
-import com.example.webapphr1_2023.Beans.Mascotas;
-import com.example.webapphr1_2023.Beans.Publicacion;
-import com.example.webapphr1_2023.Beans.Usuarios;
+import com.example.webapphr1_2023.Beans.*;
 import com.example.webapphr1_2023.Daos.*;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -117,6 +114,26 @@ public class UsuarioServlet extends HttpServlet {
                 request.setAttribute("paginaActiva", "mascotas_perdidas");
                 rd.forward(request,response);
                 break;
+
+            case "mostrarDonaciones":
+                int userId = 1; // Valor estático para userId
+                List<Donaciones> donaciones = donacionesDao.obtenerDonacionesPorUsuario(userId);
+                request.setAttribute("donaciones", donaciones);
+
+                // Ruta actualizada para el archivo mis_donaciones.jsp
+                vista = "/Usuario_final/mis_donaciones.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+
+            case "detalleDonacion":
+                Donaciones donacion = donacionesDao.vistaDetallesDonacionPorUsuarioFijo();
+                request.setAttribute("donacion", donacion);
+
+                rd = request.getRequestDispatcher("/Usuario_final/donacion_detalle.jsp");
+                rd.forward(request, response);
+                break;
+
             default:
                 // Acción por defecto en caso de que no haya coincidencias con las acciones especificadas
                 vista = "/Usuario_final/home.jsp";
@@ -184,4 +201,7 @@ public class UsuarioServlet extends HttpServlet {
         buffer.flush();
         return buffer.toByteArray();
     }
+
+
+
 }
