@@ -107,14 +107,14 @@ public class UsuarioServlet extends HttpServlet {
 
                 request.setAttribute("mascota", mascotaDetalles);
                 vista = "/Usuario_final/formulario_adopcion.jsp";
-                request.setAttribute("paginaActiva", "detalleMascota");
+                request.setAttribute("paginaActiva", "adopcion");
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
             case "formularioPerdida":
                 vista = "/Usuario_final/mascotas_perdidas.jsp";
                 rd = request.getRequestDispatcher(vista);
-                request.setAttribute("paginaActiva", "mascostasPerdidas");
+                request.setAttribute("paginaActiva", "mascotas_perdidas");
                 rd.forward(request,response);
                 break;
             default:
