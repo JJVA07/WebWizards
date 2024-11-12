@@ -2,9 +2,9 @@ package com.example.webapphr1_2023.Controllers;
 
 import com.example.webapphr1_2023.Beans.Eventos;
 import com.example.webapphr1_2023.Beans.Mascotas;
-import com.example.webapphr1_2023.Daos.DonacionesDao;
-import com.example.webapphr1_2023.Daos.MascotaDao;
-import com.example.webapphr1_2023.Daos.UsuariosDao;
+import com.example.webapphr1_2023.Beans.Publicacion;
+import com.example.webapphr1_2023.Beans.Usuarios;
+import com.example.webapphr1_2023.Daos.*;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -12,8 +12,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import com.example.webapphr1_2023.Daos.EventosDao;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @WebServlet(name ="UsuarioServlet" , value = "/Usuario")
@@ -98,7 +100,23 @@ public class UsuarioServlet extends HttpServlet {
                     rd.forward(request, response);
                 }
                 break;
+            case "detalleMascota":
+                int idMascota = Integer.parseInt(request.getParameter("id"));
+                MascotaDao mascotaDaoDetalles = new MascotaDao();
+                Mascotas mascotaDetalles = mascotaDaoDetalles.obtenerMascotaPorId(idMascota);
 
+                request.setAttribute("mascota", mascotaDetalles);
+                vista = "/Usuario_final/formulario_adopcion.jsp";
+                request.setAttribute("paginaActiva", "detalleMascota");
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "formularioPerdida":
+                vista = "/Usuario_final/mascotas_perdidas.jsp";
+                rd = request.getRequestDispatcher(vista);
+                request.setAttribute("paginaActiva", "mascostasPerdidas");
+                rd.forward(request,response);
+                break;
             default:
                 // Acción por defecto en caso de que no haya coincidencias con las acciones especificadas
                 vista = "/Usuario_final/home.jsp";
@@ -106,5 +124,64 @@ public class UsuarioServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
         }
+    }
+
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
+        PublicacionDao publicacionDao = new PublicacionDao();
+
+        switch (action) {
+            case "reportarPOST":
+                Publicacion publicacion = new Publicacion();
+                int id_Usuario =5;
+                Usuarios usuario = new Usuarios();
+                usuario.setId(id_Usuario);
+
+                String nombreMascota = request.getParameter("nombre");
+                String edad = request.getParameter("edad");
+                String raza = request.getParameter("raza");
+                String tamano = request.getParameter("tamano");
+                String distintivo = request.getParameter("distintivo");
+                String nombreContacto = request.getParameter("nombre_contacto");
+                String lugarPerdida = request.getParameter("lugar_perdida");
+                String horaPerdida = request.getParameter("hora_perdida");
+                String celularContacto = request.getParameter("celular_contacto");
+                String descripcion = request.getParameter("descripcion");
+                String descripcionAdicional = request.getParameter("descripcion_adicional");
+                String recompensa = request.getParameter("recompensa");
+
+                byte[] archivoImagen = obtenerImagenComoByteArray(request.getPart("imagen").getInputStream());
+
+                publicacion.setNombre(nombreMascota);
+                publicacion.setEdad(Integer.parseInt(edad));
+                publicacion.setRaza(raza);
+                publicacion.setTamano(tamano);
+                publicacion.setDistintivo(distintivo);
+                publicacion.setNombreContacto(nombreContacto);
+                publicacion.setLugarPerdida(lugarPerdida);
+                publicacion.setHoraPerdida(horaPerdida);
+                publicacion.setTelefono(celularContacto);
+                publicacion.setDescripcion(descripcion);
+                publicacion.setFoto(archivoImagen);
+                publicacion.setDescripcionAdicional(descripcionAdicional);
+                publicacion.setRecompensa(recompensa);
+                publicacion.setUsuario(usuario);
+                publicacionDao.reportarMascota(publicacion);
+                response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+                break;
+        }
+    }
+    public static byte[] obtenerImagenComoByteArray(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int nRead;
+        byte[] data = new byte[1024];
+        while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+        buffer.flush();
+        return buffer.toByteArray();
     }
 }

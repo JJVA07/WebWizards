@@ -1,3 +1,5 @@
+<%@ page import="com.example.webapphr1_2023.Beans.Publicacion" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +17,7 @@
 </head>
 <body class="sb-nav-fixed" style="background-color: white;">
 
-<!-- Navbar permanece como estaba -->
+<!-- Navbar -->
 <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: rgb(27, 94, 87);">
     <a class="navbar-brand ps-3" href="<%= request.getContextPath() %>/home.jsp">Usuario Final</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
@@ -41,23 +43,84 @@
             <div class="container-fluid d-flex align-items-center justify-content-center min-vh-100 mb-4">
                 <div class="col-lg-10">
                     <h1 class="mt-4 text-center">¡No te rindas, tu compañero te está esperando!</h1>
-                    <form action="<%= request.getContextPath() %>/procesar_reportar.jsp" method="post" class="p-4 border rounded bg-light mx-auto mb-4" style="width: 100%; max-width: 1600px; background-color: rgb(200, 200, 200) !important;" enctype="multipart/form-data">
-                        <!-- Formulario Aquí -->
+                    <form action="<%= request.getContextPath() %>/Usuario?action=reportarPOST" method="post" class="p-4 border rounded bg-light mx-auto mb-4" style="width: 100%; max-width: 1600px; background-color: rgb(200, 200, 200) !important;" enctype="multipart/form-data">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="nombre" class="form-label">Nombre de la Mascota:</label>
-                                <input type="text" id="nombre" name="nombre" class="form-control" pattern="[A-Za-z\s]+" required>
+                                <input type="text" id="nombre" name="nombre" class="form-control" pattern="[A-Za-z\\s]+" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="edad" class="form-label">Edad:</label>
                                 <input type="number" id="edad" name="edad" class="form-control" min="0" required>
                             </div>
                         </div>
-                        <!-- Continúa el formulario... -->
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="raza" class="form-label">Raza:</label>
+                                <input type="text" id="raza" name="raza" class="form-control" pattern="[A-Za-z\\s]+" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tamano" class="form-label">Tamaño:</label>
+                                <select id="tamano" name="tamano" class="form-control" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Pequeño">Pequeño</option>
+                                    <option value="Mediano">Mediano</option>
+                                    <option value="Grande">Grande</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="distintivo" class="form-label">Distintivo:</label>
+                            <input type="text" id="distintivo" name="distintivo" class="form-control" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s,.-]+" required>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="nombre_contacto" class="form-label">Nombre de Contacto:</label>
+                                <input type="text" id="nombre_contacto" name="nombre_contacto" class="form-control" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s,.-]+" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="lugar_perdida" class="form-label">Lugar de Pérdida:</label>
+                                <input type="text" id="lugar_perdida" name="lugar_perdida" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="hora_perdida" class="form-label">Hora Aproximada de Pérdida:</label>
+                                <input type="time" id="hora_perdida" name="hora_perdida" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="celular_contacto" class="form-label">Celular de Contacto:</label>
+                                <input type="tel" id="celular_contacto" name="celular_contacto" class="form-control" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s,.-]+" required>
+                            </div>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción de la Mascota:</label>
+                            <textarea id="descripcion" name="descripcion" class="form-control" rows="3" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="imagen" class="form-label">Subir Archivo de Imagen:</label>
+                            <input type="file" id="imagen" name="imagen" class="form-control" accept="image/*" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcion_adicional" class="form-label">Descripción Adicional:</label>
+                            <textarea id="descripcion_adicional" name="descripcion_adicional" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="recompensa" class="form-label">Recompensa:</label>
+                            <input type="text" id="recompensa" name="recompensa" class="form-control" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s,.-]+">
+                        </div>
+
                         <div class="form-group d-flex justify-content-center">
-                            <button type="submit" class="btn btn-danger" style="padding: 12px 24px; font-size: 1.1rem;">
-                                Reportar
-                            </button>
+                            <input type="submit" class="btn btn-danger" style="padding: 12px 24px; font-size: 1.1rem;">
                         </div>
                     </form>
                 </div>
