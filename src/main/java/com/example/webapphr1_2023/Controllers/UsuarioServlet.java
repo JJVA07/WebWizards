@@ -241,72 +241,6 @@ public class UsuarioServlet extends HttpServlet {
                 publicacionDao.reportarMascota(publicacion);
                 response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
                 break;
-            case "registrarSolicitud":
-                try {
-                    // Crear una nueva instancia de Postulacion y rellenar los datos desde el formulario
-                    Postulacion postulacion = new Postulacion();
-                    postulacion.setCantidadCuartos(Integer.parseInt(request.getParameter("cantidad_cuartos")));
-                    postulacion.setMetrajeVivienda(Double.parseDouble(request.getParameter("metraje_vivienda")));
-                    postulacion.setCantidadMascotas(Integer.parseInt(request.getParameter("cantidad_mascotas")));
-                    postulacion.setTipoMascotas(request.getParameter("tipo_mascotas"));
-                    postulacion.setTieneHijos(Boolean.parseBoolean(request.getParameter("tiene_hijos")));
-                    postulacion.setViveConDependientes(Boolean.parseBoolean(request.getParameter("vive_con_dependientes")));
-                    postulacion.setTrabajaRemoto(Boolean.parseBoolean(request.getParameter("trabaja_remoto")));
-                    postulacion.setPersonaReferencia(request.getParameter("persona_referencia"));
-                    postulacion.setTelefonoReferencia(request.getParameter("telefono_referencia"));
-                    postulacion.setTiempoTemporal(Integer.parseInt(request.getParameter("tiempo_temporal")));
-
-                    // Obtener las fechas como cadenas en formato yyyy-MM-dd
-                    String fechaInicio = request.getParameter("fecha_inicio_temporal");
-                    String fechaFin = request.getParameter("fecha_fin_temporal");
-
-                    // Verifica que las fechas no sean nulas o vacías y convierte el formato
-                    if (fechaInicio != null && !fechaInicio.isEmpty()) {
-                        // Convierte la fecha a formato yy-MM-dd (tomando solo los últimos 2 dígitos del año)
-                        String[] parts = fechaInicio.split("-");
-                        String fechaInicioFormateada = parts[1] + "-" + parts[2] + "-" + parts[0].substring(2); // Formato: yy-mm-dd
-                        postulacion.setFechaInicioTemporal(Date.valueOf(fechaInicioFormateada)); // Asigna la fecha formateada
-                    }
-
-                    if (fechaFin != null && !fechaFin.isEmpty()) {
-                        // Convierte la fecha a formato yy-MM-dd (tomando solo los últimos 2 dígitos del año)
-                        String[] parts = fechaFin.split("-");
-                        String fechaFinFormateada = parts[1] + "-" + parts[2] + "-" + parts[0].substring(2); // Formato: yy-mm-dd
-                        postulacion.setFechaFinTemporal(Date.valueOf(fechaFinFormateada)); // Asigna la fecha formateada
-                    }
-
-                    // Establecer otros campos
-                    postulacion.setTieneMascotas(request.getParameter("tiene_mascotas"));
-                    postulacion.setNombre(request.getParameter("nombre"));
-                    postulacion.setApellido(request.getParameter("apellido"));
-                    postulacion.setEdad(request.getParameter("edad"));
-                    postulacion.setGenero(request.getParameter("genero"));
-                    postulacion.setCelular(request.getParameter("celular"));
-                    postulacion.setDireccion(request.getParameter("direccion"));
-
-                    // Establecer Distrito y Estado
-                    Distrito distrito = new Distrito(); // Suponiendo que tienes una clase Distrito y su ID
-                    distrito.setIdDistrito(3); // Asignar el ID correspondiente
-
-                    PostulacionEstado estado = new PostulacionEstado(); // Suponiendo que tienes una clase PostulacionEstado y su ID
-                    estado.setIdPostulacionEstado(3); // Asignar el estado 'pendiente'
-
-                    postulacion.setDistrito(distrito);
-                    postulacion.setPostulacionEstado(estado);
-
-                    // Llamar al DAO para insertar la solicitud
-                    postulacionDao.insertarPostulacion(postulacion, 1); // 1 es el ID del usuario (puede ser dinámico)
-
-                    // Redirigir a la página de "Mis Solicitudes"
-                    response.sendRedirect(request.getContextPath() + "/Usuario?action=misSolicitudes");
-                } catch (NumberFormatException | NullPointerException e) {
-                    // Captura errores de formato y parámetros nulos
-                    request.setAttribute("mensaje", "Ocurrió un error al procesar la solicitud. Verifique los datos ingresados.");
-                    request.getRequestDispatcher("/Usuario_final/registrar_solicitud.jsp").forward(request, response);
-                    e.printStackTrace(); // Esto es útil para depuración, pero en producción deberías manejarlo mejor
-                }
-                break;
-
 
             // Otros casos...
             default:
@@ -314,8 +248,6 @@ public class UsuarioServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/Usuario_final/home.jsp");
                 break;
         }
-
-
     }
 
     public static byte[] obtenerImagenComoByteArray(InputStream inputStream) throws IOException {
