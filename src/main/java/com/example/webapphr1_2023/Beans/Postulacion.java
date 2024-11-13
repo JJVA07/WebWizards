@@ -168,8 +168,8 @@ public class Postulacion {
         return tieneMascotas;
     }
 
-    public void setTieneMascotas(Boolean tieneMascotas) {
-        this.tieneMascotas = tieneMascotas;
+    public void setTieneMascotas(String tieneMascotas) {
+        this.tieneMascotas = Boolean.valueOf(tieneMascotas);
     }
 
     public String getEdad() {

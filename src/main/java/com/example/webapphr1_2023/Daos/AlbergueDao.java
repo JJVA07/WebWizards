@@ -139,6 +139,4 @@ public class AlbergueDao extends DaoBase {
         }
         return eventos;
     }
-
-    public List<Lugares> obtenerLugares() {}
 }
