@@ -14,4 +14,5 @@ public abstract class DaoBase {
         String url = "jdbc:mysql://localhost:3306/mydb?serverTimezone=America/Lima";
         return DriverManager.getConnection(url, user, password);
     }
+
 }

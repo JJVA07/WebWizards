@@ -18,6 +18,7 @@ public class Donaciones {
     private Usuarios usuarioAlbergue; // Relación con Usuarios (albergue receptor)
     private DonacionEstado donacionEstado; // Relación con DonacionEstado
     private String motivoRechazo;
+    private String tipoDonacion;
 
     public int getIdDonaciones() {
         return idDonaciones;
@@ -110,4 +111,13 @@ public class Donaciones {
     public void setMotivoRechazo(String motivoRechazo) {
         this.motivoRechazo = motivoRechazo;
     }
+
+    public String getTipoDonacion() {
+        return tipoDonacion;
+    }
+
+    public void setTipoDonacion(String tipoDonacion) {
+        this.tipoDonacion = tipoDonacion;
+    }
+
 }

@@ -24,12 +24,13 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="mi_cuenta.jsp">Mi cuenta</a></li>
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/AlbergueServlet?action=cuenta">Mi cuenta</a></li>
+
                 <li><hr class="dropdown-divider" /></li>
                 <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li>
             </ul>
         </li>
-        <a class="nav-link" id="navbarDropdown" href="Albergue.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
+        <a class="nav-link" id="navbarDropdown" href="${pageContext.request.contextPath}/Albergue?action=pagPrincipal" role="button"><i class="fa-solid fa-paw"></i></a>
     </ul>
 </nav>
 

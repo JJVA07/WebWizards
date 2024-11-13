@@ -57,6 +57,25 @@ public class UsuariosDao extends DaoBase {
 
         return albergues;
     }
+    // Método para obtener los puntos de acopio según el albergue seleccionado
+    public List<String> obtenerPuntosAcopioPorAlbergue(String nombreAlbergue) {
+        List<String> puntosAcopio = new ArrayList<>();
+        String sql = "SELECT Punto_acopio_donaciones FROM usuarios WHERE Nombre_albergue = ? AND Punto_acopio_donaciones IS NOT NULL";
 
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
+            ps.setString(1, nombreAlbergue);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                puntosAcopio.add(rs.getString("Punto_acopio_donaciones"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return puntosAcopio;
+    }
 }

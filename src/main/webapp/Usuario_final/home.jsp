@@ -26,7 +26,7 @@
                 <li><a class="dropdown-item" href="<%= request.getContextPath() %>/inicio_sesion.jsp">Cerrar Sesión</a></li>
             </ul>
         </li>
-        <a class="nav-link active" id="navbarDropdown2" href="<%= request.getContextPath() %>/home.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
+        <a class="nav-link active" id="navbarDropdown2" href="<%= request.getContextPath() %>/Usuario?action=pagPrincipal" role="button"><i class="fa-solid fa-paw"></i></a>
     </ul>
 </nav>
 <div id="layoutSidenav">
@@ -73,7 +73,7 @@
                 <!-- Card 3 -->
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100 custom-post">
-                        <a href="<%= request.getContextPath() %>/adopcion.jsp">
+                        <a href="<%= request.getContextPath() %>/Usuario?action=adopcion">
                             <img src="<%= request.getContextPath() %>/assets/img/adopcion_icono_home.jpg" class="card-img-top" alt="Adopciones"/>
                         </a>
                         <div class="card-body">
