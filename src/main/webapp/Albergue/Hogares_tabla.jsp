@@ -16,7 +16,7 @@
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #581925;">
     <a class="navbar-brand ps-3" href="Albergue.jsp">Albergue</a>
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
     <ul class="navbar-nav ms-auto me-3 me-lg-4">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
@@ -76,6 +76,7 @@
                         </nav>
                     </div>
                 </div>
+            </div>
         </nav>
     </div>
 
@@ -134,9 +135,9 @@
                 <div class="d-flex align-items-center justify-content-between small">
                     <div class="text-muted" style="color: white !important;">© Huella Viva</div>
                     <div>
-                        <a style="color: white;">Correo: </a> <a href="#" style="color: white;"> info@alberguegosu.com</a>
+                        <a style="color: white;">Correo: </a> <a href="mailto:info@alberguegosu.com" style="color: white;"> info@alberguegosu.com</a>
                         <div></div>
-                        <a style="color: white;">Teléfono: </a><a href="#" style="color: white;"> +123 456 7890</a>
+                        <a style="color: white;">Teléfono: </a><a href="tel:+1234567890" style="color: white;"> +123 456 7890</a>
                         <div></div>
                         <a style="color: white;">Ubicación: </a><a href="#" style="color: white;"> Calle Ejemplo 123, Ciudad, País</a>
                     </div>

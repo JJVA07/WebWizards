@@ -19,7 +19,7 @@ public class Postulacion {
     private Date fechaFinTemporal;
     private PostulacionEstado postulacionEstado; // Relación con PostulacionEstado
     private Usuarios usuario; // Relación con Usuarios (usuario que hace la postulación)
-    private String tieneMascotas;
+    private Boolean tieneMascotas;
     private String nombre;
     private String apellido;
     private String edad;
@@ -164,11 +164,11 @@ public class Postulacion {
         this.usuario = usuario;
     }
 
-    public String getTieneMascotas() {
+    public Boolean getTieneMascotas() {
         return tieneMascotas;
     }
 
-    public void setTieneMascotas(String tieneMascotas) {
+    public void setTieneMascotas(Boolean tieneMascotas) {
         this.tieneMascotas = tieneMascotas;
     }
 

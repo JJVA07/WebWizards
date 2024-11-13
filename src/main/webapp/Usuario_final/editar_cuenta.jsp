@@ -24,12 +24,12 @@
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="mi_cuenta.html">Mi cuenta</a></li>
+                        <li><a class="dropdown-item" href="/Usuario?action=miCuenta">Mi cuenta</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item" href="inicio_sesion.html">Cerrar Sesión</a></li>
                     </ul>
                 </li>
-                <a class="nav-link " id="navbarDropdown" href="home.html" role="button" ><i class="fa-solid fa-paw"></i></a>
+                <a class="nav-link " id="navbarDropdown" href="/Usuario?action=pagPrincipal" role="button" ><i class="fa-solid fa-paw"></i></a>
             </ul>
         </nav>
         
