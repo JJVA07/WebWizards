@@ -2,6 +2,7 @@ package com.example.webapphr1_2023.Daos;
 
 import com.example.webapphr1_2023.Beans.Donaciones;
 import com.example.webapphr1_2023.Beans.Eventos;
+import com.example.webapphr1_2023.Beans.Usuarios;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -60,8 +61,8 @@ public class EventosDao extends DaoBase{
     public Eventos obtenerDetallesEvento(int idEvento) {
         Eventos evento = null;
         String query = "SELECT e.idEventos, e.nombreEvento, e.fecha, e.hora, e.lugarEvento, e.aforo, e.descripcion, "+
-                       "(e.aforo - COALESCE((SELECT COUNT(*) FROM UsuariosEventos ue WHERE ue.idEvento = e.idEventos), 0)) AS vacantesDisponibles, "+
-                       "e.artistasInvitados, e.razon, e.foto, d.cantidadDonacion, d.tipoDonacion AS tipoDonacion " +
+                "(e.aforo - COALESCE((SELECT COUNT(*) FROM UsuariosEventos ue WHERE ue.idEvento = e.idEventos), 0)) AS vacantesDisponibles, "+
+                "e.artistasInvitados, e.razon, e.foto, d.cantidadDonacion, d.tipoDonacion AS tipoDonacion " +
                 "FROM Eventos e JOIN Donaciones d ON e.idDonacion = d.idDonaciones "+
                 "WHERE e.idEventos = ? ";
 
@@ -80,7 +81,7 @@ public class EventosDao extends DaoBase{
                     evento.setLugarEvento(rs.getString("lugarEvento"));
                     evento.setAforo(rs.getInt("aforo"));
                     evento.setDescripcion(rs.getString("descripcion"));
-                    evento.setVacantesDisponibles(rs.getInt("vacantesDisponibles") + " personas");
+                    evento.setVacantesDisponibles("vacantesDisponibles");
                     evento.setArtistasInvitados(rs.getString("artistasInvitados"));
                     evento.setRazon(rs.getString("razon"));
                     evento.setFoto(rs.getBytes("foto"));
@@ -98,5 +99,48 @@ public class EventosDao extends DaoBase{
 
         return evento;
     }
-}
+    public List<Eventos> obtenerEventosPorUsuario(int idUsuario) {
+        List<Eventos> eventosList = new ArrayList<>();
+        String query = "SELECT e.idEventos, e.nombreEvento, e.fecha, e.hora, e.aforo, u.nombre AS albergue,"
+                +"d.cantidadDonacion AS costo FROM Eventos e"
+                +"JOIN Usuarios u ON e.idAlbergue = u.idUsuario"
+                +"LEFT JOIN Donaciones d ON e.idDonacion = d.idDonaciones"
+                +" JOIN UsuariosEventos ue ON ue.idEvento = e.idEventos"
+                +"WHERE ue.idUsuario = ? ";
 
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, idUsuario);  // Filtramos por el ID del usuario
+
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    Eventos evento = new Eventos();
+                    evento.setIdEventos(rs.getInt("idEventos"));
+                    evento.setNombreEvento(rs.getString("nombreEvento"));
+                    evento.setFecha(rs.getDate("fecha"));
+                    evento.setHora(rs.getTime("hora"));
+                    evento.setAforo(rs.getInt("aforo"));
+
+                    // Configuración del albergue
+                    Usuarios albergue = new Usuarios();
+                    albergue.setNombre(rs.getString("albergue"));
+                    evento.setAlbergue(albergue);
+
+                    // Configuración del costo desde Donaciones
+                    Donaciones donacion = new Donaciones();
+                    donacion.setCantidadDonacion(rs.getString("costo"));
+                    evento.setDonaciones(donacion);
+
+                    eventosList.add(evento);
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return eventosList;
+    }
+}

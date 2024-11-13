@@ -44,6 +44,24 @@ public class UsuarioServlet extends HttpServlet {
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
+            case "misEventos":
+                // Obtener el ID del usuario desde la sesión o request (aquí asumo que está en la sesión)
+                int idUsuario = (int) request.getSession().getAttribute("idUsuario");
+                List<Eventos> eventos = EventosDao.obtenerEventosPorUsuario(idUsuario);
+
+                request.setAttribute("eventos", eventos);
+                vista = "/Usuario_final/mis_eventos.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "detallesEvento":
+                int idEvento = Integer.parseInt(request.getParameter("idEvento"));
+                eventosDao = new EventosDao();
+                Eventos evento = eventosDao.obtenerDetallesEvento(idEvento);
+
+                request.setAttribute("evento", evento);
+                vista = "/Usuario_final/evento_detalles.jsp";
+                break;
             case "eventos":
                 int pagina = request.getParameter("pagina") == null ? 1 : Integer.parseInt(request.getParameter("pagina"));
                 int offset = (pagina - 1) * 6;
@@ -59,10 +77,7 @@ public class UsuarioServlet extends HttpServlet {
                 request.setAttribute("paginaActual", pagina);
                 request.setAttribute("totalPaginas", totalPaginas);
 
-
-                vista = "src/main/webapp/Usuario_final/eventos.jsp";
-                rd = request.getRequestDispatcher(vista);
-                rd.forward(request, response);
+                vista = "/Usuario_final/eventos.jsp";
                 break;
             case "donar":
                 String nombreAlbergue = request.getParameter("nombreAlbergue");
