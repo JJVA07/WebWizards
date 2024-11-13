@@ -1,4 +1,6 @@
+<%@ page import="com.example.webapphr1_2023.Beans.Eventos" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,46 +37,7 @@
     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #581925;">
       <div class="sb-sidenav-menu">
         <div class="nav">
-          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCrearPublicacion" aria-expanded="false" aria-controls="collapseCrearPublicacion">
-            <div class="sb-nav-link-icon"><i class="fas fa-edit"></i></div>
-            Crear Publicación
-            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-          </a>
-          <div class="collapse" id="collapseCrearPublicacion" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
-            <nav class="sb-sidenav-menu-nested nav">
-              <a class="nav-link" href="Albergue_adopcion.jsp">Adopción</a>
-              <a class="nav-link" href="Albergue_donacion.jsp">Donación</a>
-              <a class="nav-link" href="Albergue_eventos.jsp">Eventos Benéficos</a>
-            </nav>
-          </div>
-
-          <a class="nav-link collapsed active" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePublicaciones" aria-expanded="true" aria-controls="collapsePublicaciones">
-            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-            Publicaciones
-            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-          </a>
-          <div class="collapse show" id="collapsePublicaciones" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-            <nav class="sb-sidenav-menu-nested nav">
-              <a class="nav-link" href="Adopciones_publicaciones.jsp">Adopciones</a>
-              <a class="nav-link" href="Donaciones_publicaciones.jsp">Donaciones</a>
-              <a class="nav-link" href="Hogares_publicaciones.jsp">Hogares Temporales</a>
-              <a class="nav-link active" href="Eventos_publicaciones.jsp">Eventos Benéficos</a>
-            </nav>
-          </div>
-
-          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTemporal" aria-expanded="false" aria-controls="collapseTemporal">
-            <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
-            Mis Actividades
-            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-          </a>
-          <div class="collapse" id="collapseTemporal" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-            <nav class="sb-sidenav-menu-nested nav">
-              <a class="nav-link" href="Adopciones_tabla.jsp">Adopciones</a>
-              <a class="nav-link" href="Donaciones_tabla.jsp">Donaciones</a>
-              <a class="nav-link" href="Hogares_tabla.jsp">Hogares Temporales</a>
-              <a class="nav-link active" href="Eventos_tabla.jsp">Eventos Benéficos</a>
-            </nav>
-          </div>
+          <!-- Aquí irían tus enlaces de navegación -->
         </div>
       </div>
     </nav>
@@ -99,7 +62,7 @@
                   <th>Fecha del Evento</th>
                   <th>Hora del Evento</th>
                   <th>Aforo</th>
-                  <th>Entrada</th>
+                  <th>Vacantes Disponibles</th>
                   <th>Artistas Invitados</th>
                   <th>Descripción</th>
                   <th>Razón del Evento</th>
@@ -107,28 +70,43 @@
                 </tr>
                 </thead>
                 <tbody>
+                <%
+                  List<Eventos> eventos = (List<Eventos>) request.getAttribute("eventos");
+                  if (eventos != null) {
+                    for (Eventos evento : eventos) {
+                %>
                 <tr>
-                  <td>Evento Ejemplo</td>
-                  <td>Lima, Perú</td>
-                  <td>2024-10-15</td>
-                  <td>18:00</td>
-                  <td>100 personas</td>
-                  <td>Donación de alimentos</td>
-                  <td>Artista Ejemplo</td>
-                  <td>Evento benéfico para rescatar perritos</td>
-                  <td>Recaudar fondos para un albergue de animales</td>
+                  <td><%= evento.getNombreEvento() %></td>
+                  <td><%= evento.getLugar().getNombreLugar() %></td>
+                  <td><%= evento.getFecha() %></td>
+                  <td><%= evento.getHora() %></td>
+                  <td><%= evento.getAforo() %></td>
+                  <td><%= evento.getVacantesDisponibles() %></td>
+                  <td><%= evento.getArtistasInvitados() %></td>
+                  <td><%= evento.getDescripcion() %></td>
+                  <td><%= evento.getRazon() %></td>
                   <td>
                     <div class="dropdown">
                       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         Acciones
                       </button>
                       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" href="#">Editar</a></li>
-                        <li><a class="dropdown-item text-danger" href="#">Borrar</a></li>
+                        <li><a class="dropdown-item" href="AlbergueServlet?action=editarEvento&id=<%= evento.getAlbergue() %>">Editar</a></li>
+                        <li><a class="dropdown-item text-danger" href="AlbergueServlet?action=borrarEvento&id=<%= evento.getAlbergue() %>">Borrar</a></li>
                       </ul>
                     </div>
                   </td>
                 </tr>
+                <%
+                  }
+                } else {
+                %>
+                <tr>
+                  <td colspan="10">No hay eventos disponibles.</td>
+                </tr>
+                <%
+                  }
+                %>
                 </tbody>
               </table>
             </div>

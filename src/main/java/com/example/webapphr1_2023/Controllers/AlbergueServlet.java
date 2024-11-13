@@ -1,5 +1,6 @@
 package com.example.webapphr1_2023.Controllers;
 
+import com.example.webapphr1_2023.Beans.Eventos;
 import com.example.webapphr1_2023.Beans.Usuarios;
 import com.example.webapphr1_2023.Daos.AlbergueDao;
 import jakarta.servlet.RequestDispatcher;
@@ -11,6 +12,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import java.util.List;
+import java.util.ArrayList;
+
 @WebServlet(name = "AlbergueServlet", urlPatterns = {"/AlbergueServlet"})
 @MultipartConfig
 public class AlbergueServlet extends HttpServlet {
@@ -21,6 +25,9 @@ public class AlbergueServlet extends HttpServlet {
         String vista;
         RequestDispatcher rd;
         AlbergueDao albergueDao = new AlbergueDao();
+        int albergueId = 7; // Puedes cambiar el ID según sea necesario o hacerlo dinámico
+        Usuarios albergue = albergueDao.obtenerAlbergue(albergueId);
+        List<Eventos> eventos = albergueDao.obtenerEventosAlbergue(7);
 
         switch (action) {
             case "pagPrincipal":
@@ -30,10 +37,23 @@ public class AlbergueServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
 
+            case "eventos":
+
+                if (eventos != null) {
+                    request.setAttribute("eventos", eventos);
+                }
+
+                System.out.println("Cantidad de eventos obtenidos: " + (eventos != null ? eventos.size() : "0"));
+
+
+                // Redirige a la vista `Eventos_tabla.jsp` para mostrar los eventos
+                vista = "/Albergue/Eventos_tabla.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+
             case "cuenta":
                 // Obtener el albergue específico (por ejemplo, con ID 7)
-                int albergueId = 7; // Puedes cambiar el ID según sea necesario o hacerlo dinámico
-                Usuarios albergue = albergueDao.obtenerAlbergue(albergueId);
 
                 // Si se obtuvo la información del albergue, se pasa como atributo a la vista
                 if (albergue != null) {
@@ -45,8 +65,9 @@ public class AlbergueServlet extends HttpServlet {
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
+
             case "editar":
-                albergueId = 7; // Cambiar ID según sea necesario o hacerlo dinámico
+
                 albergue = albergueDao.obtenerAlbergue(albergueId);
 
                 if (albergue != null) {
