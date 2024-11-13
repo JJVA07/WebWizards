@@ -46,8 +46,8 @@
                 </a>
                 <div class="collapse <%= ("dueno_temporal".equals(paginaActiva) || "registrar_solicitud".equals(paginaActiva) || "mis_solicitudes".equals(paginaActiva)) ? "show" : "" %>" id="collapseTemporal" aria-labelledby="headingTemporal" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link <%= "registrar_solicitud".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/registrar_solicitud.jsp">Registrar Solicitud</a>
-                        <a class="nav-link <%= "mis_solicitudes".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/mis_solicitudes.jsp">Mis Solicitudes</a>
+                        <a class="nav-link <%= "registrar_solicitud".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario_final/registrar_solicitud.jsp">Registrar Solicitud</a>
+                        <a class="nav-link <%= "mis_solicitudes".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=misSolicitudes">Mis Solicitudes</a>
                     </nav>
                 </div>
 

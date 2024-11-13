@@ -38,9 +38,7 @@
         </nav>
 
         <div id="layoutSidenav">
-            <div id="layoutSidenav_nav">
-                <jsp:include page="/WEB-INF/sidebar.jsp" />
-            </div>
+            <jsp:include page="/WEB-INF/sidebar.jsp" />
 
             <div id="layoutSidenav_content">
                 <main>
@@ -157,14 +155,16 @@
                     cantidadInput.setAttribute('min', '0');
                     cantidadInput.setAttribute('max', '100');
                     extraInputContainer.style.display = 'block';
-                } else if (selectedOption === 'Medicinas' || selectedOption === 'Juguetes') {
+                } else if (selectedOption === 'Medicinas' || selectedOption === 'Juguetes' || selectedOption == 'Accesorios') {
                     nombreProductoLabel.textContent = 'Nombre del Producto:';
                     extraInputLabel.textContent = 'Cantidad:';
                     cantidadInput.setAttribute('step', '1');
                     cantidadInput.setAttribute('min', '0');
                     cantidadInput.setAttribute('max', '500');
                     extraInputContainer.style.display = 'block';
-                } else {
+                }
+
+                else {
                     extraInputContainer.style.display = 'none';
                 }
             });

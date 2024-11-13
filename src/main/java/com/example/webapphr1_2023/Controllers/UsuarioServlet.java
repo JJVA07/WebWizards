@@ -9,10 +9,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Date;
 import java.util.List;
 
 @WebServlet(name ="UsuarioServlet" , value = "/Usuario")
@@ -25,6 +27,7 @@ public class UsuarioServlet extends HttpServlet {
         RequestDispatcher rd;
         UsuariosDao userDao = new UsuariosDao();
         DonacionesDao donacionesDao = new DonacionesDao();
+        SolicitudDao.PostulacionDao postulacionDao = new SolicitudDao.PostulacionDao();
 
         switch (action) {
             case "pagPrincipal":
@@ -151,6 +154,32 @@ public class UsuarioServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
 
+            case "misSolicitudes":
+                int usuarioId = 1; // ID fijo del usuario
+                SolicitudDao solicitudDao = new SolicitudDao();
+
+                // Obtener todas las solicitudes para el usuario
+                List<Object[]> solicitudes = solicitudDao.obtenerSolicitudesPorUsuario(usuarioId);
+
+                // Pasar la lista de solicitudes a la JSP
+                request.setAttribute("solicitudes", solicitudes);
+
+                // Redirigir a la vista de "Mis Solicitudes"
+                vista = "/Usuario_final/mis_solicitudes.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "mostrarSolicitud":
+                int usuarioIds = 1; // ID del usuario
+                Postulacion postulacion = postulacionDao.obtenerSolicitudPorUsuario(usuarioIds);
+                request.setAttribute("postulacion", postulacion);
+
+                vista = "/Usuario_final/ver_solicitud.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+
+
             default:
                 // Acción por defecto en caso de que no haya coincidencias con las acciones especificadas
                 vista = "/Usuario_final/home.jsp";
@@ -166,6 +195,8 @@ public class UsuarioServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         PublicacionDao publicacionDao = new PublicacionDao();
+        SolicitudDao.PostulacionDao postulacionDao = new SolicitudDao.PostulacionDao();
+        SolicitudDao solicitudDao = new SolicitudDao();
 
         switch (action) {
             case "reportarPOST":
@@ -210,38 +241,83 @@ public class UsuarioServlet extends HttpServlet {
                 publicacionDao.reportarMascota(publicacion);
                 response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
                 break;
-            case "denunciaPost":
-                Publicacion denuncia = new Publicacion();
-                int usuarioId =5;
-                Usuarios usuarios = new Usuarios();
-                usuarios.setId(usuarioId);
+            case "registrarSolicitud":
+                try {
+                    // Crear una nueva instancia de Postulacion y rellenar los datos desde el formulario
+                    Postulacion postulacion = new Postulacion();
+                    postulacion.setCantidadCuartos(Integer.parseInt(request.getParameter("cantidad_cuartos")));
+                    postulacion.setMetrajeVivienda(Double.parseDouble(request.getParameter("metraje_vivienda")));
+                    postulacion.setCantidadMascotas(Integer.parseInt(request.getParameter("cantidad_mascotas")));
+                    postulacion.setTipoMascotas(request.getParameter("tipo_mascotas"));
+                    postulacion.setTieneHijos(Boolean.parseBoolean(request.getParameter("tiene_hijos")));
+                    postulacion.setViveConDependientes(Boolean.parseBoolean(request.getParameter("vive_con_dependientes")));
+                    postulacion.setTrabajaRemoto(Boolean.parseBoolean(request.getParameter("trabaja_remoto")));
+                    postulacion.setPersonaReferencia(request.getParameter("persona_referencia"));
+                    postulacion.setTelefonoReferencia(request.getParameter("telefono_referencia"));
+                    postulacion.setTiempoTemporal(Integer.parseInt(request.getParameter("tiempo_temporal")));
 
-                String nombreMaltratador = request.getParameter(("nombre_maltratador"));
-                String tipoMaltrato = request.getParameter(("tipo_maltrato"));
-                String tamanoMascota = request.getParameter(("tamano_mascota"));
-                String razaMascota = request.getParameter(("raza_mascota"));
-                String direccionMaltrato = request.getParameter(("direccion_maltrato"));
-                Boolean denunciaPolicial = Boolean.valueOf(request.getParameter(("denuncia_policial")));
-                String informacionExtra = request.getParameter(("informacion_extra"));
+                    // Obtener las fechas como cadenas en formato yyyy-MM-dd
+                    String fechaInicio = request.getParameter("fecha_inicio_temporal");
+                    String fechaFin = request.getParameter("fecha_fin_temporal");
 
-                byte[] archivoAdjunto = obtenerImagenComoByteArray(request.getPart("archivo").getInputStream());
+                    // Verifica que las fechas no sean nulas o vacías y convierte el formato
+                    if (fechaInicio != null && !fechaInicio.isEmpty()) {
+                        // Convierte la fecha a formato yy-MM-dd (tomando solo los últimos 2 dígitos del año)
+                        String[] parts = fechaInicio.split("-");
+                        String fechaInicioFormateada = parts[1] + "-" + parts[2] + "-" + parts[0].substring(2); // Formato: yy-mm-dd
+                        postulacion.setFechaInicioTemporal(Date.valueOf(fechaInicioFormateada)); // Asigna la fecha formateada
+                    }
 
-                denuncia.setNombreMaltratador(nombreMaltratador);
-                denuncia.setTipoMaltrato(tipoMaltrato);
-                denuncia.setTamano(tamanoMascota);
-                denuncia.setRaza(razaMascota);
-                denuncia.setDireccionMaltrato(direccionMaltrato);
-                denuncia.setDenunciaPolicial(denunciaPolicial);
-                denuncia.setDescripcion(informacionExtra);
-                denuncia.setFoto(archivoAdjunto);
-                denuncia.setUsuario(usuarios);
+                    if (fechaFin != null && !fechaFin.isEmpty()) {
+                        // Convierte la fecha a formato yy-MM-dd (tomando solo los últimos 2 dígitos del año)
+                        String[] parts = fechaFin.split("-");
+                        String fechaFinFormateada = parts[1] + "-" + parts[2] + "-" + parts[0].substring(2); // Formato: yy-mm-dd
+                        postulacion.setFechaFinTemporal(Date.valueOf(fechaFinFormateada)); // Asigna la fecha formateada
+                    }
+
+                    // Establecer otros campos
+                    postulacion.setTieneMascotas(request.getParameter("tiene_mascotas"));
+                    postulacion.setNombre(request.getParameter("nombre"));
+                    postulacion.setApellido(request.getParameter("apellido"));
+                    postulacion.setEdad(request.getParameter("edad"));
+                    postulacion.setGenero(request.getParameter("genero"));
+                    postulacion.setCelular(request.getParameter("celular"));
+                    postulacion.setDireccion(request.getParameter("direccion"));
+
+                    // Establecer Distrito y Estado
+                    Distrito distrito = new Distrito(); // Suponiendo que tienes una clase Distrito y su ID
+                    distrito.setIdDistrito(3); // Asignar el ID correspondiente
+
+                    PostulacionEstado estado = new PostulacionEstado(); // Suponiendo que tienes una clase PostulacionEstado y su ID
+                    estado.setIdPostulacionEstado(3); // Asignar el estado 'pendiente'
+
+                    postulacion.setDistrito(distrito);
+                    postulacion.setPostulacionEstado(estado);
+
+                    // Llamar al DAO para insertar la solicitud
+                    postulacionDao.insertarPostulacion(postulacion, 1); // 1 es el ID del usuario (puede ser dinámico)
+
+                    // Redirigir a la página de "Mis Solicitudes"
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=misSolicitudes");
+                } catch (NumberFormatException | NullPointerException e) {
+                    // Captura errores de formato y parámetros nulos
+                    request.setAttribute("mensaje", "Ocurrió un error al procesar la solicitud. Verifique los datos ingresados.");
+                    request.getRequestDispatcher("/Usuario_final/registrar_solicitud.jsp").forward(request, response);
+                    e.printStackTrace(); // Esto es útil para depuración, pero en producción deberías manejarlo mejor
+                }
+                break;
 
 
-                publicacionDao.denunciarMaltrato(denuncia);
-                response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+            // Otros casos...
+            default:
+                // Acción por defecto
+                response.sendRedirect(request.getContextPath() + "/Usuario_final/home.jsp");
                 break;
         }
+
+
     }
+
     public static byte[] obtenerImagenComoByteArray(InputStream inputStream) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;
@@ -252,6 +328,7 @@ public class UsuarioServlet extends HttpServlet {
         buffer.flush();
         return buffer.toByteArray();
     }
+
 
 
 
