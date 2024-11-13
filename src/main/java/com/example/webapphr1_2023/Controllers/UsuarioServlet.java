@@ -108,21 +108,32 @@ public class UsuarioServlet extends HttpServlet {
                     request.setAttribute("tiposDonacion", tiposDonacion);
 
                     vista = "/Usuario_final/donar.jsp";
+                    request.setAttribute("paginaActiva", "donar");
                     rd = request.getRequestDispatcher(vista);
                     rd.forward(request, response);
                 }
                 break;
             case "detalleMascota":
-                int idMascota = Integer.parseInt(request.getParameter("id"));
-                MascotaDao mascotaDaoDetalles = new MascotaDao();
-                Mascotas mascotaDetalles = mascotaDaoDetalles.obtenerMascotaPorId(idMascota);
-
-                request.setAttribute("mascota", mascotaDetalles);
-                vista = "/Usuario_final/formulario_adopcion.jsp";
-                request.setAttribute("paginaActiva", "adopcion");
-                rd = request.getRequestDispatcher(vista);
-                rd.forward(request, response);
+                try {
+                    int idMascota = Integer.parseInt(request.getParameter("id"));
+                    MascotaDao mascotaDaoDetalles = new MascotaDao();
+                    Mascotas mascotaDetalles = mascotaDaoDetalles.obtenerMascotaPorId(idMascota);
+                    if (mascotaDetalles == null) {
+                        response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion");
+                    }
+                    else{
+                        request.setAttribute("mascota", mascotaDetalles);
+                        vista = "/Usuario_final/formulario_adopcion.jsp";
+                        request.setAttribute("paginaActiva", "adopcion");
+                        rd = request.getRequestDispatcher(vista);
+                        rd.forward(request, response);
+                    }
+                }
+                catch(NumberFormatException e) {
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion");
+                }
                 break;
+
             case "formularioPerdida":
                 vista = "/Usuario_final/mascotas_perdidas.jsp";
                 rd = request.getRequestDispatcher(vista);
@@ -143,6 +154,7 @@ public class UsuarioServlet extends HttpServlet {
 
                 // Ruta actualizada para el archivo mis_donaciones.jsp
                 vista = "/Usuario_final/mis_donaciones.jsp";
+                request.setAttribute("paginaActiva", "mis_donaciones");
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
@@ -154,7 +166,13 @@ public class UsuarioServlet extends HttpServlet {
                 rd = request.getRequestDispatcher("/Usuario_final/donacion_detalle.jsp");
                 rd.forward(request, response);
                 break;
-
+            case "miCuenta":
+                int idUsuario = 5; // Aquí especificas el ID del usuario
+                Usuarios usuario = userDao.obtenerUsuarioPorId(idUsuario);
+                request.setAttribute("usuario", usuario);
+                rd = request.getRequestDispatcher("/Usuario_final/mi_cuenta.jsp");
+                rd.forward(request, response);
+                break;
             default:
                 // Acción por defecto en caso de que no haya coincidencias con las acciones especificadas
                 vista = "/Usuario_final/home.jsp";
@@ -170,15 +188,22 @@ public class UsuarioServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         PublicacionDao publicacionDao = new PublicacionDao();
+        PostulacionDao postulacionDao = new PostulacionDao();
+        Usuarios usuario = new Usuarios();
+        int id_Usuario =5;
 
         switch (action) {
             case "reportarPOST":
                 Publicacion publicacion = new Publicacion();
-                int id_Usuario =5;
-                Usuarios usuario = new Usuarios();
+
+
                 usuario.setId(id_Usuario);
 
+
                 String nombreMascota = request.getParameter("nombre");
+                if (nombreMascota.trim().isEmpty() || nombreMascota == null || nombreMascota.trim().isBlank()){
+                    System.out.println("Error, se ha enviado un nombre vacío ");
+                }
                 String edad = request.getParameter("edad");
                 String raza = request.getParameter("raza");
                 String tamano = request.getParameter("tamano");
@@ -212,9 +237,9 @@ public class UsuarioServlet extends HttpServlet {
                 break;
             case "denunciaPost":
                 Publicacion denuncia = new Publicacion();
-                int usuarioId =5;
-                Usuarios usuarios = new Usuarios();
-                usuarios.setId(usuarioId);
+
+
+                usuario.setId(id_Usuario);
 
                 String nombreMaltratador = request.getParameter(("nombre_maltratador"));
                 String tipoMaltrato = request.getParameter(("tipo_maltrato"));
@@ -234,11 +259,64 @@ public class UsuarioServlet extends HttpServlet {
                 denuncia.setDenunciaPolicial(denunciaPolicial);
                 denuncia.setDescripcion(informacionExtra);
                 denuncia.setFoto(archivoAdjunto);
-                denuncia.setUsuario(usuarios);
+                denuncia.setUsuario(usuario);
 
 
                 publicacionDao.denunciarMaltrato(denuncia);
                 response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+                break;
+            case "adoptarMascota":
+                Postulacion postulacion = new Postulacion();
+
+                usuario.setId(id_Usuario);
+
+                // Obtener el idMascota del formulario
+                String idMascotaParam = request.getParameter("idMascota");
+                if (idMascotaParam != null && !idMascotaParam.isEmpty()) {
+                    int idMascota = Integer.parseInt(idMascotaParam);
+                    Mascotas mascota = new Mascotas();
+                    mascota.setIdMascotas(idMascota);
+                    postulacion.setMascota(mascota);
+                } else {
+                    // Manejar el caso cuando idMascota no está presente o es inválido
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion"); // o la acción que prefieras
+                    return;
+                }
+
+
+
+                String Nombre = request.getParameter(("Nombre"));
+                String Apellido = request.getParameter(("Apellido"));
+                String Genero = request.getParameter(("Genero"));
+                String Edad = request.getParameter(("Edad"));
+                String Direccion = request.getParameter(("Direccion"));
+                String metraje_vivienda = request.getParameter(("metraje_vivienda"));
+                String cantidad_cuartos = request.getParameter(("cantidad_cuartos"));
+                String celular = request.getParameter(("celular"));
+                String telefono_referencia = request.getParameter(("telefono_referencia"));
+                String vive_con_dependientes = request.getParameter(("vive_con_dependientes"));
+                String trabaja_remoto = request.getParameter(("trabaja_remoto"));
+                String Tiene_mascotas = request.getParameter(("Tiene_mascotas"));
+                String tiene_hijos = request.getParameter(("tiene_hijos"));
+
+                postulacion.setNombre(Nombre);
+                postulacion.setApellido(Apellido);
+                postulacion.setGenero(Genero);
+                postulacion.setEdad(Edad);
+                postulacion.setDireccion(Direccion);
+                postulacion.setMetrajeVivienda(Double.valueOf(metraje_vivienda));
+                postulacion.setCantidadCuartos(Integer.valueOf(cantidad_cuartos));
+                postulacion.setCelular(celular);
+                postulacion.setTelefonoReferencia(telefono_referencia);
+                postulacion.setViveConDependientes(Boolean.valueOf(vive_con_dependientes));
+                postulacion.setTrabajaRemoto(Boolean.valueOf(trabaja_remoto));
+                postulacion.setTieneMascotas(Boolean.valueOf(Tiene_mascotas));
+                postulacion.setTieneHijos(Boolean.valueOf(tiene_hijos));
+                postulacion.setUsuario(usuario);
+
+
+                postulacionDao.postularAdopcion(postulacion);
+                response.sendRedirect(request.getContextPath() + "/Usuario?action=misSolicitudes");
                 break;
         }
     }

@@ -13,7 +13,7 @@ public class Usuarios {
     private Integer anioCreacion;
     private Distrito distrito; // Relación con Distrito
     private Zona zona; // Relación con Zona
-    private Integer telefono;
+    private int telefono;
     private Integer espaciosNuevosAnimales;
     private String urlFbig;
     private String puntoAcopioDonaciones;
@@ -129,11 +129,11 @@ public class Usuarios {
         this.zona = zona;
     }
 
-    public Integer getTelefono() {
+    public int getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(Integer telefono) {
+    public void setTelefono(int telefono) {
         this.telefono = telefono;
     }
 
