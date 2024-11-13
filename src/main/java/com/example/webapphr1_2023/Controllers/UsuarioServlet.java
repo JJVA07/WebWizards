@@ -151,7 +151,13 @@ public class UsuarioServlet extends HttpServlet {
                 rd = request.getRequestDispatcher("/Usuario_final/donacion_detalle.jsp");
                 rd.forward(request, response);
                 break;
-
+            case "miCuenta":
+                int idUsuario = 5; // Aquí especificas el ID del usuario
+                Usuarios usuario = userDao.obtenerUsuarioPorId(idUsuario);
+                request.setAttribute("usuario", usuario);
+                rd = request.getRequestDispatcher("/Usuario_final/mi_cuenta.jsp");
+                rd.forward(request, response);
+                break;
             default:
                 // Acción por defecto en caso de que no haya coincidencias con las acciones especificadas
                 vista = "/Usuario_final/home.jsp";

@@ -78,4 +78,29 @@ public class UsuariosDao extends DaoBase {
 
         return puntosAcopio;
     }
+
+    // UsuariosDao.java
+    public Usuarios obtenerUsuarioPorId(int idUsuario) {
+        Usuarios usuario = null;
+        String sql = "SELECT Nombre, Apellido, DNI, Telefono, Correo FROM Usuarios WHERE id = ?";
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, idUsuario);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    usuario = new Usuarios();
+                    usuario.setNombre(rs.getString("Nombre"));
+                    usuario.setApellido(rs.getString("Apellido"));
+                    usuario.setDni(String.valueOf(rs.getInt("DNI")));
+                    usuario.setTelefono(rs.getInt("Telefono"));
+                    usuario.setCorreo(rs.getString("Correo"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuario;
+    }
+
 }
