@@ -25,7 +25,8 @@ public class UsuarioServlet extends HttpServlet {
         RequestDispatcher rd;
         UsuariosDao userDao = new UsuariosDao();
         DonacionesDao donacionesDao = new DonacionesDao();
-
+        MascotaDao mascotaDao = new MascotaDao();
+        EventosDao eventosDao = new EventosDao();
         switch (action) {
             case "pagPrincipal":
                 vista = "/Usuario_final/home.jsp";
@@ -34,7 +35,7 @@ public class UsuarioServlet extends HttpServlet {
                 break;
             case "adopcion":
                 // Instancia de MascotaDao para obtener las mascotas en adopción
-                MascotaDao mascotaDao = new MascotaDao();
+
                 List<Mascotas> mascotas = mascotaDao.obtenerMascotasEnAdopcion();
 
                 // Pasar la lista de mascotas a la vista
@@ -56,8 +57,8 @@ public class UsuarioServlet extends HttpServlet {
                 break;
             case "detallesEvento":
                 int idEvento = Integer.parseInt(request.getParameter("idEvento"));
-                eventosDao = new EventosDao();
-                Eventos evento = eventosDao.obtenerDetallesEvento(idEvento);
+                EventosDao A= new EventosDao();
+                Eventos evento = A.obtenerDetallesEvento(idEvento);
 
                 request.setAttribute("evento", evento);
                 vista = "/Usuario_final/evento_detalles.jsp";
