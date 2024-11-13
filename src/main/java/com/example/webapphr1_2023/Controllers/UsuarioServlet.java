@@ -93,20 +93,30 @@ public class UsuarioServlet extends HttpServlet {
                     request.setAttribute("tiposDonacion", tiposDonacion);
 
                     vista = "/Usuario_final/donar.jsp";
+                    request.setAttribute("paginaActiva", "donar");
                     rd = request.getRequestDispatcher(vista);
                     rd.forward(request, response);
                 }
                 break;
             case "detalleMascota":
-                int idMascota = Integer.parseInt(request.getParameter("id"));
-                MascotaDao mascotaDaoDetalles = new MascotaDao();
-                Mascotas mascotaDetalles = mascotaDaoDetalles.obtenerMascotaPorId(idMascota);
-
-                request.setAttribute("mascota", mascotaDetalles);
-                vista = "/Usuario_final/formulario_adopcion.jsp";
-                request.setAttribute("paginaActiva", "adopcion");
-                rd = request.getRequestDispatcher(vista);
-                rd.forward(request, response);
+                try {
+                    int idMascota = Integer.parseInt(request.getParameter("id"));
+                    MascotaDao mascotaDaoDetalles = new MascotaDao();
+                    Mascotas mascotaDetalles = mascotaDaoDetalles.obtenerMascotaPorId(idMascota);
+                    if (mascotaDetalles == null) {
+                        response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion");
+                    }
+                    else{
+                        request.setAttribute("mascota", mascotaDetalles);
+                        vista = "/Usuario_final/formulario_adopcion.jsp";
+                        request.setAttribute("paginaActiva", "adopcion");
+                        rd = request.getRequestDispatcher(vista);
+                        rd.forward(request, response);
+                    }
+                }
+                catch(NumberFormatException e) {
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion");
+                }
                 break;
             case "formularioPerdida":
                 vista = "/Usuario_final/mascotas_perdidas.jsp";
@@ -128,6 +138,7 @@ public class UsuarioServlet extends HttpServlet {
 
                 // Ruta actualizada para el archivo mis_donaciones.jsp
                 vista = "/Usuario_final/mis_donaciones.jsp";
+                request.setAttribute("paginaActiva", "mis_donaciones");
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
@@ -163,7 +174,11 @@ public class UsuarioServlet extends HttpServlet {
                 Usuarios usuario = new Usuarios();
                 usuario.setId(id_Usuario);
 
+
                 String nombreMascota = request.getParameter("nombre");
+                if (nombreMascota.trim().isEmpty() || nombreMascota == null || nombreMascota.trim().isBlank()){
+                    System.out.println("Error, se ha enviado un nombre vacío ");
+                }
                 String edad = request.getParameter("edad");
                 String raza = request.getParameter("raza");
                 String tamano = request.getParameter("tamano");

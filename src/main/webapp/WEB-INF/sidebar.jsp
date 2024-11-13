@@ -60,8 +60,8 @@
                 </a>
                 <div class="collapse <%= ("donaciones".equals(paginaActiva) || "donar".equals(paginaActiva) || "mis_donaciones".equals(paginaActiva)) ? "show" : "" %>" id="collapseDonaciones" aria-labelledby="headingDonaciones" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link <%= "donar".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/donar.jsp">Donar</a>
-                        <a class="nav-link <%= "mis_donaciones".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/mis_donaciones.jsp">Mis Donaciones</a>
+                        <a class="nav-link <%= "donar".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=donar">Donar</a>
+                        <a class="nav-link <%= "mis_donaciones".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=mostrarDonaciones">Mis Donaciones</a>
                     </nav>
                 </div>
 

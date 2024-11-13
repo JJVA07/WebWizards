@@ -106,8 +106,6 @@
 
                         <div class="form-group d-flex justify-content-center">
                             <input type="submit" class="btn btn-danger" style="padding: 12px 24px; font-size: 1.1rem;">
-                                Denunciar
-                            </input>
                         </div>
                     </form>
                 </div>

@@ -50,7 +50,7 @@ public class MascotaDao extends DaoBase {
     private static final String SQL_SELECT_MASCOTA_BY_ID = "SELECT m.idMascotas, m.Nombre_Mascota, m.Descripcion, m.Foto, m.Edad, m.Raza, e.Estado, m.Genero " +
             "FROM mascotas m " +
             "JOIN mascota_estado e ON m.Mascota_estado_idMascota_estado = e.idMascota_estado " +
-            "WHERE m.idMascotas = ?";
+            "WHERE m.idMascotas = ? and e.idMascota_estado = 1";
     // Método para obtener una mascota específica por ID
     public Mascotas obtenerMascotaPorId(int id) {
         Mascotas mascota = null;
@@ -83,6 +83,7 @@ public class MascotaDao extends DaoBase {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return mascota;
         }
 
         return mascota;
