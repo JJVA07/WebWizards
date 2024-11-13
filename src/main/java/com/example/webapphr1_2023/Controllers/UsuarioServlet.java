@@ -114,6 +114,12 @@ public class UsuarioServlet extends HttpServlet {
                 request.setAttribute("paginaActiva", "mascotas_perdidas");
                 rd.forward(request,response);
                 break;
+            case "formularioDenuncia":
+                vista = "/Usuario_final/denuncias.jsp";
+                rd = request.getRequestDispatcher(vista);
+                request.setAttribute("paginaActiva", "denuncias");
+                rd.forward(request,response);
+                break;
 
             case "mostrarDonaciones":
                 int userId = 1; // Valor estático para userId
@@ -187,6 +193,36 @@ public class UsuarioServlet extends HttpServlet {
                 publicacion.setRecompensa(recompensa);
                 publicacion.setUsuario(usuario);
                 publicacionDao.reportarMascota(publicacion);
+                response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+                break;
+            case "denunciaPost":
+                Publicacion denuncia = new Publicacion();
+                int usuarioId =5;
+                Usuarios usuarios = new Usuarios();
+                usuarios.setId(usuarioId);
+
+                String nombreMaltratador = request.getParameter(("nombre_maltratador"));
+                String tipoMaltrato = request.getParameter(("tipo_maltrato"));
+                String tamanoMascota = request.getParameter(("tamano_mascota"));
+                String razaMascota = request.getParameter(("raza_mascota"));
+                String direccionMaltrato = request.getParameter(("direccion_maltrato"));
+                Boolean denunciaPolicial = Boolean.valueOf(request.getParameter(("denuncia_policial")));
+                String informacionExtra = request.getParameter(("informacion_extra"));
+
+                byte[] archivoAdjunto = obtenerImagenComoByteArray(request.getPart("archivo").getInputStream());
+
+                denuncia.setNombreMaltratador(nombreMaltratador);
+                denuncia.setTipoMaltrato(tipoMaltrato);
+                denuncia.setTamano(tamanoMascota);
+                denuncia.setRaza(razaMascota);
+                denuncia.setDireccionMaltrato(direccionMaltrato);
+                denuncia.setDenunciaPolicial(denunciaPolicial);
+                denuncia.setDescripcion(informacionExtra);
+                denuncia.setFoto(archivoAdjunto);
+                denuncia.setUsuario(usuarios);
+
+
+                publicacionDao.denunciarMaltrato(denuncia);
                 response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
                 break;
         }

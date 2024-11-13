@@ -12,8 +12,8 @@
 
     <!-- CSS externo de librerías y estilos locales -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="<%= request.getContextPath() %>/assets/css/styles.css" rel="stylesheet" />
-    <link href="<%= request.getContextPath() %>/assets/css/styles_2.css" rel="stylesheet" />
+    <link href="<%= request.getContextPath() %>/css/styles.css" rel="stylesheet" />
+    <link href="<%= request.getContextPath() %>/css/styles_2.css" rel="stylesheet" />
 
     <!-- Font Awesome -->
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -36,7 +36,7 @@
                 <li><a class="dropdown-item" href="<%= request.getContextPath() %>/inicio_sesion.jsp">Cerrar Sesión</a></li>
             </ul>
         </li>
-        <a class="nav-link" id="navbarDropdown" href="<%= request.getContextPath() %>/home.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
+        <a class="nav-link" id="navbarDropdown" href="<%= request.getContextPath() %>/Usuario?action=pagPrincipal" role="button"><i class="fa-solid fa-paw"></i></a>
     </ul>
 </nav>
 
@@ -49,8 +49,8 @@
             <div class="container-fluid d-flex align-items-center justify-content-center min-vh-100">
                 <div class="col-lg-10">
                     <h1 class="mt-4 text-center">¡Tu voz puede marcar la diferencia!</h1>
-                    <form action="<%= request.getContextPath() %>/procesar_denuncia.jsp" method="post" class="p-4 border rounded bg-light mx-auto mb-4"
-                          style="width: 100%; max-width: 1600px; background-color: rgb(200, 200, 200) !important;">
+                    <form action="<%= request.getContextPath() %>/Usuario?action=denunciaPost" method="post" class="p-4 border rounded bg-light mx-auto mb-4"
+                          style="width: 100%; max-width: 1600px; background-color: rgb(200, 200, 200) !important;" enctype="multipart/form-data">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="nombre_maltratador" class="form-label">Nombre del Maltratador:</label>
@@ -85,11 +85,11 @@
                         <div class="mb-3">
                             <label>¿Se ha realizado denuncia policial?</label><br>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="denuncia_policial" id="denuncia_si" value="si" required>
+                                <input class="form-check-input" type="radio" name="denuncia_policial" id="denuncia_si" value="true" required>
                                 <label class="form-check-label" for="denuncia_si">Sí</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="denuncia_policial" id="denuncia_no" value="no">
+                                <input class="form-check-input" type="radio" name="denuncia_policial" id="denuncia_no" value="false">
                                 <label class="form-check-label" for="denuncia_no">No</label>
                             </div>
                         </div>
@@ -105,9 +105,9 @@
                         </div>
 
                         <div class="form-group d-flex justify-content-center">
-                            <button type="submit" class="btn btn-danger" style="padding: 12px 24px; font-size: 1.1rem;">
+                            <input type="submit" class="btn btn-danger" style="padding: 12px 24px; font-size: 1.1rem;">
                                 Denunciar
-                            </button>
+                            </input>
                         </div>
                     </form>
                 </div>
@@ -130,6 +130,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="<%= request.getContextPath() %>/assets/js/scripts.js"></script>
+<script src="<%= request.getContextPath() %>/js/scripts.js"></script>
 </body>
 </html>

@@ -75,7 +75,7 @@
                 <div class="collapse <%= ("crear_publicacion".equals(paginaActiva) || "mascotas_perdidas".equals(paginaActiva) || "denuncias".equals(paginaActiva)) ? "show" : "" %>" id="collapseCrearPublicacion" aria-labelledby="headingCrearPublicacion" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
                         <a class="nav-link <%= "mascotas_perdidas".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=formularioPerdida">Mascotas Perdidas</a>
-                        <a class="nav-link <%= "denuncias".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/denuncias.jsp">Denuncias</a>
+                        <a class="nav-link <%= "denuncias".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=formularioDenuncia">Denuncias</a>
                     </nav>
                 </div>
 
