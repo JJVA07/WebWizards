@@ -139,4 +139,5 @@ public class AlbergueDao extends DaoBase {
         }
         return eventos;
     }
+
 }

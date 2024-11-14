@@ -1,8 +1,10 @@
 package com.example.webapphr1_2023.Controllers;
+import com.example.webapphr1_2023.Beans.*;
 
 import com.example.webapphr1_2023.Beans.Eventos;
 import com.example.webapphr1_2023.Beans.Usuarios;
 import com.example.webapphr1_2023.Daos.AlbergueDao;
+import com.example.webapphr1_2023.Daos.Lista_eventosDao;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -26,8 +28,7 @@ public class AlbergueServlet extends HttpServlet {
         RequestDispatcher rd;
         AlbergueDao albergueDao = new AlbergueDao();
         int albergueId = 7; // Puedes cambiar el ID según sea necesario o hacerlo dinámico
-        Usuarios albergue = albergueDao.obtenerAlbergue(albergueId);
-        List<Eventos> eventos = albergueDao.obtenerEventosAlbergue(7);
+
 
         switch (action) {
             case "pagPrincipal":
@@ -38,6 +39,8 @@ public class AlbergueServlet extends HttpServlet {
                 break;
 
             case "eventos":
+
+                List<Eventos> eventos = albergueDao.obtenerEventosAlbergue(7);
 
                 if (eventos != null) {
                     request.setAttribute("eventos", eventos);
@@ -54,7 +57,7 @@ public class AlbergueServlet extends HttpServlet {
 
             case "cuenta":
                 // Obtener el albergue específico (por ejemplo, con ID 7)
-
+                Usuarios albergue = albergueDao.obtenerAlbergue(7);
                 // Si se obtuvo la información del albergue, se pasa como atributo a la vista
                 if (albergue != null) {
                     request.setAttribute("albergue", albergue);
@@ -65,6 +68,20 @@ public class AlbergueServlet extends HttpServlet {
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
+
+            case "temporal":
+                Lista_eventosDao lista_eventosDao = new Lista_eventosDao();
+                List<Mascotas> mascotasTemporales = lista_eventosDao.obtenerEventosAlbergue(7);
+
+                // Obtener lista de mascotas temporales
+                if (mascotasTemporales != null) {
+                    request.setAttribute("mascotasTemporales", mascotasTemporales);
+                }
+                vista = "/Albergue/mascotas_temporales.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+
 
             case "editar":
 

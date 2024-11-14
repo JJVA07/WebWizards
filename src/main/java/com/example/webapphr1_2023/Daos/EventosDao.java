@@ -10,8 +10,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
-public class EventosDao extends DaoBase{
-
+public class EventosDao extends DaoBase {
     public List<Eventos> obtenerEventosActivosPaginados(int offset, int limit) {
         List<Eventos> eventosList = new ArrayList<>();
         String query = "SELECT Nombre_Evento, Foto, Descripcion FROM eventos e " +
@@ -42,8 +41,8 @@ public class EventosDao extends DaoBase{
     }
 
     public int contarEventosActivos() {
-        String query = "SELECT COUNT(*) AS total FROM Eventos e " +
-                "JOIN EstadoEventos es ON e.idEstadoEventos = es.idEstadoEventos " +
+        String query = "SELECT COUNT(*) AS total FROM eventos e " +
+                "JOIN estadoEventos es ON e.idEstadoEventos = es.idEstadoEventos " +
                 "WHERE es.estadoEventos = 'activo'";
 
         try (Connection conn = getConnection();
@@ -61,9 +60,9 @@ public class EventosDao extends DaoBase{
     public Eventos obtenerDetallesEvento(int idEvento) {
         Eventos evento = null;
         String query = "SELECT e.idEventos, e.nombreEvento, e.fecha, e.hora, e.lugarEvento, e.aforo, e.descripcion, "+
-                "(e.aforo - COALESCE((SELECT COUNT(*) FROM UsuariosEventos ue WHERE ue.idEvento = e.idEventos), 0)) AS vacantesDisponibles, "+
+                "(e.aforo - COALESCE((SELECT COUNT(*) FROM usuariosEventos ue WHERE ue.idEvento = e.idEventos), 0)) AS vacantesDisponibles, "+
                 "e.artistasInvitados, e.razon, e.foto, d.cantidadDonacion, d.tipoDonacion AS tipoDonacion " +
-                "FROM Eventos e JOIN Donaciones d ON e.idDonacion = d.idDonaciones "+
+                "FROM eventos e JOIN donaciones d ON e.idDonacion = d.idDonaciones "+
                 "WHERE e.idEventos = ? ";
 
         try (Connection conn = getConnection();
@@ -102,10 +101,10 @@ public class EventosDao extends DaoBase{
     public List<Eventos> obtenerEventosPorUsuario(int idUsuario) {
         List<Eventos> eventosList = new ArrayList<>();
         String query = "SELECT e.idEventos, e.nombreEvento, e.fecha, e.hora, e.aforo, u.nombre AS albergue,"
-                +"d.cantidadDonacion AS costo FROM Eventos e"
-                +"JOIN Usuarios u ON e.idAlbergue = u.idUsuario"
-                +"LEFT JOIN Donaciones d ON e.idDonacion = d.idDonaciones"
-                +" JOIN UsuariosEventos ue ON ue.idEvento = e.idEventos"
+                +"d.cantidadDonacion AS costo FROM eventos e"
+                +"JOIN usuarios u ON e.idAlbergue = u.idUsuario"
+                +"LEFT JOIN donaciones d ON e.idDonacion = d.idDonaciones"
+                +" JOIN usuariosEventos ue ON ue.idEvento = e.idEventos"
                 +"WHERE ue.idUsuario = ? ";
 
         try (Connection conn = getConnection();
@@ -144,3 +143,4 @@ public class EventosDao extends DaoBase{
         return eventosList;
     }
 }
+

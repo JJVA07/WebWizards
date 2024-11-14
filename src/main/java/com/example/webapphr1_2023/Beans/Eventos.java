@@ -19,6 +19,9 @@ public class Eventos {
     private String motivoRechazo;
     private Donaciones donaciones;
 
+    public Eventos() {
+    }
+
     public int getIdEventos() {
         return idEventos;
     }
@@ -75,20 +78,20 @@ public class Eventos {
         this.descripcion = descripcion;
     }
 
-    public EstadoEventos getEstadoEventos() {
-        return estadoEventos;
-    }
-
-    public void setEstadoEventos(EstadoEventos estadoEventos) {
-        this.estadoEventos = estadoEventos;
-    }
-
     public String getVacantesDisponibles() {
         return vacantesDisponibles;
     }
 
     public void setVacantesDisponibles(String vacantesDisponibles) {
         this.vacantesDisponibles = vacantesDisponibles;
+    }
+
+    public EstadoEventos getEstadoEventos() {
+        return estadoEventos;
+    }
+
+    public void setEstadoEventos(EstadoEventos estadoEventos) {
+        this.estadoEventos = estadoEventos;
     }
 
     public Lugares getLugar() {
@@ -115,20 +118,20 @@ public class Eventos {
         this.razon = razon;
     }
 
-    public String getArtistasInvitados() {
-        return artistasInvitados;
-    }
-
-    public void setArtistasInvitados(String artistasInvitados) {
-        this.artistasInvitados = artistasInvitados;
-    }
-
     public byte[] getFoto() {
         return foto;
     }
 
     public void setFoto(byte[] foto) {
         this.foto = foto;
+    }
+
+    public String getArtistasInvitados() {
+        return artistasInvitados;
+    }
+
+    public void setArtistasInvitados(String artistasInvitados) {
+        this.artistasInvitados = artistasInvitados;
     }
 
     public String getMotivoRechazo() {

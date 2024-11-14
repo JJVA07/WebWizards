@@ -20,7 +20,7 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/Usuario?action=miCuenta">Mi cuenta</a></li>
+                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/mi_cuenta.jsp">Mi cuenta</a></li>
                 <li><hr class="dropdown-divider" /></li>
                 <li><a class="dropdown-item" href="<%= request.getContextPath() %>/inicio_sesion.jsp">Cerrar Sesión</a></li>
             </ul>
@@ -56,20 +56,24 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>12 - 12 - 2024</td>
-                                    <td>1 p.m</td>
-                                    <td>Albergue Perritos Felices</td>
-                                    <td>S/. 15.00</td>
-                                    <td>50 personas</td>
-                                    <td>
-                                        <a href="<%= request.getContextPath() %>/evento_albergue_perritos_felices.jsp" class="btn inscribirse-btn d-inline-flex align-items-center" style="text-align: center; padding: 5px 10px; border-radius: 8px; background-color: transparent; text-decoration: none;">
-                                            <i class="fas fa-info-circle" style="color: #808080; font-size: 2rem; margin-right: 0.5rem;"></i>
-                                            <span style="color: #808080; font-size: 1.2rem;">Más detalles</span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <!-- Agrega más filas si es necesario -->
+                                <!-- Iteración de la lista de eventos obtenidos desde la base de datos -->
+                                <c:forEach var="evento" items="${eventos}">
+                                    <tr>
+                                        <td><fmt:formatDate value="${evento.fecha}" pattern="dd-MM-yyyy" /></td>
+                                        <td><fmt:formatDate value="${evento.hora}" pattern="hh:mm a" /></td>
+                                        <td>${evento.albergue.nombre}</td>
+                                        <td>S/. ${evento.donaciones.cantidadDonacion}</td>
+                                        <td>${evento.aforo} personas</td>
+                                        <td>
+                                            <a href="<%= request.getContextPath() %>/Usuario?action=detallesEvento&idEvento=${evento.idEventos}"
+                                               class="btn inscribirse-btn d-inline-flex align-items-center"
+                                               style="text-align: center; padding: 5px 10px; border-radius: 8px; background-color: transparent; text-decoration: none;">
+                                                <i class="fas fa-info-circle" style="color: #808080; font-size: 2rem; margin-right: 0.5rem;"></i>
+                                                <span style="color: #808080; font-size: 1.2rem;">Más detalles</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
                                 </tbody>
                             </table>
                         </div>

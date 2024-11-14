@@ -116,8 +116,8 @@ public class Donaciones {
         return tipoDonacion;
     }
 
-    // Método setter para tipoDonacion
     public void setTipoDonacion(String tipoDonacion) {
         this.tipoDonacion = tipoDonacion;
     }
+
 }

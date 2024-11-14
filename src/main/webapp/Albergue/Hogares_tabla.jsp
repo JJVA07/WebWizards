@@ -1,4 +1,7 @@
+<%@ page import="com.example.webapphr1_2023.Beans.Mascotas" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,33 +38,7 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #581925;">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseCrearPublicacion" aria-expanded="false" aria-controls="collapseCrearPublicacion">
-                        <div class="sb-nav-link-icon"><i class="fas fa-edit"></i></div>
-                        Crear Publicación
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapseCrearPublicacion" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="Albergue_adopcion.jsp">Adopción</a>
-                            <a class="nav-link" href="Albergue_donacion.jsp">Donación</a>
-                            <a class="nav-link" href="Albergue_eventos.jsp">Eventos Benéficos</a>
-                        </nav>
-                    </div>
-
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePublicaciones" aria-expanded="false" aria-controls="collapsePublicaciones">
-                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                        Publicaciones
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapsePublicaciones" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="Adopciones_publicaciones.jsp">Adopciones</a>
-                            <a class="nav-link" href="Donaciones_publicaciones.jsp">Donaciones</a>
-                            <a class="nav-link" href="Hogares_publicaciones.jsp">Hogares Temporales</a>
-                            <a class="nav-link" href="Eventos_publicaciones.jsp">Eventos Benéficos</a>
-                        </nav>
-                    </div>
-
+                    <!-- Sidebar -->
                     <a class="nav-link collapsed active" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTemporal" aria-expanded="true" aria-controls="collapseTemporal">
                         <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
                         Mis Actividades
@@ -104,13 +81,21 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <%
+                                    // Obtiene la lista de mascotas temporales pasada desde el servlet
+                                    List<Mascotas> mascotasTemporales = (List<Mascotas>) request.getAttribute("mascotasTemporales");
+
+                                    // Verifica si la lista tiene elementos
+                                    if (mascotasTemporales != null && !mascotasTemporales.isEmpty()) {
+                                        for (Mascotas mascota : mascotasTemporales) {
+                                %>
                                 <tr>
-                                    <td>Firulais</td>
-                                    <td>3 años</td>
-                                    <td>Macho</td>
-                                    <td>2 meses</td>
-                                    <td>Requiere medicamento diario</td>
-                                    <td>Juan Pérez, 123-4567890</td>
+                                    <td><%= mascota.getNombreMascota() %></td>
+                                    <td><%= mascota.getEdad() %> años</td>
+                                    <td><%= mascota.getGenero() %></td>
+                                    <td><%= mascota.getComentarioCoordinador() %></td>
+                                    <td><%= mascota.getDescripcion() %></td>
+                                    <td><%= mascota.getUsuario().getNombre() %></td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -123,6 +108,14 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <%
+                                    }
+                                } else {
+                                %>
+                                <tr>
+                                    <td colspan="7">No hay mascotas temporales registradas.</td>
+                                </tr>
+                                <% } %>
                                 </tbody>
                             </table>
                         </div>

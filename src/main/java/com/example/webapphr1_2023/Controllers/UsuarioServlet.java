@@ -9,12 +9,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Date;
 import java.util.List;
 
 @WebServlet(name ="UsuarioServlet" , value = "/Usuario")
@@ -27,8 +25,8 @@ public class UsuarioServlet extends HttpServlet {
         RequestDispatcher rd;
         UsuariosDao userDao = new UsuariosDao();
         DonacionesDao donacionesDao = new DonacionesDao();
+        EventosDao eventosDao = new EventosDao();
         SolicitudDao.PostulacionDao postulacionDao = new SolicitudDao.PostulacionDao();
-
         switch (action) {
             case "pagPrincipal":
                 vista = "/Usuario_final/home.jsp";
@@ -47,23 +45,60 @@ public class UsuarioServlet extends HttpServlet {
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
+            case "misEventos":
+                // Obtener el ID del usuario desde la sesión o request (aquí asumo que está en la sesión)
+                int idUsuario = (int) request.getSession().getAttribute("2");
+                List<Eventos> eventos = eventosDao.obtenerEventosPorUsuario(idUsuario);
+
+                request.setAttribute("eventos", eventos);
+                vista = "/Usuario_final/mis_eventos.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "detallesEvento":
+                int idEvento = Integer.parseInt(request.getParameter("idEvento"));
+                Eventos evento = eventosDao.obtenerDetallesEvento(idEvento);
+                request.setAttribute("evento", evento);
+                vista = "/Usuario_final/evento_detalles.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
             case "eventos":
                 int pagina = request.getParameter("pagina") == null ? 1 : Integer.parseInt(request.getParameter("pagina"));
                 int offset = (pagina - 1) * 6;
-
-                // Crear una instancia de EventosDao
-                EventosDao eventosDao = new EventosDao();
-                List<Eventos> eventos = eventosDao.obtenerEventosActivosPaginados(offset, 6);
+                List<Eventos> eventasos = eventosDao.obtenerEventosActivosPaginados(offset, 6);
 
                 int totalEventos = eventosDao.contarEventosActivos();
                 int totalPaginas = (int) Math.ceil((double) totalEventos / 6);
 
-                request.setAttribute("eventos", eventos);
+                request.setAttribute("eventos", eventasos);
                 request.setAttribute("paginaActual", pagina);
                 request.setAttribute("totalPaginas", totalPaginas);
+                vista = "/Usuario_final/eventos.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "mostrarSolicitud":
+                int usuarioIds = 1; // ID del usuario
+                Postulacion postulacion = postulacionDao.obtenerSolicitudPorUsuario(usuarioIds);
+                request.setAttribute("postulacion", postulacion);
 
+                vista = "/Usuario_final/ver_solicitud.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "misSolicitudes":
+                int usuarioId = 1; // ID fijo del usuario
+                SolicitudDao solicitudDao = new SolicitudDao();
 
-                vista = "src/main/webapp/Usuario_final/eventos.jsp";
+                // Obtener todas las solicitudes para el usuario
+                List<Object[]> solicitudes = solicitudDao.obtenerSolicitudesPorUsuario(usuarioId);
+
+                // Pasar la lista de solicitudes a la JSP
+                request.setAttribute("solicitudes", solicitudes);
+
+                // Redirigir a la vista de "Mis Solicitudes"
+                vista = "/Usuario_final/mis_solicitudes.jsp";
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
@@ -121,6 +156,7 @@ public class UsuarioServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion");
                 }
                 break;
+
             case "formularioPerdida":
                 vista = "/Usuario_final/mascotas_perdidas.jsp";
                 rd = request.getRequestDispatcher(vista);
@@ -153,33 +189,13 @@ public class UsuarioServlet extends HttpServlet {
                 rd = request.getRequestDispatcher("/Usuario_final/donacion_detalle.jsp");
                 rd.forward(request, response);
                 break;
-
-            case "misSolicitudes":
-                int usuarioId = 1; // ID fijo del usuario
-                SolicitudDao solicitudDao = new SolicitudDao();
-
-                // Obtener todas las solicitudes para el usuario
-                List<Object[]> solicitudes = solicitudDao.obtenerSolicitudesPorUsuario(usuarioId);
-
-                // Pasar la lista de solicitudes a la JSP
-                request.setAttribute("solicitudes", solicitudes);
-
-                // Redirigir a la vista de "Mis Solicitudes"
-                vista = "/Usuario_final/mis_solicitudes.jsp";
-                rd = request.getRequestDispatcher(vista);
+            case "miCuenta":
+                int idUsuarioo = 5; // Aquí especificas el ID del usuario
+                Usuarios usuario = userDao.obtenerUsuarioPorId(idUsuarioo);
+                request.setAttribute("usuario", usuario);
+                rd = request.getRequestDispatcher("/Usuario_final/mi_cuenta.jsp");
                 rd.forward(request, response);
                 break;
-            case "mostrarSolicitud":
-                int usuarioIds = 1; // ID del usuario
-                Postulacion postulacion = postulacionDao.obtenerSolicitudPorUsuario(usuarioIds);
-                request.setAttribute("postulacion", postulacion);
-
-                vista = "/Usuario_final/ver_solicitud.jsp";
-                rd = request.getRequestDispatcher(vista);
-                rd.forward(request, response);
-                break;
-
-
             default:
                 // Acción por defecto en caso de que no haya coincidencias con las acciones especificadas
                 vista = "/Usuario_final/home.jsp";
@@ -195,14 +211,15 @@ public class UsuarioServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         PublicacionDao publicacionDao = new PublicacionDao();
-        SolicitudDao.PostulacionDao postulacionDao = new SolicitudDao.PostulacionDao();
-        SolicitudDao solicitudDao = new SolicitudDao();
+        PostulacionDao postulacionDao = new PostulacionDao();
+        Usuarios usuario = new Usuarios();
+        int id_Usuario =5;
 
         switch (action) {
             case "reportarPOST":
                 Publicacion publicacion = new Publicacion();
-                int id_Usuario =5;
-                Usuarios usuario = new Usuarios();
+
+
                 usuario.setId(id_Usuario);
 
 
@@ -241,15 +258,91 @@ public class UsuarioServlet extends HttpServlet {
                 publicacionDao.reportarMascota(publicacion);
                 response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
                 break;
+            case "denunciaPost":
+                Publicacion denuncia = new Publicacion();
 
-            // Otros casos...
-            default:
-                // Acción por defecto
-                response.sendRedirect(request.getContextPath() + "/Usuario_final/home.jsp");
+
+                usuario.setId(id_Usuario);
+
+                String nombreMaltratador = request.getParameter(("nombre_maltratador"));
+                String tipoMaltrato = request.getParameter(("tipo_maltrato"));
+                String tamanoMascota = request.getParameter(("tamano_mascota"));
+                String razaMascota = request.getParameter(("raza_mascota"));
+                String direccionMaltrato = request.getParameter(("direccion_maltrato"));
+                Boolean denunciaPolicial = Boolean.valueOf(request.getParameter(("denuncia_policial")));
+                String informacionExtra = request.getParameter(("informacion_extra"));
+
+                byte[] archivoAdjunto = obtenerImagenComoByteArray(request.getPart("archivo").getInputStream());
+
+                denuncia.setNombreMaltratador(nombreMaltratador);
+                denuncia.setTipoMaltrato(tipoMaltrato);
+                denuncia.setTamano(tamanoMascota);
+                denuncia.setRaza(razaMascota);
+                denuncia.setDireccionMaltrato(direccionMaltrato);
+                denuncia.setDenunciaPolicial(denunciaPolicial);
+                denuncia.setDescripcion(informacionExtra);
+                denuncia.setFoto(archivoAdjunto);
+                denuncia.setUsuario(usuario);
+
+
+                publicacionDao.denunciarMaltrato(denuncia);
+                response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+                break;
+            case "adoptarMascota":
+                Postulacion postulacion = new Postulacion();
+
+                usuario.setId(id_Usuario);
+
+                // Obtener el idMascota del formulario
+                String idMascotaParam = request.getParameter("idMascota");
+                if (idMascotaParam != null && !idMascotaParam.isEmpty()) {
+                    int idMascota = Integer.parseInt(idMascotaParam);
+                    Mascotas mascota = new Mascotas();
+                    mascota.setIdMascotas(idMascota);
+                    postulacion.setMascota(mascota);
+                } else {
+                    // Manejar el caso cuando idMascota no está presente o es inválido
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion"); // o la acción que prefieras
+                    return;
+                }
+
+
+
+                String Nombre = request.getParameter(("Nombre"));
+                String Apellido = request.getParameter(("Apellido"));
+                String Genero = request.getParameter(("Genero"));
+                String Edad = request.getParameter(("Edad"));
+                String Direccion = request.getParameter(("Direccion"));
+                String metraje_vivienda = request.getParameter(("metraje_vivienda"));
+                String cantidad_cuartos = request.getParameter(("cantidad_cuartos"));
+                String celular = request.getParameter(("celular"));
+                String telefono_referencia = request.getParameter(("telefono_referencia"));
+                String vive_con_dependientes = request.getParameter(("vive_con_dependientes"));
+                String trabaja_remoto = request.getParameter(("trabaja_remoto"));
+                String Tiene_mascotas = request.getParameter(("Tiene_mascotas"));
+                String tiene_hijos = request.getParameter(("tiene_hijos"));
+
+                postulacion.setNombre(Nombre);
+                postulacion.setApellido(Apellido);
+                postulacion.setGenero(Genero);
+                postulacion.setEdad(Edad);
+                postulacion.setDireccion(Direccion);
+                postulacion.setMetrajeVivienda(Double.valueOf(metraje_vivienda));
+                postulacion.setCantidadCuartos(Integer.valueOf(cantidad_cuartos));
+                postulacion.setCelular(celular);
+                postulacion.setTelefonoReferencia(telefono_referencia);
+                postulacion.setViveConDependientes(Boolean.valueOf(vive_con_dependientes));
+                postulacion.setTrabajaRemoto(Boolean.valueOf(trabaja_remoto));
+                postulacion.setTieneMascotas(Boolean.valueOf(Tiene_mascotas));
+                postulacion.setTieneHijos(Boolean.valueOf(tiene_hijos));
+                postulacion.setUsuario(usuario);
+
+
+                postulacionDao.postularAdopcion(postulacion);
+                response.sendRedirect(request.getContextPath() + "/Usuario?action=misSolicitudes");
                 break;
         }
     }
-
     public static byte[] obtenerImagenComoByteArray(InputStream inputStream) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;
@@ -260,7 +353,6 @@ public class UsuarioServlet extends HttpServlet {
         buffer.flush();
         return buffer.toByteArray();
     }
-
 
 
 
