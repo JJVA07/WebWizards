@@ -38,19 +38,16 @@ public class AlbergueServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
 
-            case "eventos":
+            case "lista_eventos":
+                Lista_eventosDao listaEventosDao = new Lista_eventosDao();
+                List<Eventos> eventos = listaEventosDao.obtenerEventosAlbergue(albergueId);
 
-                List<Eventos> eventos = albergueDao.obtenerEventosAlbergue(7);
+                // Agregar la lista de eventos al request
+                request.setAttribute("eventos", eventos);
 
-                if (eventos != null) {
-                    request.setAttribute("eventos", eventos);
-                }
-
-                System.out.println("Cantidad de eventos obtenidos: " + (eventos != null ? eventos.size() : "0"));
-
-
-                // Redirige a la vista `Eventos_tabla.jsp` para mostrar los eventos
+                // Redirigir a la vista de lista de eventos
                 vista = "/Albergue/Eventos_tabla.jsp";
+
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
@@ -69,19 +66,55 @@ public class AlbergueServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
 
-            case "temporal":
-                Lista_eventosDao lista_eventosDao = new Lista_eventosDao();
-                List<Mascotas> mascotasTemporales = lista_eventosDao.obtenerEventosAlbergue(7);
+            case "lista_temporal":
+                // Crear instancia de AlbergueDao y obtener la lista de mascotas temporales
+                AlbergueDao temporaldao = new AlbergueDao();
+                List<Mascotas> mascotasTemporales = temporaldao.listaTemporales(albergueId);
 
-                // Obtener lista de mascotas temporales
-                if (mascotasTemporales != null) {
-                    request.setAttribute("mascotasTemporales", mascotasTemporales);
-                }
-                vista = "/Albergue/mascotas_temporales.jsp";
+                // Agregar la lista de mascotas temporales al request para pasarla a la vista
+                request.setAttribute("mascotasTemporales", mascotasTemporales);
+
+                // Redirigir a la vista que mostrará la lista de mascotas temporales
+                vista = "/Albergue/Hogares_tabla.jsp";
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
 
+            case "mis_donaciones":
+
+                // Crear instancia del DAO para obtener la lista de donaciones
+                AlbergueDao donacionesDao = new AlbergueDao();
+
+                // ID del albergue (puedes obtenerlo dinámicamente si es necesario)
+
+                // Obtener la lista de donaciones asociadas al albergue
+                List<Donaciones> listaDonaciones = donacionesDao.obtenerDonacionesPorAlbergue(albergueId);
+
+                // Agregar la lista de donaciones al request para enviarla a la vista
+                request.setAttribute("listaDonaciones", listaDonaciones);
+
+                // Redirigir a la vista que mostrará las donaciones
+                vista = "/Albergue/Donaciones_tabla.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+
+
+                break;
+
+            case "mis_adopciones":
+                AlbergueDao adopciones  = new AlbergueDao();
+
+                List<Mascotas> misAdopciones = adopciones .obtenerAdopciones(albergueId);
+
+                // Agregar la lista de adopciones como atributo al request
+                request.setAttribute("misAdopciones", misAdopciones);
+
+                // Redirigir a la vista correspondiente
+                vista = "/Albergue/Adopciones_tabla.jsp"; // Cambia el nombre de la vista si es diferente
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+
+                break;
 
             case "editar":
 

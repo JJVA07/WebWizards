@@ -9,7 +9,7 @@ public class Lista_eventosDao extends DaoBase{
         List<Eventos> eventos = new ArrayList<>();
         String sql = "SELECT " +
                 "e.Nombre_Evento AS NombreDelEvento, " +
-                "l.Nombre_Lugar AS Lugar, " +
+                "l.Nombre_Lugar AS Lugar, " + // Alias 'Lugar' para el nombre del lugar
                 "e.Fecha AS FechaDelEvento, " +
                 "e.Hora AS HoraDelEvento, " +
                 "e.Aforo, " +
@@ -20,9 +20,10 @@ public class Lista_eventosDao extends DaoBase{
                 "FROM eventos e " +
                 "JOIN lugares l ON e.Lugares_idLugar = l.idLugar " +
                 "WHERE e.Albergue = ?";
+
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, 7);
+            pstmt.setInt(1, idAlbergue);
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
@@ -32,7 +33,7 @@ public class Lista_eventosDao extends DaoBase{
                 evento.setNombreEvento(rs.getString("NombreDelEvento"));
 
                 Lugares lugares = new Lugares();
-                lugares.setNombreLugar(rs.getString("NombreLugar"));
+                lugares.setNombreLugar(rs.getString("Lugar"));
                 evento.setLugar(lugares);
 
                 evento.setFecha(rs.getDate("FechaDelEvento"));

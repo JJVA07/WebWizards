@@ -14,81 +14,11 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-<nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #581925;">
-    <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="Albergue.jsp">Albergue</a>
-    <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-    <!-- Navbar-->
-    <ul class="navbar-nav ms-auto me-3 me-lg-4">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/AlbergueServlet?action=cuenta">Mi cuenta</a></li>
 
-                <li><hr class="dropdown-divider" /></li>
-                <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li>
-            </ul>
-        </li>
-        <a class="nav-link" id="navbarDropdown" href="${pageContext.request.contextPath}/Albergue?action=pagPrincipal" role="button"><i class="fa-solid fa-paw"></i></a>
-    </ul>
-</nav>
+<%@ include file="/WEB-INF/navbar_albergue.jsp" %>
 
 <div id="layoutSidenav">
-    <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #581925;">
-            <div class="sb-sidenav-menu">
-                <div class="nav">
-                    <!-- Crear Publicación -->
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                       data-bs-target="#collapseCrearPublicacion" aria-expanded="false" aria-controls="collapseCrearPublicacion">
-                        <div class="sb-nav-link-icon"><i class="fas fa-edit"></i></div>
-                        Crear Publicación
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapseCrearPublicacion" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="Albergue_adopcion.jsp">Adopción</a>
-                            <a class="nav-link" href="Albergue_donacion.jsp">Donación</a>
-                            <a class="nav-link" href="Albergue_eventos.jsp">Eventos Benéficos</a>
-                        </nav>
-                    </div>
-
-                    <!-- Publicaciones -->
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                       data-bs-target="#collapsePublicaciones" aria-expanded="false" aria-controls="collapsePublicaciones">
-                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                        Publicaciones
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapsePublicaciones" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="Adopciones_publicaciones.jsp">Adopciones</a>
-                            <a class="nav-link" href="Donaciones_publicaciones.jsp">Donaciones</a>
-                            <a class="nav-link" href="Hogares_publicaciones.jsp">Hogares Temporales</a>
-                            <a class="nav-link" href="Eventos_publicaciones.jsp">Eventos Benéficos</a>
-                        </nav>
-                    </div>
-
-                    <!-- Mis Actividades -->
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                       data-bs-target="#collapseTemporal" aria-expanded="false" aria-controls="collapseTemporal">
-                        <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
-                        Mis Actividades
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapseTemporal" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="Adopciones_tabla.jsp">Adopciones</a>
-                            <a class="nav-link" href="Donaciones_tabla.jsp">Donaciones</a>
-                            <a class="nav-link" href="Hogares_tabla.jsp">Hogares Temporales</a>
-                            <a class="nav-link" href="Eventos_tabla.jsp">Eventos Benéficos</a>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </div>
+    <%@ include file="/WEB-INF/sidebar_albergue.jsp" %>
 
     <div id="layoutSidenav_content">
         <main>

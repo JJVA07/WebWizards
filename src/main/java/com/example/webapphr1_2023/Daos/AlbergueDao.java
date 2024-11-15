@@ -1,9 +1,7 @@
 package com.example.webapphr1_2023.Daos;
 
-import com.example.webapphr1_2023.Beans.Distrito;
-import com.example.webapphr1_2023.Beans.Eventos;
-import com.example.webapphr1_2023.Beans.Lugares;
-import com.example.webapphr1_2023.Beans.Usuarios;
+import com.example.webapphr1_2023.Beans.*;
+
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -90,54 +88,136 @@ public class AlbergueDao extends DaoBase {
         }
     }
 
-    public List<Eventos> obtenerEventosAlbergue(int idAlbergue) {
-        List<Eventos> eventos = new ArrayList<>();
-
+    public List<Mascotas> listaTemporales(int id_albergue){
+        List<Mascotas> temporales = new ArrayList<>();
         String sql = "SELECT " +
-                "e.Nombre_Evento AS NombreDelEvento, " +
-                "l.Nombre_Lugar AS Lugar, " +
-                "e.Fecha AS FechaDelEvento, " +
-                "e.Hora AS HoraDelEvento, " +
-                "e.Aforo, " +
-                "e.vacantes_disponibles AS Vacantes_disponibles, " +
-                "e.Artistas_invitados AS ArtistasInvitados, " +
-                "e.Descripcion, " +
-                "e.Razon AS RazonDelEvento " +
-                "FROM eventos e " +
-                "JOIN lugares l ON e.Lugares_idLugar = l.idLugar " +
-                "WHERE e.Albergue = ?";
+                "m.idMascotas AS idMascota, " +
+                "m.Nombre_Mascota AS nombreMascota, " +
+                "m.Edad AS edad, " +
+                "m.Genero AS genero, " +
+                "m.Comentario_Coordinador AS comentarioCoordinador, " +
+                "u.Telefono AS telefonoUsuario " +
+                "FROM mascotas m " +
+                "JOIN usuarios u ON m.Usuarios_ID = u.ID " +
+                "WHERE m.Albergue_ID = ?"; // Filtrar por id_albergue
 
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, idAlbergue);
+            // Asignar el ID del albergue al parámetro
+            pstmt.setInt(1, id_albergue);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    Eventos evento = new Eventos();
+                    // Crear un objeto Mascotas
+                    Mascotas mascota = new Mascotas();
+                    mascota.setIdMascotas(rs.getInt("idMascota"));
+                    mascota.setNombreMascota(rs.getString("nombreMascota"));
+                    mascota.setEdad(rs.getInt("edad"));
+                    mascota.setGenero(rs.getString("genero"));
+                    mascota.setComentarioCoordinador(rs.getString("comentarioCoordinador"));
 
-                    // Asignación de valores obtenidos de ResultSet al objeto Evento
-                    evento.setNombreEvento(rs.getString("NombreDelEvento"));
+                    // Asignar el teléfono al usuario dentro de Mascotas
+                    Usuarios usuario = new Usuarios();
+                    usuario.setTelefono(rs.getInt("telefonoUsuario"));
+                    mascota.setUsuario(usuario); // Asocia el usuario con la mascota
 
-                    Lugares lugares = new Lugares();
-                    lugares.setNombreLugar(rs.getString("NombreLugar"));
-                    evento.setLugar(lugares);
-
-                    evento.setFecha(rs.getDate("FechaDelEvento"));
-                    evento.setHora(rs.getTime("HoraDelEvento"));
-                    evento.setAforo(rs.getInt("Aforo"));
-                    evento.setVacantesDisponibles(rs.getString("Vacantes_disponibles"));
-                    evento.setArtistasInvitados(rs.getString("ArtistasInvitados"));
-                    evento.setDescripcion(rs.getString("Descripcion"));
-                    evento.setRazon(rs.getString("RazonDelEvento"));
-
-                    eventos.add(evento);
+                    // Agregar la mascota a la lista
+                    temporales.add(mascota);
                 }
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return eventos;
+        return temporales;
+    }
+
+    public List<Donaciones> obtenerDonacionesPorAlbergue(int AlbergueId){
+        List<Donaciones> listaDonaciones  = new ArrayList<>();
+        String sql = "SELECT " +
+                "u.Telefono AS telefonoContacto, " +
+                "CONCAT(u.Nombre, ' ', u.Apellido) AS nombreContacto, " +
+                "d.punto_entrega AS puntoEventos, " +
+                "d.Tipo_donacion AS tipoDonacion, " +
+                "d.Cantidad_donacion AS cantidadDonaciones, " +
+                "d.Fecha_Donacion AS fechasRecepcion, " +
+                "d.Hora_entrega AS horasRecepcion " +
+                "FROM donaciones d " +
+                "JOIN usuarios u ON d.Usuarios_ID = u.ID " +
+                "WHERE d.Usuarios_albergue = ?";
+
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // Asignar el valor del filtro para Usuarios_albergue
+            pstmt.setInt(1, AlbergueId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+
+                    Donaciones donacion = new Donaciones();
+
+                    Usuarios usuario = new Usuarios();
+                    usuario.setTelefono(rs.getInt("telefonoContacto"));
+                    usuario.setNombre(rs.getString("nombreContacto"));
+                    donacion.setUsuario(usuario);
+
+                    donacion.setPuntoEntrega(rs.getString("puntoEventos"));
+                    donacion.setTipoDonacion(rs.getString("tipoDonacion"));
+                    donacion.setCantidadDonacion(rs.getString("cantidadDonaciones"));
+                    donacion.setFechaDonacion(rs.getDate("fechasRecepcion"));
+                    donacion.setHoraEntrega(rs.getTime("horasRecepcion"));
+
+                    // Agregar a la lista
+                    listaDonaciones.add(donacion);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaDonaciones;
+    }
+
+    public List<Mascotas> obtenerAdopciones(int albergueId){
+
+        List<Mascotas> listaAdopciones = new ArrayList<>();
+
+        String sql = "SELECT " +
+                "m.Nombre_Mascota AS nombre, " +
+                "m.Edad AS edad, " +
+                "m.Genero AS genero, " +
+                "m.Comentario_Coordinador AS comentarios, " +
+                "m.Descripcion AS descripcion " +
+                "FROM mascotas m " +
+                "WHERE m.Albergue_ID = ? " +
+                "AND m.Mascota_estado_idMascota_estado = 3";
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // Asignar el ID del albergue al parámetro de la consulta
+            pstmt.setInt(1, albergueId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    // Crear una nueva instancia de Mascotas y asignar valores
+                    Mascotas mascota = new Mascotas();
+                    mascota.setNombreMascota(rs.getString("nombre"));
+                    mascota.setEdad(rs.getInt("edad"));
+                    mascota.setGenero(rs.getString("genero"));
+                    mascota.setComentarioCoordinador(rs.getString("comentarios"));
+                    mascota.setDescripcion(rs.getString("descripcion"));
+
+                    // Agregar la mascota a la lista de adopciones
+                    listaAdopciones.add(mascota);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaAdopciones;
     }
 
 }
+
