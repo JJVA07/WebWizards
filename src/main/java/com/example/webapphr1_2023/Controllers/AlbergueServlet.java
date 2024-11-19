@@ -1,8 +1,9 @@
 package com.example.webapphr1_2023.Controllers;
 import com.example.webapphr1_2023.Beans.*;
-
+import com.example.webapphr1_2023.Beans.Mascotas;
 import com.example.webapphr1_2023.Beans.Eventos;
 import com.example.webapphr1_2023.Beans.Usuarios;
+import com.example.webapphr1_2023.Daos.AdopcionDao;
 import com.example.webapphr1_2023.Daos.AlbergueDao;
 import com.example.webapphr1_2023.Daos.Lista_eventosDao;
 import jakarta.servlet.RequestDispatcher;
@@ -12,15 +13,20 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.ArrayList;
 
 @WebServlet(name = "AlbergueServlet", urlPatterns = {"/AlbergueServlet"})
 @MultipartConfig
+
 public class AlbergueServlet extends HttpServlet {
     @Override
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action") == null ? "pagPrincipal" : request.getParameter("action");
@@ -31,6 +37,13 @@ public class AlbergueServlet extends HttpServlet {
 
 
         switch (action) {
+
+            case "Albergue_adopcion":
+                vista = "/Albergue/Albergue_adopcion.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+
+
             case "pagPrincipal":
                 // Redirige a la página principal del albergue
                 vista = "/Albergue/Albergue.jsp";
@@ -129,6 +142,7 @@ public class AlbergueServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
 
+
             default:
                 // Página por defecto
                 vista = "/Albergue/Albergue.jsp";
@@ -167,21 +181,81 @@ public class AlbergueServlet extends HttpServlet {
                     albergue.setNumeroDonaciones(numeroDonaciones);
 
                     // Llamar al DAO para actualizar el albergue
-                    albergueDao.actualizarAlbergue(albergue);
 
                     // Redirigir a la vista de cuenta después de actualizar
                     response.sendRedirect("AlbergueServlet?action=cuenta");
                 } catch (Exception e) {
                     e.printStackTrace();
-                    response.sendRedirect("error.jsp");
+                }
+                break;
+
+            case "adopcion_post":
+
+                try {
+                    if (request.getParameter("nombreMascota") == null || request.getParameter("nombreMascota").trim().isEmpty()) {
+                        response.sendRedirect("error.jsp?message=Nombre de la mascota es obligatorio");
+                        return;
+                    }
+                    if (request.getParameter("raza") == null || request.getParameter("raza").trim().isEmpty()) {
+                        response.sendRedirect("error.jsp?message=Raza de la mascota es obligatoria");
+                        return;
+                    }
+                    if (request.getParameter("edad") == null || Integer.parseInt(request.getParameter("edad")) <= 0) {
+                        response.sendRedirect("error.jsp?message=Edad de la mascota debe ser un número positivo");
+                        return;
+                    }
+                    if (request.getParameter("genero") == null || (!request.getParameter("genero").equals("Macho") && !request.getParameter("genero").equals("Hembra"))) {
+                        response.sendRedirect("error.jsp?message=Género de la mascota es inválido");
+                        return;
+                    }
+
+
+                    // Crear un objeto Mascotas para capturar los datos del formulario
+                    Mascotas nuevaMascota = new Mascotas();
+                    nuevaMascota.setNombreMascota(request.getParameter("nombreMascota"));
+                    nuevaMascota.setRaza(request.getParameter("raza"));
+                    nuevaMascota.setEdad(Integer.parseInt(request.getParameter("edad")));
+                    nuevaMascota.setGenero(request.getParameter("genero"));
+                    nuevaMascota.setDescripcion(request.getParameter("descripcion"));
+
+                    // Establecer el estado "Adopción" (asumimos que idEstado = 1 para adopción)
+                    MascotaEstado estadoAdopcion = new MascotaEstado();
+                    estadoAdopcion.setIdMascotaEstado(1); // Estado de adopción
+                    nuevaMascota.setMascotaEstado(estadoAdopcion);
+
+                    // Asociar la mascota al albergue correspondiente
+                    Usuarios albergue = new Usuarios();
+                    albergue.setId(7); // Cambiar este ID si el albergue es dinámico
+                    nuevaMascota.setAlbergue(albergue);
+
+                    byte[] archivoAdjunto = obtenerImagenComoByteArray(request.getPart("Foto").getInputStream());
+
+                    nuevaMascota.setFoto(archivoAdjunto);
+
+                    AdopcionDao postadopcion = new AdopcionDao();
+                    postadopcion.createAdopcion(nuevaMascota);
+                    response.sendRedirect("AlbergueServlet?action=mis_adopciones");
+                    break;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 break;
 
             default:
-                // Acción por defecto si no se especifica ninguna o es inválida
                 response.sendRedirect("AlbergueServlet?action=pagPrincipal");
                 break;
         }
     }
 
+
+    public static byte[] obtenerImagenComoByteArray(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int nRead;
+        byte[] data = new byte[1024];
+        while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+        buffer.flush();
+        return buffer.toByteArray();
+    }
 }

@@ -12,7 +12,7 @@
         </a>
         <div class="collapse" id="collapseCrearPublicacion" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
           <nav class="sb-sidenav-menu-nested nav">
-            <a class="nav-link" href="Albergue_adopcion.jsp">Adopcion</a>
+            <a class="nav-link" href="${pageContext.request.contextPath}/AlbergueServlet?action=Albergue_adopcion">Adopcion</a>
             <a class="nav-link" href="Albergue_donacion.jsp">Donacion</a>
             <a class="nav-link" href="Albergue_eventos.jsp">Eventos Beneficos</a>
           </nav>

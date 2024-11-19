@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class AlbergueDao extends DaoBase {
 
+
     public Usuarios obtenerAlbergue(int id) {
         Usuarios albergue = null;
 
@@ -218,6 +219,7 @@ public class AlbergueDao extends DaoBase {
 
         return listaAdopciones;
     }
+
 
 }
 
