@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class AlbergueServlet extends HttpServlet {
                 vista = "/Albergue/Albergue_adopcion.jsp";
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
-
+                break;
 
             case "pagPrincipal":
                 // Redirige a la página principal del albergue
@@ -192,6 +193,7 @@ public class AlbergueServlet extends HttpServlet {
             case "adopcion_post":
 
                 try {
+                    // Validaciones de los parámetros enviados desde el formulario
                     if (request.getParameter("nombreMascota") == null || request.getParameter("nombreMascota").trim().isEmpty()) {
                         response.sendRedirect("error.jsp?message=Nombre de la mascota es obligatorio");
                         return;
@@ -208,15 +210,18 @@ public class AlbergueServlet extends HttpServlet {
                         response.sendRedirect("error.jsp?message=Género de la mascota es inválido");
                         return;
                     }
-
+                    if (request.getParameter("descripcion") == null || request.getParameter("descripcion").trim().isEmpty()) {
+                        response.sendRedirect("error.jsp?message=Descripción de la mascota es obligatoria");
+                        return;
+                    }
 
                     // Crear un objeto Mascotas para capturar los datos del formulario
                     Mascotas nuevaMascota = new Mascotas();
                     nuevaMascota.setNombreMascota(request.getParameter("nombreMascota"));
-                    nuevaMascota.setRaza(request.getParameter("raza"));
                     nuevaMascota.setEdad(Integer.parseInt(request.getParameter("edad")));
                     nuevaMascota.setGenero(request.getParameter("genero"));
                     nuevaMascota.setDescripcion(request.getParameter("descripcion"));
+                    nuevaMascota.setRaza(request.getParameter("raza"));
 
                     // Establecer el estado "Adopción" (asumimos que idEstado = 1 para adopción)
                     MascotaEstado estadoAdopcion = new MascotaEstado();
@@ -228,16 +233,36 @@ public class AlbergueServlet extends HttpServlet {
                     albergue.setId(7); // Cambiar este ID si el albergue es dinámico
                     nuevaMascota.setAlbergue(albergue);
 
-                    byte[] archivoAdjunto = obtenerImagenComoByteArray(request.getPart("Foto").getInputStream());
+                    // Procesar y almacenar la foto como un byte array
+                    if (request.getPart("Foto") != null) {
+                        Part fotoPart = request.getPart("Foto"); // Obtiene el archivo adjunto del formulario
+                        if (fotoPart.getSize() > 0) {
+                            byte[] archivoAdjunto = obtenerImagenComoByteArray(fotoPart.getInputStream());
+                            nuevaMascota.setFoto(archivoAdjunto);
+                        } else {
+                            response.sendRedirect("AlbergueServlet?action=mis_adopciones&error=No se pudo crear la publicación de adopción");
+                            return;
+                        }
+                    } else {
+                        response.sendRedirect("AlbergueServlet?action=mis_adopciones&error=No se pudo crear la publicación de adopción");
+                        return;
+                    }
 
-                    nuevaMascota.setFoto(archivoAdjunto);
+                    // Crear la publicación en la base de datos
+                    AdopcionDao postAdopcion = new AdopcionDao();
+                    boolean resultado = postAdopcion.createAdopcion(nuevaMascota);
 
-                    AdopcionDao postadopcion = new AdopcionDao();
-                    postadopcion.createAdopcion(nuevaMascota);
-                    response.sendRedirect("AlbergueServlet?action=mis_adopciones");
-                    break;
+                    // Redirigir según el resultado de la operación
+                    if (resultado) {
+                        response.sendRedirect("AlbergueServlet?action=mis_adopciones");
+                    } else {
+                        response.sendRedirect("AlbergueServlet?action=mis_adopciones&error=No se pudo crear la publicación de adopción");
+                    }
+                } catch (NumberFormatException e) {
+                    response.sendRedirect("AlbergueServlet?action=mis_adopciones&error=No se pudo crear la publicación de adopción");
                 } catch (Exception e) {
                     e.printStackTrace();
+                    response.sendRedirect("AlbergueServlet?action=mis_adopciones&error=No se pudo crear la publicación de adopción");
                 }
                 break;
 
