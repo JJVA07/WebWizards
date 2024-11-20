@@ -21,6 +21,7 @@ public class CoordinadorServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getParameter("action") == null ? "pagPrincipal" : request.getParameter("action");
         String vista;
+        RequestDispatcher rd;
         CoordinadorDao coordinadorDao = new CoordinadorDao();
 
         switch (action) {
@@ -39,24 +40,25 @@ public class CoordinadorServlet extends HttpServlet {
 
                 if (coordinador != null) {
                     request.setAttribute("coordinador", coordinador);
-                } else {
-                    request.setAttribute("error", "No se encontró información del coordinador con ID " + coordinadorid);
                 }
-
                 vista = "/Coordinador/Mi_cuenta.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
                 break;
 
             case "pagPrincipal":
+
                 vista = "/Coordinador/index_coordinador.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
                 break;
 
             default:
                 vista = "/Coordinador/index_coordinador.jsp";
                 break;
-        }
 
-        // Redirección centralizada
-        RequestDispatcher rd = request.getRequestDispatcher(vista);
-        rd.forward(request, response);
+
+
     }
+}
 }

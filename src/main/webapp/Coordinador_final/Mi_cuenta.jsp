@@ -24,12 +24,12 @@
             </div>
             <div id="account-info">
                 <h3>Información Actual</h3>
-                <p><strong>Nombre</strong> ${coordinador.nombreAlbergue}</p>
-                <p><strong>Apellido:</strong> ${coordinador.nombre}</p>
-                <p><strong>Edad:</strong> ${coordinador.distrito.nombre}</p>
-                <p><strong>Genero:</strong> ${coordinador.direccion}</p>
-                <p><strong>Teléfono:</strong> ${coordinador.telefono}</p>
-                <p><strong>Correo :</strong> ${coordinador.puntoAcopioDonaciones}</p>
+                <p><strong>Nombre</strong> ${coordinador.nombre}</p>
+                <p><strong>Apellido:</strong> ${coordinador.apellido}</p>
+                <p><strong>Edad:</strong> ${coordinador.Edad}</p>
+                <p><strong>Genero:</strong> ${coordinador.Genero}</p>
+                <p><strong>Telefono:</strong> ${coordinador.telefono}</p>
+                <p><strong>Correo :</strong> ${coordinador.correo}</p>
             </div>
 
             <button type="button" id="edit-info-btn" class="btn btn-secondary mt-3 mb-3" onclick="redirectToEditPage()">Editar Información</button>
