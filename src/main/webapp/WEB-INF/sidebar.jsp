@@ -18,8 +18,8 @@
                 </a>
                 <div class="collapse <%= ("eventos".equals(paginaActiva) || "mis_eventos".equals(paginaActiva)) ? "show" : "" %>" id="collapseEventos" aria-labelledby="headingEventos" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link <%= "eventos".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/eventos.jsp">Eventos</a>
-                        <a class="nav-link <%= "mis_eventos".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/mis_eventos.jsp">Mis eventos</a>
+                        <a class="nav-link <%= "eventos".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=eventos">Eventos</a>
+                        <a class="nav-link <%= "mis_eventos".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=misEventos">Mis eventos</a>
                     </nav>
                 </div>
 
@@ -30,10 +30,20 @@
                     Publicaciones
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
+                <a class="nav-link <%= ("publicaciones".equals(paginaActiva) || "noticias".equals(paginaActiva) || "mis_publicaciones".equals(paginaActiva)) ? "active" : "" %> collapsed"
+                   href="UsuariosServlet?action=noticias"
+                   data-bs-toggle="collapse" data-bs-target="#collapsePublicaciones"
+                   aria-expanded="<%= ("publicaciones".equals(paginaActiva) || "noticias".equals(paginaActiva) || "mis_publicaciones".equals(paginaActiva)) ? "true" : "false" %>"
+                   aria-controls="collapsePublicaciones">
+                    <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                    Publicaciones
+                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                </a>
+
                 <div class="collapse <%= ("publicaciones".equals(paginaActiva) || "noticias".equals(paginaActiva) || "mis_publicaciones".equals(paginaActiva)) ? "show" : "" %>" id="collapsePublicaciones" aria-labelledby="headingPublicaciones" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link <%= "noticias".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/noticias.jsp">Noticias</a>
-                        <a class="nav-link <%= "mis_publicaciones".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/mis_publicaciones.jsp">Mis Publicaciones</a>
+                        <a class="nav-link <%= "noticias".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=noticias">Noticias</a>
+                        <a class="nav-link <%= "mis_publicaciones".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=misPublicaciones">Mis Publicaciones</a>
                     </nav>
                 </div>
 
