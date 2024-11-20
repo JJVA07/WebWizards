@@ -28,6 +28,24 @@ public class Usuarios {
     private Integer cantidadAlbergados;
     private String fechaRegistro;
     private Donaciones donaciones; // Relación con Donaciones
+    private Integer Edad;
+    private String Genero;
+
+    public String getGenero() {
+        return Genero;
+    }
+
+    public void setGenero(String genero) {
+        Genero = genero;
+    }
+
+    public Integer getEdad() {
+        return Edad;
+    }
+
+    public void setEdad(Integer edad) {
+        Edad = edad;
+    }
 
     public Usuarios() {
     }

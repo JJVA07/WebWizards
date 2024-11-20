@@ -5,6 +5,8 @@ import com.example.webapphr1_2023.Beans.*;
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AlbergueDao extends DaoBase {
 
@@ -192,7 +194,7 @@ public class AlbergueDao extends DaoBase {
                 "m.Descripcion AS descripcion " +
                 "FROM mascotas m " +
                 "WHERE m.Albergue_ID = ? " +
-                "AND m.Mascota_estado_idMascota_estado = 3";
+                "AND m.Mascota_estado_idMascota_estado = 1";
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -219,6 +221,58 @@ public class AlbergueDao extends DaoBase {
 
         return listaAdopciones;
     }
+
+    public boolean creardonacion(Donaciones nuevaDonacion) {
+        final int ESTADO_DEFAULT = 4; // Estado de donación predeterminado
+        final int USUARIO_ALBERGUE_DEFAULT = 7; // Usuario albergue predeterminado
+
+        String sql = "INSERT INTO donaciones ("
+                + "Teléfono, Cantidad_donacion, Nombre_contacto_albergue, "
+                + "punto_acopio_donaciones, Fechas_programadas_recepcion, "
+                + "Tipo_donacion, Hora_recepcion, Donacion_estado_idDonacion_estado, Usuarios_albergue) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, 4, 7)";
+
+        try (Connection conn = DaoBase.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // Validar y establecer parámetros
+            if (nuevaDonacion.getTelefono() != null) {
+                stmt.setInt(1, nuevaDonacion.getTelefono());
+            } else {
+                stmt.setNull(1, Types.INTEGER);
+            }
+
+            stmt.setString(2, nuevaDonacion.getCantidadDonacion());
+            stmt.setString(3, nuevaDonacion.getNombre_contacto_albergue());
+            stmt.setString(4, nuevaDonacion.getPunto_acopio_donaciones());
+
+            if (nuevaDonacion.getFechas_programadas_recepcion() != null) {
+                stmt.setDate(5, new java.sql.Date(nuevaDonacion.getFechas_programadas_recepcion().getTime()));
+            } else {
+                stmt.setNull(5, Types.DATE);
+            }
+
+            stmt.setString(6, nuevaDonacion.getTipoDonacion());
+
+            if (nuevaDonacion.getHora_recepcion() != null) {
+                stmt.setTime(7, nuevaDonacion.getHora_recepcion());
+            } else {
+                stmt.setNull(7, Types.TIME);
+            }
+
+            stmt.setInt(8, ESTADO_DEFAULT); // Estado de donación predeterminado
+            stmt.setInt(9, USUARIO_ALBERGUE_DEFAULT); // Usuario albergue predeterminado
+
+            // Ejecutar consulta
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            Logger.getLogger(AlbergueDao.class.getName()).log(Level.SEVERE,
+                    "Error al insertar en donaciones. Datos: " + nuevaDonacion.toString(), e);
+            return false;
+        }
+    }
+
 
 
 }

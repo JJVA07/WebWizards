@@ -15,8 +15,6 @@
 </head>
 <body class="sb-nav-fixed">
 <%@ include file="/WEB-INF/navbar_albergue.jsp" %>
-
-
 <div id="layoutSidenav">
     <%@ include file="/WEB-INF/sidebar_albergue.jsp" %>
     <div id="layoutSidenav_content">
@@ -24,7 +22,6 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-gray-800">Mi cuenta</h1>
             </div>
-
             <div id="account-info">
                 <h3>Información Actual</h3>
                 <p><strong>Nombre del Albergue:</strong> ${albergue.nombreAlbergue}</p>

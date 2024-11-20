@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import java.io.InputStream;
+import java.sql.Time;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -38,6 +39,12 @@ public class AlbergueServlet extends HttpServlet {
 
 
         switch (action) {
+
+            case "Albergue_donacion":
+                vista = "/Albergue/Albergue_donacion.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
 
             case "Albergue_adopcion":
                 vista = "/Albergue/Albergue_adopcion.jsp";
@@ -266,6 +273,75 @@ public class AlbergueServlet extends HttpServlet {
                 }
                 break;
 
+
+            case "donacion_post":
+                try {
+                    // Validaciones de los parámetros enviados desde el formulario
+                    if (!validarParametroObligatorio(request, "telefono", "El teléfono es obligatorio", response)) return;
+                    if (!validarParametroObligatorio(request, "cantidad_donacion", "La cantidad de donación es obligatoria", response)) return;
+                    if (!validarParametroObligatorio(request, "nombre_contacto_albergue", "El nombre del contacto del albergue es obligatorio", response)) return;
+                    if (!validarParametroObligatorio(request, "punto_acopio_donaciones", "El punto de acopio es obligatorio", response)) return;
+                    if (!validarParametroObligatorio(request, "fechas_programadas_recepcion", "La fecha programada de recepción es obligatoria", response)) return;
+                    if (!validarParametroObligatorio(request, "tipo_donacion", "El tipo de donación es obligatorio", response)) return;
+                    if (!validarParametroObligatorio(request, "hora_recepcion", "La hora de recepción es obligatoria", response)) return;
+
+                    // Crear un objeto Donaciones para capturar los datos del formulario
+                    Donaciones nuevaDonacion = new Donaciones();
+                    nuevaDonacion.setTelefono(Integer.parseInt(request.getParameter("telefono")));
+                    nuevaDonacion.setCantidadDonacion(String.valueOf(Integer.parseInt(request.getParameter("cantidad_donacion"))));
+                    nuevaDonacion.setNombre_contacto_albergue(request.getParameter("nombre_contacto_albergue"));
+                    nuevaDonacion.setPunto_acopio_donaciones(request.getParameter("punto_acopio_donaciones"));
+                    nuevaDonacion.setFechas_programadas_recepcion(request.getParameter("fechas_programadas_recepcion")); // Formato: YYYY-MM-DD
+
+                    // Validar y asignar la hora de recepción
+                    try {
+                        String horaRecepcion = request.getParameter("hora_recepcion");
+                        if (horaRecepcion != null && !horaRecepcion.isEmpty() && horaRecepcion.matches("\\d{2}:\\d{2}")) {
+                            // Agregar segundos si están ausentes
+                            horaRecepcion += ":00";
+                            nuevaDonacion.setHora_recepcion(Time.valueOf(horaRecepcion));
+                        } else {
+                            response.sendRedirect("error.jsp?message=La hora de recepción tiene un formato inválido");
+                            return;
+                        }
+                    } catch (IllegalArgumentException e) {
+                        response.sendRedirect("error.jsp?message=La hora de recepción tiene un formato inválido");
+                        return;
+                    }
+
+
+                    nuevaDonacion.setTipoDonacion(request.getParameter("tipo_donacion"));
+
+                    // Crear y asignar el estado de la donación
+                    DonacionEstado estado = new DonacionEstado();
+                    estado.setIdDonacionEstado(4); // Estado fijo
+                    nuevaDonacion.setDonacionEstado(estado);
+
+                    // Usuario del albergue (puede ser dinámico desde la sesión)
+                    Usuarios usuarioAlbergue = new Usuarios();
+                    usuarioAlbergue.setId(7); // Albergue fijo
+                    nuevaDonacion.setUsuarioAlbergue(usuarioAlbergue);
+
+                    // Crear la donación en la base de datos
+                    AlbergueDao donacionesDAO = new AlbergueDao();
+                    boolean resultado = donacionesDAO.creardonacion(nuevaDonacion);
+
+                    // Redirigir según el resultado de la operación
+                    if (resultado) {
+                        response.sendRedirect("AlbergueServlet?action=mis_donaciones");
+                    } else {
+                        response.sendRedirect("AlbergueServlet?action=mis_donaciones&error=No se pudo registrar la donación");
+                    }
+
+                } catch (NumberFormatException e) {
+                    response.sendRedirect("AlbergueServlet?action=mis_donaciones&error=Los datos ingresados son inválidos");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.sendRedirect("AlbergueServlet?action=mis_donaciones&error=Hubo un error inesperado");
+                }
+                break;
+
+
             default:
                 response.sendRedirect("AlbergueServlet?action=pagPrincipal");
                 break;
@@ -283,4 +359,12 @@ public class AlbergueServlet extends HttpServlet {
         buffer.flush();
         return buffer.toByteArray();
     }
+    private boolean validarParametroObligatorio(HttpServletRequest request, String parametro, String mensajeError, HttpServletResponse response) throws IOException {
+        if (request.getParameter(parametro) == null || request.getParameter(parametro).trim().isEmpty()) {
+            response.sendRedirect("error.jsp?message=" + mensajeError);
+            return false;
+        }
+        return true;
+    }
+
 }
