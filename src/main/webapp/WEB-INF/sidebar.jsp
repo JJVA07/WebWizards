@@ -30,15 +30,6 @@
                     Publicaciones
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
-                <a class="nav-link <%= ("publicaciones".equals(paginaActiva) || "noticias".equals(paginaActiva) || "mis_publicaciones".equals(paginaActiva)) ? "active" : "" %> collapsed"
-                   href="UsuariosServlet?action=noticias"
-                   data-bs-toggle="collapse" data-bs-target="#collapsePublicaciones"
-                   aria-expanded="<%= ("publicaciones".equals(paginaActiva) || "noticias".equals(paginaActiva) || "mis_publicaciones".equals(paginaActiva)) ? "true" : "false" %>"
-                   aria-controls="collapsePublicaciones">
-                    <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                    Publicaciones
-                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
 
                 <div class="collapse <%= ("publicaciones".equals(paginaActiva) || "noticias".equals(paginaActiva) || "mis_publicaciones".equals(paginaActiva)) ? "show" : "" %>" id="collapsePublicaciones" aria-labelledby="headingPublicaciones" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">

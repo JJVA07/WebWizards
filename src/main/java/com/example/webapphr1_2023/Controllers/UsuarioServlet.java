@@ -27,7 +27,39 @@ public class UsuarioServlet extends HttpServlet {
         DonacionesDao donacionesDao = new DonacionesDao();
         EventosDao eventosDao = new EventosDao();
         SolicitudDao.PostulacionDao postulacionDao = new SolicitudDao.PostulacionDao();
+        PublicacionDao publicacionDao = new PublicacionDao();
         switch (action) {
+            case "noticias":
+                int paginita = request.getParameter("pagina") == null ? 1 : Integer.parseInt(request.getParameter("pagina"));
+                int offset = (paginita - 1) * 6;
+
+                List<Publicacion> publicaciones = publicacionDao.listarPublicacionesYDonacionesOrdenadas(offset, 6);
+
+                request.setAttribute("publicaciones", publicaciones);
+                request.setAttribute("pagina", paginita);
+                request.setAttribute("totalPaginas", publicacionDao.obtenerCantidadTotal() / 6);
+
+                vista = "/WEB-INF/noticias.jsp";
+                break;
+
+                case "verDenuncia":
+                int idDenuncia = Integer.parseInt(request.getParameter("id"));
+                Publicacion denuncia = publicacionDao.obtenerDenunciaPorId(idDenuncia);
+                request.setAttribute("publicacion", denuncia);
+                vista = "/WEB-INF/detalleDenuncia.jsp";
+                break;
+                case "verPerdida":
+                int idPerdida = Integer.parseInt(request.getParameter("id"));
+                Publicacion perdida = publicacionDao.obtenerPublicacionPorId(idPerdida);
+                request.setAttribute("publicacion", perdida);
+                vista = "/WEB-INF/detallePerdida.jsp";
+                break;
+            case "verDonacion":
+                int idDonacion = Integer.parseInt(request.getParameter("id"));
+                Publicacion donacion = publicacionDao.obtenerPublicacionPorId(idDonacion);
+                request.setAttribute("publicacion", donacion);
+                vista = "/WEB-INF/detalleDonacion.jsp";
+                break;
             case "pagPrincipal":
                 vista = "/Usuario_final/home.jsp";
                 rd = request.getRequestDispatcher(vista);
@@ -65,8 +97,8 @@ public class UsuarioServlet extends HttpServlet {
                 break;
             case "eventos":
                 int pagina = request.getParameter("pagina") == null ? 1 : Integer.parseInt(request.getParameter("pagina"));
-                int offset = (pagina - 1) * 6;
-                List<Eventos> eventasos = eventosDao.obtenerEventosActivosPaginados(offset, 6);
+                int aoffset = (pagina - 1) * 6;
+                List<Eventos> eventasos = eventosDao.obtenerEventosActivosPaginados(aoffset, 6);
 
                 int totalEventos = eventosDao.contarEventosActivos();
                 int totalPaginas = (int) Math.ceil((double) totalEventos / 6);
@@ -183,8 +215,8 @@ public class UsuarioServlet extends HttpServlet {
                 break;
 
             case "detalleDonacion":
-                Donaciones donacion = donacionesDao.vistaDetallesDonacionPorUsuarioFijo();
-                request.setAttribute("donacion", donacion);
+                Donaciones adonacion = donacionesDao.vistaDetallesDonacionPorUsuarioFijo();
+                request.setAttribute("donacion", adonacion);
 
                 rd = request.getRequestDispatcher("/Usuario_final/donacion_detalle.jsp");
                 rd.forward(request, response);
