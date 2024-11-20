@@ -53,6 +53,7 @@ public class CoordinadorServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
 
+
             default:
                 vista = "/Coordinador/index_coordinador.jsp";
                 break;
