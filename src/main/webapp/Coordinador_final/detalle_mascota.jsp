@@ -12,86 +12,52 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed" style="background-color: #ffffff;">
-<nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: rgb(58, 49, 70);">
-    <a class="navbar-brand ps-3" href="<%= request.getContextPath() %>/index_coordinador.jsp">Coordinador Zonal</a>
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
-    <ul class="navbar-nav ms-auto me-3 me-lg-4">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/mi_cuenta.jsp">Mi cuenta</a></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li>
-            </ul>
-        </li>
-        <a class="nav-link" id="navbarDropdown" href="<%= request.getContextPath() %>/index_coordinador.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
-    </ul>
-</nav>
+
+<%@ include file="/WEB-INF/navbar_coordinador.jsp" %>
 
 <div id="layoutSidenav">
-    <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion sb-sidenav-dark" style="background-color: rgb(58, 49, 70)" id="sidenavAccordion">
-            <div class="sb-sidenav-menu">
-                <div class="nav">
-                    <a class="nav-link active" href="<%= request.getContextPath() %>/mascotas_perdidas.jsp">
-                        <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
-                        Mascotas Perdidas
-                    </a>
-                    <a class="nav-link" href="<%= request.getContextPath() %>/mascotas_aprobadas.jsp">
-                        <div class="sb-nav-link-icon"><i class="fa-solid fa-check"></i></div>
-                        Mascotas Aprobadas
-                    </a>
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseHogaresTemporales" aria-expanded="false" aria-controls="collapseHogaresTemporales">
-                        <div class="sb-nav-link-icon"><i class="fas fa-heart"></i></div>
-                        Hogares Temporales
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapseHogaresTemporales" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="<%= request.getContextPath() %>/hogares_aprobados.jsp">Hogares Aprobados</a>
-                            <a class="nav-link" href="<%= request.getContextPath() %>/solicitud_hogares.jsp">Solicitud de Hogares</a>
-                            <a class="nav-link" href="<%= request.getContextPath() %>/solicitudes_agendadas.jsp">Solicitudes Agendadas</a>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </div>
+    <%@ include file="/WEB-INF/sidebar_coordinador.jsp" %>
 
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
-                <h1 class="mt-4">Detalles de la Mascota</h1>
+                <h1 class="mt-4" id="nombreMascota">Detalles de la Mascota</h1>
+
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="row">
-                            <!-- Información de la mascota -->
+                            <!-- Información de la mascota (Izquierda) -->
                             <div class="col-md-6">
-                                <p><strong>Nombre:</strong> <%= request.getParameter("nombre") != null ? request.getParameter("nombre") : "No disponible" %></p>
-                                <p><strong>Edad:</strong> <%= request.getParameter("edad") != null ? request.getParameter("edad") : "No disponible" %> años</p>
-                                <p><strong>Raza:</strong> <%= request.getParameter("raza") != null ? request.getParameter("raza") : "No disponible" %></p>
-                                <p><strong>Tamaño:</strong> <%= request.getParameter("tamano") != null ? request.getParameter("tamano") : "No disponible" %></p>
-                                <p><strong>Contacto:</strong> <%= request.getParameter("contacto") != null ? request.getParameter("contacto") : "No disponible" %></p>
-                                <p><strong>Distintivo:</strong> <%= request.getParameter("distintivo") != null ? request.getParameter("distintivo") : "No disponible" %></p>
-                                <p><strong>Lugar:</strong> <%= request.getParameter("lugar") != null ? request.getParameter("lugar") : "No disponible" %></p>
-                                <p><strong>Hora:</strong> <%= request.getParameter("hora") != null ? request.getParameter("hora") : "No disponible" %></p>
-                                <p><strong>Contacto Nombre:</strong> <%= request.getParameter("contacto_nombre") != null ? request.getParameter("contacto_nombre") : "No disponible" %></p>
-                                <p><strong>Recompensa:</strong> <%= request.getParameter("recompensa") != null ? request.getParameter("recompensa") : "No disponible" %></p>
+                                <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+                                <p><strong>Edad:</strong> <span id="edad"></span> años</p>
+                                <p><strong>Raza:</strong> <span id="raza"></span></p>
+                                <p><strong>Tamaño:</strong> <span id="tamaño"></span></p>
+                                <p><strong>Contacto:</strong> <span id="contacto"></span></p>
+                                <p><strong>Distintivo:</strong> <span id="distintivo"></span></p>
+                                <p><strong>Lugar:</strong> <span id="lugar"></span></p>
+                                <p><strong>Hora:</strong> <span id="hora"></span></p>
+                                <p><strong>Contacto Nombre:</strong> <span id="contacto_nombre"></span></p>
+                                <p><strong>Recompensa:</strong> <span id="recompensa"></span></p>
                             </div>
 
-                            <!-- Imagen -->
+                            <!-- Imagen y descripción (Derecha) -->
                             <div class="col-md-6 text-center">
-                                <img src="<%= request.getParameter("imagen") != null ? request.getParameter("imagen") : request.getContextPath() + "/assets/img/default.png" %>"
-                                     class="img-fluid rounded mb-3" style="max-width: 300px; height: auto;" alt="Imagen de la mascota">
+                                <img id="imagen" class="img-fluid rounded mb-3"
+                                     style="max-width: 300px; height: auto;"
+                                     alt="Imagen de la mascota" />
+
+                                <!-- Recuadro para la descripción -->
                                 <div class="border p-3 mt-3 rounded" style="background-color: #f8f9fa;">
                                     <h5>Descripción</h5>
-                                    <p><%= request.getParameter("descripcion") != null ? request.getParameter("descripcion") : "No disponible" %></p>
+                                    <p id="descripcion"></p>
                                 </div>
+
+                                <!-- Botones debajo de la imagen y la descripción -->
                                 <div class="d-flex justify-content-center gap-5 mt-3">
-                                    <button class="btn btn-success btn-lg">
+                                    <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalCheck">
                                         <i class="fa-solid fa-check fa-2x"></i>
                                     </button>
-                                    <button class="btn btn-danger btn-lg">
+                                    <button class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#modalRechazar">
                                         <i class="fa-solid fa-xmark fa-2x"></i>
                                     </button>
                                 </div>
@@ -101,15 +67,90 @@
                 </div>
             </div>
         </main>
+
         <footer class="py-4 mt-auto" style="background-color: black;">
             <div class="container-fluid px-4">
                 <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Contáctanos: info@alberguegosu.com</div>
-                    <div>Teléfono: +123 456 7890</div>
+                    <div class="text-muted">Contáctanos: Somos un albergue gosu...</div>
+                    <div>
+                        <a href="#" style="color: white;">Correo: info@alberguegosu.com</a>
+                        <a href="#" style="color: white;">Teléfono: +123 456 7890</a>
+                    </div>
                 </div>
             </div>
         </footer>
     </div>
 </div>
+
+<!-- Modal Check -->
+<div class="modal fade" id="modalCheck" tabindex="-1" aria-labelledby="modalCheckLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCheckLabel">¿Estás seguro de aprobar?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Esta acción aprobará la mascota.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="check()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Rechazar -->
+<div class="modal fade" id="modalRechazar" tabindex="-1" aria-labelledby="modalRechazarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalRechazarLabel">¿Estás seguro de rechazar?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Esta acción rechazará la mascota.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="rechazar()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const index = urlParams.get('index');
+
+    const data = [
+        { imagen: "<%= request.getContextPath() %>/assets/img/perdido1.jpg", nombre: "Firulais", edad: 3, raza: "Labrador", tamaño: "Grande", contacto: "974769424", distintivo: "Collar rojo", descripcion: "Se perdió en el parque", lugar: "Parque Central", hora: "10:30 AM", contacto_nombre: "Carlos Pérez", recompensa: "50 USD" },
+        // Más datos...
+    ];
+
+    const mascota = data[index];
+
+    document.getElementById('imagen').src = mascota.imagen;
+    document.getElementById('nombre').textContent = mascota.nombre;
+    document.getElementById('edad').textContent = mascota.edad;
+    document.getElementById('raza').textContent = mascota.raza;
+    document.getElementById('tamaño').textContent = mascota.tamaño;
+    document.getElementById('contacto').textContent = mascota.contacto;
+    document.getElementById('distintivo').textContent = mascota.distintivo;
+    document.getElementById('descripcion').textContent = mascota.descripcion;
+    document.getElementById('lugar').textContent = mascota.lugar;
+    document.getElementById('hora').textContent = mascota.hora;
+    document.getElementById('contacto_nombre').textContent = mascota.contacto_nombre;
+    document.getElementById('recompensa').textContent = mascota.recompensa;
+
+    function check() {
+        alert("Mascota aprobada.");
+    }
+
+    function rechazar() {
+        alert("Mascota rechazada.");
+    }
+</script>
 </body>
 </html>
