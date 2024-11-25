@@ -8,11 +8,11 @@
         <i class="fas fa-user fa-fw"></i>
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-        <li><a class="dropdown-item" href="<%= request.getContextPath() %>/mi_cuenta.jsp">Mi cuenta</a></li>
+        <li><a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=cuenta">Mi cuenta</a></li>
         <li><hr class="dropdown-divider" /></li>
         <li><a class="dropdown-item" href="<%= request.getContextPath() %>/logout.jsp">Cerrar Sesión</a></li>
       </ul>
     </li>
-    <a class="nav-link" id="navbarDropdown" href="<%= request.getContextPath() %>/index_coordinador.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
+    <a class="nav-link" id="navbarDropdown" href="<%= request.getContextPath() %>/Coordinador_final/index_coordinador.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
   </ul>
 </nav>

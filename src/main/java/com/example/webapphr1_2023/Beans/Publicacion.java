@@ -5,7 +5,7 @@ public class Publicacion {
     private String descripcion;
     private byte[] foto;
     private String nombre;
-    private Integer edad;
+    private int edad;
     private String raza;
     private String tamano;
     private String distintivo;
@@ -24,6 +24,14 @@ public class Publicacion {
     private String fechaPublicacion;
     private String fechaEncontrado;
     private Usuarios usuario; // Relación con Usuarios (usuario que realiza la publicación)
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
 
     public Publicacion() {
     }
@@ -58,14 +66,6 @@ public class Publicacion {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public Integer getEdad() {
-        return edad;
-    }
-
-    public void setEdad(Integer edad) {
-        this.edad = edad;
     }
 
     public String getRaza() {

@@ -1,3 +1,5 @@
+<%@ page import="com.example.webapphr1_2023.Beans.*" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -45,8 +47,46 @@
                                     <th>Opciones</th>
                                 </tr>
                                 </thead>
-                                <tbody id="tableBody">
-                                <!-- Filas generadas dinámicamente -->
+                                <tbody>
+                                <!-- Iteración clásica con scriptlets -->
+                                <%
+                                    List<Publicacion> listaPublicaciones = (List<Publicacion>) request.getAttribute("listaPublicaciones");
+                                    if (listaPublicaciones != null && !listaPublicaciones.isEmpty()) {
+                                        for (int i = 0; i < listaPublicaciones.size(); i++) {
+                                            Publicacion publicacion = listaPublicaciones.get(i);
+                                %>
+                                <tr>
+                                    <td><%= publicacion.getNombre() %></td>
+                                    <td><%= publicacion.getEdad() %></td>
+                                    <td><%= publicacion.getRaza() %></td>
+                                    <td><%= publicacion.getTamano() %></td>
+                                    <td><%= publicacion.getTelefono() %></td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton<%= publicacion.getIdPublicacion() %>" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Opciones
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= publicacion.getIdPublicacion() %>">
+                                                <li>
+                                                    <a class="dropdown-item" href="<%= request.getContextPath() %>/detalle_mascota.jsp?id=<%= publicacion.getIdPublicacion() %>">Revisar</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=eliminar&id=<%= publicacion.getIdPublicacion() %>">Eliminar</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <%
+                                    }
+                                } else {
+                                %>
+                                <tr>
+                                    <td colspan="6" class="text-center">No se encontraron datos para mostrar.</td>
+                                </tr>
+                                <%
+                                    }
+                                %>
                                 </tbody>
                             </table>
                         </div>
@@ -74,55 +114,5 @@
 <script src="<%= request.getContextPath() %>/assets/demo/chart-bar-demo.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
 <script src="<%= request.getContextPath() %>/js/datatables-simple-demo.js"></script>
-
-<script>
-    // Inicializar DataTables con paginación
-    document.addEventListener('DOMContentLoaded', function() {
-        var dataTable = new simpleDatatables.DataTable("#dataTable", {
-            searchable: true,
-            fixedHeight: true,
-            perPage: 5
-        });
-    });
-
-    // Datos de ejemplo de mascotas perdidas
-    const data = [
-        { imagen: "<%= request.getContextPath() %>/assets/img/perdido1.jpg", nombre: "Firulais", edad: 3, raza: "Labrador", tamaño: "Grande", contacto: "974769424" },
-        { imagen: "<%= request.getContextPath() %>/assets/img/perdido2.jpg", nombre: "Rex", edad: 2, raza: "Pastor Alemán", tamaño: "Grande", contacto: "912345678" },
-        { imagen: "<%= request.getContextPath() %>/assets/img/perdido3.jpg", nombre: "Dobby", edad: 1, raza: "Chihuahua", tamaño: "Pequeño", contacto: "987654321" },
-        { imagen: "<%= request.getContextPath() %>/assets/img/perdido4.jpg", nombre: "Toby", edad: 4, raza: "Bulldog", tamaño: "Mediano", contacto: "956123789" },
-        { imagen: "<%= request.getContextPath() %>/assets/img/perdido5.jpg", nombre: "Bruno", edad: 3, raza: "Boxer", tamaño: "Grande", contacto: "932178945" },
-        { imagen: "<%= request.getContextPath() %>/assets/img/perdido6.jpg", nombre: "Nina", edad: 1, raza: "Shih Tzu", tamaño: "Pequeño", contacto: "986543210" }
-    ];
-
-    const tableBody = document.getElementById("tableBody");
-
-    // Recorrer los datos y generar las filas dinámicamente
-    data.forEach((item, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${item.nombre}</td>
-            <td>${item.edad}</td>
-            <td>${item.raza}</td>
-            <td>${item.tamaño}</td>
-            <td>${item.contacto}</td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton${index}" data-bs-toggle="dropdown" aria-expanded="false">
-                        Opciones
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${index}">
-                        <li>
-                            <a class="dropdown-item" href="<%= request.getContextPath() %>/detalle_mascota.jsp?index=${index}">Revisar</a>
-                        </li>
-                        <li><a class="dropdown-item" href="#">Eliminar</a></li>
-                    </ul>
-                </div>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
-</script>
-
 </body>
 </html>

@@ -1,3 +1,5 @@
+<%@ page import="com.example.webapphr1_2023.Beans.Postulacion" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -44,8 +46,46 @@
                   <th>Opciones</th>
                 </tr>
                 </thead>
-                <tbody id="tableBody">
-                <!-- Filas dinámicas -->
+                <tbody>
+                <%-- Iterar sobre la lista dinámica --%>
+                <%
+                  List<Postulacion> listaSolicitudeshogaraprobados = (List<Postulacion>) request.getAttribute("listaSolicitudeshogaraprobados");
+                  if (listaSolicitudeshogaraprobados != null && !listaSolicitudeshogaraprobados.isEmpty()) {
+                    for (Postulacion solicitud : listaSolicitudeshogaraprobados) {
+                %>
+                <tr>
+                  <td><%= solicitud.getNombre() %></td>
+                  <td><%= solicitud.getApellido() %></td>
+                  <td><%= solicitud.getEdad() %></td>
+                  <td><%= solicitud.getDireccion() %></td>
+                  <td><%= solicitud.getDistrito().getNombre() %></td>
+                  <td><%= solicitud.getCelular() %></td>
+                  <td>
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Opciones
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a class="dropdown-item" href="<%= request.getContextPath() %>/detalle_hogaresaprobados.jsp?id=<%= solicitud.getIdPostulacion() %>">Revisar</a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=eliminar&id=<%= solicitud.getIdPostulacion() %>">Eliminar</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                <%
+                  }
+                } else {
+                %>
+                <tr>
+                  <td colspan="7" class="text-center">No se encontraron hogares aprobados.</td>
+                </tr>
+                <%
+                  }
+                %>
                 </tbody>
               </table>
             </div>
@@ -82,43 +122,6 @@
       fixedHeight: true,
       perPage: 5
     });
-  });
-
-  // Datos de ejemplo para la tabla
-  const data = [
-    { nombre: "Ana", apellido: "García", edad: 34, direccion: "Calle 123", distrito: "Ancon", celular: "987654321" },
-    { nombre: "Luis", apellido: "Martínez", edad: 42, direccion: "Av. Libertad", distrito: "Santa Rosa", celular: "912345678" },
-    { nombre: "Carlos", apellido: "Sánchez", edad: 39, direccion: "Calle 45", distrito: "Puente Piedra", celular: "924567890" },
-    { nombre: "María", apellido: "Rodríguez", edad: 28, direccion: "Av. Primavera", distrito: "Comas", celular: "987654322" },
-    { nombre: "Patricia", apellido: "Ramírez", edad: 36, direccion: "Calle del Sol", distrito: "Los Olivos", celular: "916543210" },
-    { nombre: "Fernando", apellido: "López", edad: 50, direccion: "Av. Pardo", distrito: "San Martín de Porres", celular: "935678910" },
-    { nombre: "Daniela", apellido: "Hernández", edad: 29, direccion: "Calle Las Palmeras", distrito: "Independencia", celular: "912345679" }
-  ];
-
-  // Agregar datos dinámicamente a la tabla
-  const tableBody = document.getElementById("tableBody");
-  data.forEach((item, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-            <td>${item.nombre}</td>
-            <td>${item.apellido}</td>
-            <td>${item.edad}</td>
-            <td>${item.direccion}</td>
-            <td>${item.distrito}</td>
-            <td>${item.celular}</td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton${index}" data-bs-toggle="dropdown" aria-expanded="false">
-                        Opciones
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${index}">
-                        <li><a class="dropdown-item" href="detalle_hogares.jsp?index=${index}">Revisar</a></li>
-                        <li><a class="dropdown-item" href="#">Eliminar</a></li>
-                    </ul>
-                </div>
-            </td>
-        `;
-    tableBody.appendChild(row);
   });
 </script>
 </body>

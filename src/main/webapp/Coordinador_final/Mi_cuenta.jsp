@@ -22,53 +22,21 @@
             <div class="container-fluid px-4">
                 <h1 class="mt-4">Perfil</h1>
 
-                <!-- Iniciamos la rejilla de Bootstrap -->
-                <div class="row align-items-center">
-                    <!-- Columna de la imagen del usuario -->
-                    <div class="col-lg-6 d-flex flex-column align-items-center">
-                        <img src="<%= request.getContextPath() %>/assets/img/usuario.jpg"
-                             class="img-fluid mb-3"
-                             alt="Imagen del usuario"
-                             style="max-width: 50%; height: auto; width: 65%;" />
+                <div class="container-fluid mt-5">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Mi cuenta</h1>
+                    </div>
+                    <div id="account-info">
+                        <h3>Información Actual</h3>
+                        <!-- Mostrar información del usuario -->
+                        <p><strong>Nombre:</strong> ${coordinador.nombre}</p>
+                        <p><strong>Apellido:</strong> ${coordinador.apellido}</p>
+                        <p><strong>Edad:</strong> ${coordinador.edad}</p>
+                        <p><strong>Celular:</strong> ${coordinador.telefono}</p>
+                        <p><strong>Correo:</strong> ${coordinador.correo}</p>
                     </div>
 
-                    <!-- Columna del formulario de información -->
-                    <div class="col-lg-6">
-                        <form action="#" method="post"
-                              class="p-3 border rounded bg-light mx-auto mb-3"
-                              style="width: 90%; max-width: 1400px; background-color: rgb(200, 200, 200) !important;">
-
-                            <div class="mb-3">
-                                <label for="nombre" class="form-label">Nombre:</label>
-                                <input type="text" id="nombre" name="nombre" class="form-control" value="Fernando" readonly>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="apellido" class="form-label">Apellido:</label>
-                                <input type="text" id="apellido" name="apellido" class="form-control" value="Godoy" readonly>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="edad" class="form-label">Edad:</label>
-                                <input type="number" id="edad" name="edad" class="form-control" value="24" readonly>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="genero" class="form-label">Género:</label>
-                                <input type="text" id="genero" name="genero" class="form-control" value="Masculino" readonly>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="celular" class="form-label">Celular Personal:</label>
-                                <input type="tel" id="celular" name="celular" class="form-control" value="987654321" readonly>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Correo Electrónico:</label>
-                                <input type="email" id="email" name="email" class="form-control" value="a20206311@pucp.edu.pe" readonly>
-                            </div>
-                        </form>
-                    </div>
+                    <button type="button" id="edit-info-btn" class="btn btn-secondary mt-3 mb-3" onclick="redirectToEditPage()">Editar Información</button>
                 </div>
             </div>
         </main>

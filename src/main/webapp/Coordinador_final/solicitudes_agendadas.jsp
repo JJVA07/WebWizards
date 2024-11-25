@@ -1,3 +1,5 @@
+<%@ page import="com.example.webapphr1_2023.Beans.Postulacion" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -43,12 +45,53 @@
                                     <th>Dirección</th>
                                     <th>Distrito</th>
                                     <th>Contacto</th>
-                                    <th>Faltas</th>
                                     <th>Opciones</th>
                                 </tr>
                                 </thead>
-                                <tbody id="tableBody">
-                                <!-- Filas generadas dinámicamente -->
+                                <tbody>
+                                <%-- Iterar sobre listaSolicitudes usando scriptlets --%>
+                                <%
+                                    List<Postulacion> listaSolicitudes = (List<Postulacion>) request.getAttribute("listaSolicitudes");
+                                    if (listaSolicitudes != null && !listaSolicitudes.isEmpty()) {
+                                        for (Postulacion solicitud : listaSolicitudes) {
+                                %>
+                                <tr>
+                                    <td><%= solicitud.getNombre() %></td>
+                                    <td><%= solicitud.getApellido() %></td>
+                                    <td><%= solicitud.getEdad() %></td>
+                                    <td><%= solicitud.getDireccion() %></td>
+                                    <td><%= solicitud.getDistrito().getNombre() %></td>
+                                    <td><%= solicitud.getCelular() %></td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Opciones
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" href="<%= request.getContextPath() %>/detalles_solicitudes_agendadas.jsp?id=<%= solicitud.getIdPostulacion() %>">
+                                                        Revisar
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=eliminar&id=<%= solicitud.getIdPostulacion() %>">
+                                                        Eliminar
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <%
+                                    }
+                                } else {
+                                %>
+                                <tr>
+                                    <td colspan="7" class="text-center">No se encontraron solicitudes agendadas.</td>
+                                </tr>
+                                <%
+                                    }
+                                %>
                                 </tbody>
                             </table>
                         </div>
@@ -73,9 +116,7 @@
 </div>
 
 <script src="<%= request.getContextPath() %>/js/scripts.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-
 <script>
     // Inicializar DataTables con paginación
     document.addEventListener('DOMContentLoaded', function() {
@@ -84,46 +125,6 @@
             fixedHeight: true,
             perPage: 5
         });
-    });
-
-    // Datos de ejemplo de solicitudes agendadas
-    const data = [
-        { nombre: "Ana", apellido: "García", edad: 34, direccion: "Calle 123", distrito: "Ancon", contacto: "987654321", faltas: 2 },
-        { nombre: "Luis", apellido: "Martínez", edad: 42, direccion: "Av. Libertad", distrito: "Santa Rosa", contacto: "912345678", faltas: 3 },
-        { nombre: "Carlos", apellido: "Sánchez", edad: 39, direccion: "Calle 45", distrito: "Puente Piedra", contacto: "924567890", faltas: 1 },
-        { nombre: "María", apellido: "Rodríguez", edad: 28, direccion: "Av. Primavera", distrito: "Comas", contacto: "987654322", faltas: 0 },
-        { nombre: "Patricia", apellido: "Ramírez", edad: 36, direccion: "Calle del Sol", distrito: "Los Olivos", contacto: "916543210", faltas: 0 },
-        { nombre: "Fernando", apellido: "López", edad: 50, direccion: "Av. Pardo", distrito: "San Martín de Porres", contacto: "935678910", faltas: 3 },
-        { nombre: "Daniela", apellido: "Hernández", edad: 29, direccion: "Calle Las Palmeras", distrito: "Independencia", contacto: "912345679", faltas: 2 }
-    ];
-
-    const tableBody = document.getElementById("tableBody");
-
-    // Recorrer los datos y generar las filas dinámicamente
-    data.forEach((item, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${item.nombre}</td>
-            <td>${item.apellido}</td>
-            <td>${item.edad}</td>
-            <td>${item.direccion}</td>
-            <td>${item.distrito}</td>
-            <td>${item.contacto}</td>
-            <td>${item.faltas}</td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton${index}" data-bs-toggle="dropdown" aria-expanded="false">
-                        Opciones
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${index}">
-                        <li><a class="dropdown-item" href="<%= request.getContextPath() %>/detalles_solicitudes_agendadas.jsp?index=${index}">Revisar</a></li>
-                        ${item.faltas == 3 ? '<li><a class="dropdown-item" href="#">Banear</a></li>' : ''}
-                        <li><a class="dropdown-item" href="#">Eliminar</a></li>
-                    </ul>
-                </div>
-            </td>
-        `;
-        tableBody.appendChild(row);
     });
 </script>
 
