@@ -102,5 +102,24 @@ public class UsuariosDao extends DaoBase {
         }
         return usuario;
     }
+    public Usuarios validarUsuarioPassword(String username, String password) {
+        Usuarios usuario= null;
+        String sql = "SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?";
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    int ID = rs.getInt(1); // Ajusta el índice según tu base de datos
+                    usuario = this.obtenerUsuarioPorId(ID);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return usuario;
+    }
+
 
 }
