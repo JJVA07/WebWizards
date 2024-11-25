@@ -10,7 +10,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import com.example.webapphr1_2023.Daos.DonacionesDao;
 
+import com.example.webapphr1_2023.Daos.UsuariosDao;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -147,12 +149,38 @@ public class UsuarioServlet extends HttpServlet {
                 break;
 
             case "detalleDonacion":
-                Donaciones donacion = donacionesDao.vistaDetallesDonacionPorUsuarioFijo();
-                request.setAttribute("donacion", donacion);
+                // Obtener el ID desde la URL
+                String idDonacionesParam = request.getParameter("idDonaciones");
 
-                rd = request.getRequestDispatcher("/Usuario_final/donacion_detalle.jsp");
-                rd.forward(request, response);
+                if (idDonacionesParam == null || idDonacionesParam.trim().isEmpty()) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Falta el parámetro idDonaciones");
+                    return;
+                }
+
+                try {
+                    // Convertir el ID a entero
+                    int idDonaciones = Integer.parseInt(idDonacionesParam);
+
+                    // Buscar la donación en la base de datos
+                    Donaciones donacion = donacionesDao.obtenerDonacionPorId(idDonaciones);
+
+                    if (donacion == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND, "Donación no encontrada");
+                        return;
+                    }
+
+                    // Pasar la donación al JSP
+                    request.setAttribute("donacion", donacion);
+
+                    // Redirigir al JSP de detalles
+                    rd = request.getRequestDispatcher("/Usuario_final/donacion_detalle.jsp");
+                    rd.forward(request, response);
+
+                } catch (NumberFormatException e) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "El parámetro idDonaciones no es válido");
+                }
                 break;
+
 
             case "misSolicitudes":
                 int usuarioId = 1; // ID fijo del usuario
@@ -197,6 +225,8 @@ public class UsuarioServlet extends HttpServlet {
         PublicacionDao publicacionDao = new PublicacionDao();
         SolicitudDao.PostulacionDao postulacionDao = new SolicitudDao.PostulacionDao();
         SolicitudDao solicitudDao = new SolicitudDao();
+        DonacionesDao donacionesDao; // Declaración como variable miembro
+        donacionesDao = new DonacionesDao();
 
         switch (action) {
             case "reportarPOST":
@@ -242,12 +272,86 @@ public class UsuarioServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
                 break;
 
+            case "guardarDonacion":
+                try {
+                    // Recibir parámetros del formulario
+                    String cantidad = request.getParameter("cantidad");
+                    String unidades = request.getParameter("unidades");
+                    String tipoDonacion = request.getParameter("tipo-donacion");
+                    String marca = request.getParameter("nombre-producto");
+                    String puntoEntrega = request.getParameter("lugar-entrega");
+                    String nombreAlbergue = request.getParameter("albergue");
+                    String fechaEntregaStr = request.getParameter("fecha");
+
+                    // Validaciones básicas
+                    if (cantidad == null || unidades == null || tipoDonacion == null || marca == null ||
+                            puntoEntrega == null || nombreAlbergue == null || fechaEntregaStr == null ||
+                            cantidad.trim().isEmpty() || unidades.trim().isEmpty() || tipoDonacion.trim().isEmpty() ||
+                            marca.trim().isEmpty() || puntoEntrega.trim().isEmpty() || nombreAlbergue.trim().isEmpty() ||
+                            fechaEntregaStr.trim().isEmpty()) {
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Todos los campos son obligatorios.");
+                        return;
+                    }
+
+                    // Concatenar cantidad y unidades
+                    String cantidadDonacion = cantidad + " " + unidades;
+
+                    // Parsear la fecha de entrega
+                    Date fechaEntrega = java.sql.Date.valueOf(fechaEntregaStr);
+
+                    // Obtener el ID del albergue por su nombre
+                    int usuariosAlbergueId = donacionesDao.obtenerIdAlberguePorNombre(nombreAlbergue);
+
+                    if (usuariosAlbergueId == 0) {
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Albergue seleccionado no válido.");
+                        return;
+                    }
+
+                    // Crear el objeto Donaciones
+                    Donaciones nuevaDonacion = new Donaciones();
+                    nuevaDonacion.setCantidadDonacion(cantidadDonacion); // Se guarda la concatenación
+                    nuevaDonacion.setTipoDonacion(tipoDonacion);
+                    nuevaDonacion.setMarca(marca);
+                    nuevaDonacion.setPuntoEntrega(puntoEntrega);
+                    nuevaDonacion.setFechaEntrega(fechaEntrega);
+
+                    // Usuario que realiza la donación (fijo)
+                    Usuarios usuarioDonador = new Usuarios();
+                    usuarioDonador.setId(1); // Usuario fijo con ID 1
+                    nuevaDonacion.setUsuario(usuarioDonador);
+
+                    // Albergue receptor
+                    Usuarios usuarioAlbergue = new Usuarios();
+                    usuarioAlbergue.setId(usuariosAlbergueId);
+                    nuevaDonacion.setUsuarioAlbergue(usuarioAlbergue);
+
+                    // Guardar la donación en la base de datos
+                    boolean exito = donacionesDao.guardarDonacion(nuevaDonacion);
+
+                    if (exito) {
+                        // Redirigir a la página de mis donaciones tras el guardado exitoso
+                        response.sendRedirect(request.getContextPath() + "/Usuario?action=mostrarDonaciones");
+                    } else {
+                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al guardar la donación.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error procesando la donación.");
+                }
+                break;
+
+
+
             // Otros casos...
             default:
                 // Acción por defecto
                 response.sendRedirect(request.getContextPath() + "/Usuario_final/home.jsp");
                 break;
+
+
         }
+
+
     }
 
     public static byte[] obtenerImagenComoByteArray(InputStream inputStream) throws IOException {
@@ -260,7 +364,6 @@ public class UsuarioServlet extends HttpServlet {
         buffer.flush();
         return buffer.toByteArray();
     }
-
 
 
 
