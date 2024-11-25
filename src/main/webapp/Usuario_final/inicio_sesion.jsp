@@ -35,7 +35,6 @@
         #layoutAuthentication_footer {
             flex-shrink: 0;
         }
-
         .forgot-password,
         .register-link {
             color: #dd9013;
