@@ -176,6 +176,11 @@ public class CoordinadorServlet extends HttpServlet {
                 break;
 
 
+            case "detalle_mascotaperdida":
+
+                break;
+
+
             default:
                 vista = "/Coordinador_final/index_coordinador.jsp";
                 rd = request.getRequestDispatcher(vista);
