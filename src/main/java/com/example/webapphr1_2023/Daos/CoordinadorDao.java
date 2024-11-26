@@ -2,10 +2,13 @@ package com.example.webapphr1_2023.Daos;
 import com.example.webapphr1_2023.Beans.*;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class CoordinadorDao extends DaoBase{
 
@@ -370,6 +373,101 @@ public class CoordinadorDao extends DaoBase{
         }
     }
 
+    public Postulacion obtenerDetallesSolicitudAgendada(int idPostulacion) {
+        Postulacion postulacion = null;
 
+        String sql = "SELECT " +
+                "    p.idPostulacion, " +
+                "    p.Nombre AS Nombre, " +
+                "    p.Apellido AS Apellido, " +
+                "    p.Edad AS Edad, " +
+                "    p.Genero AS Género, " +
+                "    p.Celular AS Celular, " +
+                "    p.Direccion AS Dirección, " +
+                "    d.nombre AS Distrito, " +
+                "    p.cantidad_cuartos AS 'Cantidad de cuartos', " +
+                "    p.metraje_vivienda AS 'Metraje de vivienda (m²)', " +
+                "    CASE WHEN p.Tiene_mascotas = 1 THEN 'Sí' ELSE 'No' END AS 'Tiene mascotas', " +
+                "    p.cantidad_mascotas AS 'Cantidad de mascotas', " +
+                "    p.tipo_mascotas AS 'Tipo de mascotas', " +
+                "    CASE WHEN p.tiene_hijos = 1 THEN 'Sí' ELSE 'No' END AS 'Tiene hijos', " +
+                "    CASE WHEN p.vive_con_dependientes = 1 THEN 'Con dependientes' ELSE 'Solo' END AS 'Vive solo o con dependientes', " +
+                "    CASE WHEN p.trabaja_remoto = 1 THEN 'Remoto' ELSE 'Presencial' END AS 'Trabaja', " +
+                "    p.persona_referencia AS 'Persona de referencia', " +
+                "    p.telefono_referencia AS 'Número de contacto de referencia', " +
+                "    p.tiempo_temporal AS 'Tiempo de temporal (meses)', " +
+                "    DATE_FORMAT(p.fecha_inicio_temporal, '%d/%m/%Y') AS 'Fecha de inicio', " +
+                "    DATE_FORMAT(p.fecha_fin_temporal, '%d/%m/%Y') AS 'Fecha de fin', " +
+                    "FROM postulacion p " +
+                    "LEFT JOIN distrito d ON p.Distrito_idDistrito = d.idDistrito " +
+                    "WHERE p.idPostulacion = ? AND p.Postulacion_estado_idPostulacion_estado = 3";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idPostulacion); // ID de la solicitud agendada como parámetro
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    postulacion = new Postulacion();
+                    postulacion.setIdPostulacion(rs.getInt("idPostulacion"));
+                    postulacion.setNombre(rs.getString("Nombre"));
+                    postulacion.setApellido(rs.getString("Apellido"));
+                    postulacion.setEdad(rs.getString("Edad"));
+                    postulacion.setGenero(rs.getString("Género"));
+                    postulacion.setCelular(rs.getString("Celular"));
+                    postulacion.setDireccion(rs.getString("Dirección"));
+
+                    // Relación con Distrito
+                    Distrito distrito = new Distrito();
+                    distrito.setNombre(rs.getString("Distrito"));
+                    postulacion.setDistrito(distrito);
+
+                    postulacion.setCantidadCuartos(rs.getInt("Cantidad de cuartos"));
+                    postulacion.setMetrajeVivienda(rs.getDouble("Metraje de vivienda (m²)"));
+                    postulacion.setTieneMascotas(rs.getString("Tiene mascotas").equals("Sí"));
+                    postulacion.setCantidadMascotas(rs.getInt("Cantidad de mascotas"));
+                    postulacion.setTipoMascotas(rs.getString("Tipo de mascotas"));
+                    postulacion.setTieneHijos(rs.getString("Tiene hijos").equals("Sí"));
+                    postulacion.setViveConDependientes(rs.getString("Vive solo o con dependientes").equals("Con dependientes"));
+                    postulacion.setTrabajaRemoto(rs.getString("Trabaja").equals("Remoto"));
+                    postulacion.setPersonaReferencia(rs.getString("Persona de referencia"));
+                    postulacion.setTelefonoReferencia(rs.getString("Número de contacto de referencia"));
+                    postulacion.setTiempoTemporal(rs.getInt("Tiempo de temporal (meses)"));
+                    // Conversión de fechas
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    try {
+                        postulacion.setFechaInicioTemporal(dateFormat.parse(rs.getString("Fecha de inicio")));
+                        postulacion.setFechaFinTemporal(dateFormat.parse(rs.getString("Fecha de fin")));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return postulacion;
+    }
+
+
+    public boolean actualizarFechaHoraVisita(int idPostulacion, String fechaVisita, String horaVisita) {
+        String sql = "UPDATE postulacion SET Fecha_inopinada = ?, Hora_inopinada = ? WHERE idPostulacion = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, fechaVisita); // Fecha de la visita
+            pstmt.setString(2, horaVisita); // Hora de la visita
+            pstmt.setInt(3, idPostulacion); // ID de la postulación
+
+            int filasActualizadas = pstmt.executeUpdate();
+            return filasActualizadas > 0; // Retorna true si se actualizó al menos una fila
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 }
