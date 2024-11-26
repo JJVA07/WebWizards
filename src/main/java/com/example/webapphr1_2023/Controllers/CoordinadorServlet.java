@@ -30,7 +30,8 @@ public class CoordinadorServlet extends HttpServlet {
         String vista;
         RequestDispatcher rd;
         CoordinadorDao coordinadorDao = new CoordinadorDao();
-        int coordinadorid=8;
+        PublicacionDao publicaciondao= new PublicacionDao();
+
         switch (action) {
 
 
@@ -231,30 +232,24 @@ public class CoordinadorServlet extends HttpServlet {
                 break;
 
             case "mascotas_perdidas":
-
                 // Llamar al DAO para obtener la lista de publicaciones
                 List<Publicacion> listaPublicaciones = coordinadorDao.mascotasperdidas();
                 System.out.println("Total publicaciones encontradas: " + listaPublicaciones.size());
-
                 // Enviar la lista como atributo al JSP
                 request.setAttribute("listaPublicaciones", listaPublicaciones);
-
                 // Definir la vista
                 vista = "/Coordinador_final/mascotas_perdidas.jsp";
-
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
-
                 break;
             case "cuenta":
                 // Obtener el albergue específico (por ejemplo, con ID 7)
-                Usuarios coordinador = coordinadorDao.micuenta(coordinadorid);
+                Usuarios coordinador = coordinadorDao.micuenta(usuario.getId());
                 // Si se obtuvo la información del albergue, se pasa como atributo a la vista
                 if (coordinador != null) {
                     request.setAttribute("coordinador", coordinador);
                     System.out.println("Coordinador enviado al JSP: " + coordinador.getNombre());
                 }
-
                 // Redirige a la vista `mi_cuenta.jsp` para mostrar la información
                 vista = "/Coordinador_final/Mi_cuenta.jsp";
                 rd = request.getRequestDispatcher(vista);
@@ -272,7 +267,22 @@ public class CoordinadorServlet extends HttpServlet {
 
 
             case "detalle_mascotaperdida":
+                String idPublicacion = request.getParameter("id");
 
+                if (idPublicacion != null) {
+                    // Realiza la lógica necesaria para buscar la información de esa publicación
+                    Publicacion publicacion = PublicacionDao.obtenerPublicacionPorId(Integer.parseInt(idPublicacion));
+                    // Almacena los datos en el request para usarlos en el JSP
+                    request.setAttribute("publicacion", publicacion);
+                    // Redirige al JSP con los detalles
+                    rd = request.getRequestDispatcher("/detalles_mascotas.jsp");
+                } else {
+                    // Si no hay ID o es inválido, redirige a una página de error o lista
+                    rd = request.getRequestDispatcher("/error.jsp");
+                }
+
+                // Redirige a la vista correspondiente
+                rd.forward(request, response);
                 break;
 
 

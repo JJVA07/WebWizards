@@ -1,6 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -14,12 +12,9 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed" style="background: white;">
-
 <%@ include file="/WEB-INF/navbar_coordinador.jsp" %>
-
 <div id="layoutSidenav">
     <%@ include file="/WEB-INF/sidebar_coordinador.jsp" %>
-
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
