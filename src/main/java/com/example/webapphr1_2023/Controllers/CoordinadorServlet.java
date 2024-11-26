@@ -35,33 +35,6 @@ public class CoordinadorServlet extends HttpServlet {
         switch (action) {
 
 
-            case "detallesVisita":
-                try {
-                    // Obtener el ID de la postulación desde los parámetros del request
-                    int idPostulacion = Integer.parseInt(request.getParameter("id"));
-
-                    // Instanciar el DAO para obtener los detalles de la postulación
-                    Postulacion postulacion = coordinadorDao.obtenerDetallesSolicitudAgendada(idPostulacion);
-
-                    // Validar que la postulación exista
-                    if (postulacion != null) {
-                        // Pasar la postulación como atributo a la vista
-                        request.setAttribute("postulacionDetalles", postulacion);
-
-                        // Redirigir a la vista de detalles de la visita
-                        RequestDispatcher dispatcher = request.getRequestDispatcher("/Coordinador_final/detalles_solicitudes_agendadas.jsp");
-                        dispatcher.forward(request, response);
-                    } else {
-                        // Si no se encuentra la postulación, redirigir a la lista
-                        response.sendRedirect(request.getContextPath() + "/SolicitudAgendadaServlet?action=list");
-                    }
-                } catch (NumberFormatException e) {
-                    // Manejo de errores en caso de que el ID no sea válido
-                    response.sendRedirect(request.getContextPath() + "/SolicitudAgendadaServlet?action=list");
-                }
-                break;
-
-
             case "detalleMascotaAprobada":
                 try {
                     int idPublicacion = Integer.parseInt(request.getParameter("id")); // Obtener ID de la publicación
@@ -299,73 +272,40 @@ public class CoordinadorServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
-            switch (action) {
+        switch (action) {
+            case "actualizarComentario":
+                try {
+                    // Obtener parámetros del formulario
+                    int idPublicacion = Integer.parseInt(request.getParameter("idPublicacion"));
+                    String comentario = request.getParameter("comentario_coordinador");
 
-                case "updateVisita":
-                    try {
-                        // Crear una instancia de CoordinadorDao
-                        CoordinadorDao coordinadorDao = new CoordinadorDao();
+                    if (idPublicacion > 0 && comentario != null && !comentario.trim().isEmpty()) {
+                        Publicacion publicacion = new Publicacion();
+                        publicacion.setIdPublicacion(idPublicacion);
+                        publicacion.setComentario_coordinador(comentario);
 
-                        // Obtener parámetros del request
-                        int idPostulacion = Integer.parseInt(request.getParameter("id"));
-                        String fechaVisita = request.getParameter("fechaVisita");
-                        String horaVisita = request.getParameter("horaVisita");
+                        // Actualizar el comentario en la base de datos
+                        CoordinadorDao dao = new CoordinadorDao();
+                        dao.actualizarComentarioCoordinador(publicacion);
 
-                        // Validar que los campos no estén vacíos
-                        if (fechaVisita != null && !fechaVisita.isEmpty() && horaVisita != null && !horaVisita.isEmpty()) {
-                            // Llamar al método actualizarFechaHoraVisita con la instancia
-                            boolean actualizado = coordinadorDao.actualizarFechaHoraVisita(idPostulacion, fechaVisita, horaVisita);
-
-                            if (actualizado) {
-                                request.setAttribute("mensaje", "Fecha y hora de visita actualizadas exitosamente.");
-                            } else {
-                                request.setAttribute("mensaje", "No se pudo actualizar la fecha y hora de visita.");
-                            }
-                        } else {
-                            request.setAttribute("mensaje", "Por favor complete todos los campos.");
-                        }
-
-                        // Redirigir nuevamente a los detalles de la postulación
-                        request.getRequestDispatcher("/CoordinadorServlet?action=detallesVisita&id=" + idPostulacion).forward(request, response);
-                    } catch (NumberFormatException e) {
-                        // Manejo de errores en caso de que el ID no sea válido
-                        response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=mascotasaprobadas&error=exception");
+                        // Redirigir con mensaje de éxito
+                        response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=pagPrincipal");
+                    } else {
+                        // Redirigir con error por comentario vacío
+                        response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=detallePublicacion&id=" + idPublicacion + "&error=emptyComment");
                     }
-                    break;
+                } catch (NumberFormatException | IOException e) {
+                    // Manejar errores y redirigir
+                    e.printStackTrace();
+                    response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=mascotasaprobadas&error=exception");
+                }
+                break;
 
-                case "actualizarComentario":
-                    try {
-                        // Obtener parámetros del formulario
-                        int idPublicacion = Integer.parseInt(request.getParameter("idPublicacion"));
-                        String comentario = request.getParameter("comentario_coordinador");
-
-                        if (idPublicacion > 0 && comentario != null && !comentario.trim().isEmpty()) {
-                            Publicacion publicacion = new Publicacion();
-                            publicacion.setIdPublicacion(idPublicacion);
-                            publicacion.setComentario_coordinador(comentario);
-
-                            // Actualizar el comentario en la base de datos
-                            CoordinadorDao dao = new CoordinadorDao();
-                            dao.actualizarComentarioCoordinador(publicacion);
-
-                            // Redirigir con mensaje de éxito
-                            response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=pagPrincipal");
-                        } else {
-                            // Redirigir con error por comentario vacío
-                            response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=detallePublicacion&id=" + idPublicacion + "&error=emptyComment");
-                        }
-                    } catch (NumberFormatException | IOException e) {
-                        // Manejar errores y redirigir
-                        e.printStackTrace();
-                        response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=mascotasaprobadas&error=exception");
-                    }
-                    break;
-
-                // Otros casos aquí...
-                default:
-                    response.sendRedirect(request.getContextPath() + "/CoordinadorServlet");
-                    break;
-            }
-
+            // Otros casos aquí...
+            default:
+                response.sendRedirect(request.getContextPath() + "/CoordinadorServlet");
+                break;
+        }
     }
+
 }
