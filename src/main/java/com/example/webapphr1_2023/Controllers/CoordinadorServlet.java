@@ -30,8 +30,8 @@ public class CoordinadorServlet extends HttpServlet {
         String vista;
         RequestDispatcher rd;
         CoordinadorDao coordinadorDao = new CoordinadorDao();
-
         PublicacionDao publicaciondao= new PublicacionDao();
+
         switch (action) {
 
 
@@ -217,7 +217,7 @@ public class CoordinadorServlet extends HttpServlet {
                 break;
             case "cuenta":
                 // Obtener el albergue específico (por ejemplo, con ID 7)
-                Usuarios coordinador = coordinadorDao.micuenta(coordinadorid);
+                Usuarios coordinador = coordinadorDao.micuenta(usuario.getId());
                 // Si se obtuvo la información del albergue, se pasa como atributo a la vista
                 if (coordinador != null) {
                     request.setAttribute("coordinador", coordinador);
