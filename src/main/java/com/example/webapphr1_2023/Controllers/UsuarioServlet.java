@@ -60,6 +60,7 @@ public class UsuarioServlet extends HttpServlet {
                 request.setAttribute("evento", evento);
                 vista = "/Usuario_final/evento_detalles.jsp";
                 rd = request.getRequestDispatcher(vista);
+                request.setAttribute("paginaActiva", "eventos");
                 rd.forward(request, response);
                 break;
             case "eventos":
