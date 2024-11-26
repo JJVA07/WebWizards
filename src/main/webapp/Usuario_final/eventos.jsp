@@ -26,10 +26,7 @@
 
 <!-- Barra de navegación superior -->
 <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: rgb(27, 94, 87);">
-    <!-- Marca de navegación -->
-    <a class="navbar-brand ps-3" href="<%= request.getContextPath() %>/home.jsp">Usuario Final</a>
-
-    <!-- Botón de barra lateral -->
+    <a class="navbar-brand ps-3" href="<%= request.getContextPath() %>/Usuario?action=home">Usuario Final</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
 
     <!-- Navegación de usuario -->
@@ -39,18 +36,17 @@
                 <i class="fas fa-user fa-fw"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/mi_cuenta.jsp">Mi cuenta</a></li>
+                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/Usuario?action=miCuenta">Mi cuenta</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/inicio_sesion.jsp">Cerrar Sesión</a></li>
+                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/Usuario?action=logout">Cerrar Sesión</a></li>
             </ul>
         </li>
-        <a class="nav-link" id="navbarDropdown" href="<%= request.getContextPath() %>/home.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
+        <a class="nav-link" id="navbarDropdown" href="<%= request.getContextPath() %>/Usuario?action=home" role="button"><i class="fa-solid fa-paw"></i></a>
     </ul>
 </nav>
 
 <!-- Layout principal con la barra lateral -->
 <div id="layoutSidenav">
-
     <!-- Incluir el sidebar común -->
     <jsp:include page="/WEB-INF/sidebar.jsp" />
 
@@ -62,38 +58,61 @@
                     <!-- Generar dinámicamente las tarjetas de eventos -->
                     <%
                         List<Eventos> eventos = (List<Eventos>) request.getAttribute("eventos");
-                        for (Eventos evento : eventos) {
+                        if (eventos != null && !eventos.isEmpty()) {
+                            for (Eventos evento : eventos) {
+                                String encodedImage = evento.getFoto() != null
+                                        ? Base64.getEncoder().encodeToString(evento.getFoto())
+                                        : null;
                     %>
                     <div class="col d-flex justify-content-center">
                         <div class="card" style="width: 25rem;">
-                            <img src="data:image/jpeg;base64,<%= Base64.getEncoder().encodeToString(evento.getFoto()) %>" class="card-img-top" alt="Evento" style="height: 200px; object-fit: cover;">
+                            <img src="<%= encodedImage != null ? "data:image/jpeg;base64," + encodedImage : request.getContextPath() + "/assets/img/placeholder.png" %>"
+                                 class="card-img-top" alt="<%= evento.getNombreEvento() %>" style="height: 200px; object-fit: cover;">
                             <div class="card-body">
                                 <h5 class="card-title"><%= evento.getNombreEvento() %></h5>
                                 <p class="card-text"><%= evento.getDescripcion() %></p>
-                                <a href="#" class="btn btn-primary">Más detalles</a>
+                                <a href="<%= request.getContextPath() %>/Usuario?action=detallesEvento&idEvento=<%= evento.getIdEventos() %>" class="btn btn-primary">Más detalles</a>
                             </div>
                         </div>
                     </div>
-                    <% } %>
+                    <%
+                        }
+                    } else {
+                    %>
+                    <div class="text-center mt-4">
+                        <p>No hay eventos disponibles en este momento.</p>
+                    </div>
+                    <%
+                        }
+                    %>
                 </div>
 
                 <!-- Paginación -->
                 <nav aria-label="Page navigation" class="mt-4">
                     <ul class="pagination justify-content-center">
-                        <li class="page-item <%= (int) request.getAttribute("paginaActual") == 1 ? "disabled" : "" %>">
-                            <a class="page-link" href="?action=eventos&pagina=<%= (int) request.getAttribute("paginaActual") - 1 %>">Anterior</a>
+                        <%
+                            Integer paginaActual = (Integer) request.getAttribute("paginaActual");
+                            Integer totalPaginas = (Integer) request.getAttribute("totalPaginas");
+                            if (paginaActual != null && totalPaginas != null) {
+                        %>
+                        <li class="page-item <%= paginaActual == 1 ? "disabled" : "" %>">
+                            <a class="page-link" href="<%= request.getContextPath() %>/Usuario?action=eventos&pagina=<%= paginaActual - 1 %>">Anterior</a>
                         </li>
                         <%
-                            int totalPaginas = (int) request.getAttribute("totalPaginas");
                             for (int i = 1; i <= totalPaginas; i++) {
                         %>
-                        <li class="page-item <%= (int) request.getAttribute("paginaActual") == i ? "active" : "" %>">
-                            <a class="page-link" href="?action=eventos&pagina=<%= i %>"><%= i %></a>
+                        <li class="page-item <%= paginaActual == i ? "active" : "" %>">
+                            <a class="page-link" href="<%= request.getContextPath() %>/Usuario?action=eventos&pagina=<%= i %>"><%= i %></a>
                         </li>
-                        <% } %>
-                        <li class="page-item <%= (int) request.getAttribute("paginaActual") == totalPaginas ? "disabled" : "" %>">
-                            <a class="page-link" href="?action=eventos&pagina=<%= (int) request.getAttribute("paginaActual") + 1 %>">Siguiente</a>
+                        <%
+                            }
+                        %>
+                        <li class="page-item <%= paginaActual == totalPaginas ? "disabled" : "" %>">
+                            <a class="page-link" href="<%= request.getContextPath() %>/Usuario?action=eventos&pagina=<%= paginaActual + 1 %>">Siguiente</a>
                         </li>
+                        <%
+                            }
+                        %>
                     </ul>
                 </nav>
             </div>
@@ -106,9 +125,7 @@
                     <div class="text-muted" style="color: white !important;">© Huella Viva</div>
                     <div>
                         <a style="color: white;">Correo: </a><a href="#" style="color: white;"> info@alberguegosu.com</a>
-                        <div></div>
                         <a style="color: white;">Teléfono: </a><a href="#" style="color: white;"> +123 456 7890</a>
-                        <div></div>
                         <a style="color: white;">Ubicación: </a><a href="#" style="color: white;"> Calle Ejemplo 123, Ciudad, País</a>
                     </div>
                 </div>
@@ -118,9 +135,7 @@
 </div>
 
 <!-- Archivos JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
-<script src="<%= request.getContextPath() %>/assets/js/scripts.js"></script>
+<script src="<%= request.getContextPath() %>/js/scripts.js"></script>
 </body>
 </html>

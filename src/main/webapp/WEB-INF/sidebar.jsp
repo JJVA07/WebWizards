@@ -18,7 +18,7 @@
                 </a>
                 <div class="collapse <%= ("eventos".equals(paginaActiva) || "mis_eventos".equals(paginaActiva)) ? "show" : "" %>" id="collapseEventos" aria-labelledby="headingEventos" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link <%= "eventos".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/eventos.jsp">Eventos</a>
+                        <a class="nav-link <%= "eventos".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=eventos">Eventos</a>
                         <a class="nav-link <%= "mis_eventos".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/mis_eventos.jsp">Mis eventos</a>
                     </nav>
                 </div>

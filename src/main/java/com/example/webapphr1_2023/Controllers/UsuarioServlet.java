@@ -46,14 +46,13 @@ public class UsuarioServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
             case "misEventos":
-                // Obtener el ID del usuario desde la sesión o request (aquí asumo que está en la sesión)
-                int idUsuario = (int) request.getSession().getAttribute("2");
+                // Obtener el ID del usuario desde la sesión
+                int idUsuario = (int) request.getSession().getAttribute("idUsuario");
                 List<Eventos> eventos = eventosDao.obtenerEventosPorUsuario(idUsuario);
 
+                // Enviar eventos a la vista
                 request.setAttribute("eventos", eventos);
                 vista = "/Usuario_final/mis_eventos.jsp";
-                rd = request.getRequestDispatcher(vista);
-                rd.forward(request, response);
                 break;
             case "detallesEvento":
                 int idEvento = Integer.parseInt(request.getParameter("idEvento"));
@@ -71,11 +70,17 @@ public class UsuarioServlet extends HttpServlet {
                 int totalEventos = eventosDao.contarEventosActivos();
                 int totalPaginas = (int) Math.ceil((double) totalEventos / 6);
 
+                // Imprimir logs para verificar los datos enviados
+                System.out.println("Eventos obtenidos: " + eventasos.size());
+                System.out.println("Página actual: " + pagina);
+                System.out.println("Total páginas: " + totalPaginas);
+
+                // Asegurarte de enviar correctamente los datos al JSP
                 request.setAttribute("eventos", eventasos);
                 request.setAttribute("paginaActual", pagina);
                 request.setAttribute("totalPaginas", totalPaginas);
-                vista = "/Usuario_final/eventos.jsp";
-                rd = request.getRequestDispatcher(vista);
+
+                rd = request.getRequestDispatcher("/Usuario_final/eventos.jsp");
                 rd.forward(request, response);
                 break;
             case "mostrarSolicitud":
