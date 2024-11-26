@@ -1,1 +1,1 @@
-<% response.sendRedirect("LoginServlet"); %>
+<% response.sendRedirect(request.getContextPath()+"/LoginServlet"); %>

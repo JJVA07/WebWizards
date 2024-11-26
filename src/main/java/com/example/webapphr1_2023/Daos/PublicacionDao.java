@@ -67,5 +67,48 @@ public class PublicacionDao extends DaoBase {
             throw new RuntimeException(e);
 
         }
+
+    }
+    public Publicacion obtenerPublicacionPorId(int id) {
+        String sql = "SELECT " +
+                "Nombre, " +
+                "Edad, " +
+                "Raza, " +
+                "Foto"+
+                "Tamano, " +
+                "Contacto, " +
+                "Distintivo, " +
+                "LugarPerdida AS lugar_perdida, " +
+                "HoraPerdida AS hora_perdida, " +
+                "Nombre_contacto, " +
+                "Recompensa " +
+                "FROM publicacion WHERE idPublicacion = ?";
+        Publicacion publicacion = null;
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    publicacion = new Publicacion();
+                    publicacion.setIdPublicacion(id); // ID de la publicación
+                    publicacion.setNombre(rs.getString("Nombre")); // Nombre de la mascota
+                    publicacion.setEdad(rs.getInt("Edad")); // Edad
+                    publicacion.setRaza(rs.getString("Raza")); // Raza
+                    publicacion.setTamano(rs.getString("Tamano")); // Tamaño
+                    publicacion.setNombreContacto(rs.getString("Contacto")); // Contacto (teléfono o email)
+                    publicacion.setDistintivo(rs.getString("Distintivo")); // Característica distintiva
+                    publicacion.setLugarPerdida(rs.getString("lugar_perdida")); // Lugar donde se perdió
+                    publicacion.setHoraPerdida(rs.getString("hora_perdida")); // Hora de la pérdida
+                    publicacion.setNombreContacto(rs.getString("Nombre_contacto")); // Nombre del contacto
+                    publicacion.setRecompensa(rs.getString("Recompensa")); // Recompensa
+                    publicacion.setFoto(rs.getBytes("Foto"));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al obtener la publicación por ID", e);
+        }
+
+        return publicacion;
     }
 }
