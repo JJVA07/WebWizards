@@ -1,9 +1,5 @@
 package com.example.webapphr1_2023.Beans;
 
-import org.w3c.dom.Text;
-
-import java.sql.Clob;
-
 public class Publicacion {
     private int idPublicacion;
     private String descripcion;
@@ -28,15 +24,6 @@ public class Publicacion {
     private String fechaPublicacion;
     private String fechaEncontrado;
     private Usuarios usuario; // Relación con Usuarios (usuario que realiza la publicación)
-    private String comentario_coordinador;
-
-    public String getComentario_coordinador() {
-        return comentario_coordinador;
-    }
-
-    public void setComentario_coordinador(String comentario_coordinador) {
-        this.comentario_coordinador = comentario_coordinador;
-    }
 
     public int getEdad() {
         return edad;
