@@ -31,7 +31,7 @@ public class CoordinadorServlet extends HttpServlet {
         RequestDispatcher rd;
         CoordinadorDao coordinadorDao = new CoordinadorDao();
         PublicacionDao publicaciondao= new PublicacionDao();
-ola
+
         switch (action) {
 
 
