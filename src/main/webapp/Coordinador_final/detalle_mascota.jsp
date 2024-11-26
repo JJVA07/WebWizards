@@ -12,9 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed" style="background-color: #ffffff;">
-
 <%@ include file="/WEB-INF/navbar_coordinador.jsp" %>
-
 <div id="layoutSidenav">
     <%@ include file="/WEB-INF/sidebar_coordinador.jsp" %>
 
@@ -39,7 +37,6 @@
                                 <p><strong>Contacto Nombre:</strong> <span id="contacto_nombre"></span></p>
                                 <p><strong>Recompensa:</strong> <span id="recompensa"></span></p>
                             </div>
-
                             <!-- Imagen y descripción (Derecha) -->
                             <div class="col-md-6 text-center">
                                 <img id="imagen" class="img-fluid rounded mb-3"

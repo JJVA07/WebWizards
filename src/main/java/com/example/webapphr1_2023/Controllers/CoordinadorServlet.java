@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,16 +25,15 @@ public class CoordinadorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action") == null ? "pagPrincipal" : request.getParameter("action");
+        Usuarios usuario  = (Usuarios) request.getSession().getAttribute("usuarioSession");
         String vista;
         RequestDispatcher rd;
         CoordinadorDao coordinadorDao = new CoordinadorDao();
         int coordinadorid=8;
         switch (action) {
-
             case "solicitud_hogaresaprobados":
                 // Llamar al método del DAO para obtener las solicitudes de hogares aprobados
                 List<Postulacion> listaSolicitudeshogaraprobados = coordinadorDao.solicitudehogaresaprobados();
-
                 // Verificar si la lista contiene datos y depurar
                 if (listaSolicitudeshogaraprobados.isEmpty()) {
                     System.out.println("No se encontraron solicitudes de hogares aprobados.");
@@ -45,7 +45,6 @@ public class CoordinadorServlet extends HttpServlet {
                                 ", Distrito: " + p.getDistrito().getNombre());
                     }
                 }
-
                 // Enviar la lista como atributo al JSP
                 request.setAttribute("listaSolicitudeshogaraprobados", listaSolicitudeshogaraprobados);
 

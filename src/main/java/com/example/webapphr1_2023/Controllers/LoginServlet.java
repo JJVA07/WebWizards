@@ -1,5 +1,4 @@
 package com.example.webapphr1_2023.Controllers;
-
 import com.example.webapphr1_2023.Beans.Usuarios;
 import com.example.webapphr1_2023.Daos.UsuariosDao;
 import jakarta.servlet.*;
@@ -28,7 +27,7 @@ public class LoginServlet extends HttpServlet {
                 case "logout":
                 HttpSession session = request.getSession();
                 session.invalidate();
-                response.sendRedirect(request.getContextPath());
+                response.sendRedirect(request.getContextPath()+"/LoginServlet?action=loginform");
                 break;
         }
     }
