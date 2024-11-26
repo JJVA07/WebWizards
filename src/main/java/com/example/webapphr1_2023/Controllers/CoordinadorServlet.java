@@ -5,6 +5,7 @@ import com.example.webapphr1_2023.Beans.Publicacion;
 import com.example.webapphr1_2023.Beans.Usuarios;
 import com.example.webapphr1_2023.Daos.CoordinadorDao;
 import com.example.webapphr1_2023.Daos.Lista_eventosDao;
+import com.example.webapphr1_2023.Daos.PublicacionDao;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -31,6 +32,74 @@ public class CoordinadorServlet extends HttpServlet {
         CoordinadorDao coordinadorDao = new CoordinadorDao();
         int coordinadorid=8;
         switch (action) {
+
+
+            case "detalleMascotaAprobada":
+                try {
+                    int idPublicacion = Integer.parseInt(request.getParameter("id")); // Obtener ID de la publicación
+                    Publicacion publicacionDetalles = coordinadorDao.obtenerDetallesMascotaAprobada(idPublicacion); // Obtener detalles
+
+                    if (publicacionDetalles != null) {
+                        // Enviar los detalles de la publicación al JSP
+                        request.setAttribute("publicacionDetalles", publicacionDetalles);
+                        RequestDispatcher view = request.getRequestDispatcher("/Coordinador_final/detalle_mascota_aprobada.jsp");
+                        view.forward(request, response);
+                    } else {
+                        // Redirigir si no se encuentra la publicación
+                        response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=mascotasaprobadas");
+                    }
+                } catch (NumberFormatException e) {
+                    // Manejar errores en caso de que el parámetro ID no sea válido
+                    response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=mascotasaprobadas");
+                }
+                break;
+
+
+            case "eliminarPublicacion":
+                try {
+                    // Obtener el ID de la publicación
+                    int idEliminar = Integer.parseInt(request.getParameter("id"));
+
+                    // Llamar al método para eliminar la publicación
+                    boolean eliminado = coordinadorDao.eliminarPublicacion(idEliminar);
+
+                    if (eliminado) {
+                        // Redirigir a la lista de mascotas perdidas después de eliminar
+                        response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=mascotasperdidas");
+                    } else {
+                        // Manejo en caso de que no se pueda eliminar
+                        request.setAttribute("error", "No se pudo eliminar la publicación.");
+                        RequestDispatcher view = request.getRequestDispatcher("/CoordinadorServlet?action=mascotasperdidas");
+                        view.forward(request, response);
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=mascotasperdidas");
+                }
+                break;
+
+
+            case "detallePublicacion":
+                try {
+                    int idPublicacion = Integer.parseInt(request.getParameter("id")); // Obtener el ID de la publicación
+                    Publicacion publicacionDetalles = coordinadorDao.obtenerDetallesPublicacion(idPublicacion); // Buscar detalles
+
+                    if (publicacionDetalles != null) {
+                        // Enviar los detalles de la publicación al JSP
+                        request.setAttribute("publicacionDetalles", publicacionDetalles);
+                        RequestDispatcher view = request.getRequestDispatcher("/Coordinador_final/detalle_mascota.jsp");
+                        view.forward(request, response);
+                    } else {
+                        // Redirigir si no se encuentra la publicación
+                        response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=mascotasperdidas");
+                    }
+                } catch (NumberFormatException e) {
+                    // Manejo de errores en caso de que el parámetro ID no sea válido
+                    response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=mascotasperdidas");
+                }
+                break;
+
+
             case "solicitud_hogaresaprobados":
                 // Llamar al método del DAO para obtener las solicitudes de hogares aprobados
                 List<Postulacion> listaSolicitudeshogaraprobados = coordinadorDao.solicitudehogaresaprobados();
@@ -188,4 +257,45 @@ public class CoordinadorServlet extends HttpServlet {
 
     }
 }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+
+        switch (action) {
+            case "actualizarComentario":
+                try {
+                    // Obtener parámetros del formulario
+                    int idPublicacion = Integer.parseInt(request.getParameter("idPublicacion"));
+                    String comentario = request.getParameter("comentario_coordinador");
+
+                    if (idPublicacion > 0 && comentario != null && !comentario.trim().isEmpty()) {
+                        Publicacion publicacion = new Publicacion();
+                        publicacion.setIdPublicacion(idPublicacion);
+                        publicacion.setComentario_coordinador(comentario);
+
+                        // Actualizar el comentario en la base de datos
+                        CoordinadorDao dao = new CoordinadorDao();
+                        dao.actualizarComentarioCoordinador(publicacion);
+
+                        // Redirigir con mensaje de éxito
+                        response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=pagPrincipal");
+                    } else {
+                        // Redirigir con error por comentario vacío
+                        response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=detallePublicacion&id=" + idPublicacion + "&error=emptyComment");
+                    }
+                } catch (NumberFormatException | IOException e) {
+                    // Manejar errores y redirigir
+                    e.printStackTrace();
+                    response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=mascotasaprobadas&error=exception");
+                }
+                break;
+
+            // Otros casos aquí...
+            default:
+                response.sendRedirect(request.getContextPath() + "/CoordinadorServlet");
+                break;
+        }
+    }
+
 }
