@@ -70,7 +70,7 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a class="dropdown-item" href="<%= request.getContextPath() %>/detalle_solicitud_hogares.jsp?id=<%= solicitud.getIdPostulacion() %>">
+                                                    <a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=detalleSolicitudHogar&id=<%= solicitud.getIdPostulacion() %>">
                                                         Revisar
                                                     </a>
                                                 </li>

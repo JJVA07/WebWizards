@@ -68,10 +68,10 @@
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= publicacion.getIdPublicacion() %>">
                                                 <li>
-                                                    <a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=detalleMascota&id=<%= publicacion.getIdPublicacion() %>">Revisar</a>
+                                                    <a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=detallePublicacion&id=<%= publicacion.getIdPublicacion() %>">Revisar</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=eliminar&id=<%= publicacion.getIdPublicacion() %>">Eliminar</a>
+                                                    <a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=eliminarPublicacion&id=<%= publicacion.getIdPublicacion() %>">Eliminar</a>
                                                 </li>
                                             </ul>
                                         </div>

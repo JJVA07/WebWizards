@@ -69,7 +69,7 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a class="dropdown-item" href="<%= request.getContextPath() %>/detalles_solicitudes_agendadas.jsp?id=<%= solicitud.getIdPostulacion() %>">
+                                                    <a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=detallesSolicitudAgendada&id=<%= solicitud.getIdPostulacion() %>">
                                                         Revisar
                                                     </a>
                                                 </li>

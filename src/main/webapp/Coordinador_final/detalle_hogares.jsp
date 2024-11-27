@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.example.webapphr1_2023.Beans.Postulacion" %>
+<%@ page import="java.util.Base64" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -31,32 +33,49 @@
                 <div class="row">
                   <!-- Primera columna de información -->
                   <div class="col-md-6">
-                    <p><strong>Nombre:</strong> <span id="nombre"></span></p>
-                    <p><strong>Apellido:</strong> <span id="apellido"></span></p>
-                    <p><strong>Edad:</strong> <span id="edad"></span></p>
-                    <p><strong>Género:</strong> <span id="genero"></span></p>
-                    <p><strong>Celular:</strong> <span id="celular"></span></p>
-                    <p><strong>Dirección:</strong> <span id="direccion"></span></p>
-                    <p><strong>Distrito:</strong> <span id="distrito"></span></p>
+                    <%
+                      Postulacion postulacion = (Postulacion) request.getAttribute("postulacionDetalles");
+                      if (postulacion != null) {
+                    %>
+                    <p><strong>Nombre:</strong> <%= postulacion.getNombre() %></p>
+                    <p><strong>Apellido:</strong> <%= postulacion.getApellido() %></p>
+                    <p><strong>Edad:</strong> <%= postulacion.getEdad() %></p>
+                    <p><strong>Género:</strong> <%= postulacion.getGenero() %></p>
+                    <p><strong>Celular:</strong> <%= postulacion.getCelular() %></p>
+                    <p><strong>Dirección:</strong> <%= postulacion.getDireccion() %></p>
+                    <p><strong>Distrito:</strong> <%= postulacion.getDistrito().getNombre() %></p>
+                    <p><strong>Cantidad de cuartos:</strong> <%= postulacion.getCantidadCuartos() %></p>
+                    <p><strong>Metraje de vivienda:</strong> <%= postulacion.getMetrajeVivienda() %> m²</p>
+                    <p><strong>Tiene mascotas:</strong> <%= postulacion.getTieneMascotas() != null && postulacion.getTieneMascotas() ? "Sí" : "No" %></p>
+
                   </div>
                   <!-- Segunda columna de información -->
                   <div class="col-md-6">
-                    <p><strong>Cantidad de cuartos:</strong> <span id="cuartos"></span></p>
-                    <p><strong>Metraje de vivienda:</strong> <span id="metraje"></span> m²</p>
-                    <p><strong>Tiene mascotas:</strong> <span id="tieneMascotas"></span></p>
-                    <p><strong>Tipo de mascotas:</strong> <span id="tipoMascotas"></span></p>
-                    <p><strong>Tiene hijos:</strong> <span id="tieneHijos"></span></p>
-                    <p><strong>Vive solo o con dependientes:</strong> <span id="viveSolo"></span></p>
-                    <p><strong>Trabaja:</strong> <span id="trabaja"></span></p>
+
+                    <p><strong>Cantidad de mascotas:</strong> <%= postulacion.getCantidadMascotas() %></p>
+                    <p><strong>Tipo de mascotas:</strong> <%= postulacion.getTipoMascotas() %></p>
+                    <p><strong>Tiene hijos:</strong> <%= postulacion.getTieneHijos() != null && postulacion.getTieneHijos() ? "Sí" : "No" %></p>
+                    <p><strong>Vive solo o con dependientes:</strong> <%= postulacion.getViveConDependientes() != null && postulacion.getViveConDependientes() ? "Con dependientes" : "Solo" %></p>
+                    <p><strong>Trabaja:</strong> <%= postulacion.getTrabajaRemoto() != null && postulacion.getTrabajaRemoto() ? "Remoto" : "Presencial" %></p>
+                    <p><strong>Fecha de inicio temporal:</strong>
+                      <%= postulacion.getFechaInicioTemporal() != null ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(postulacion.getFechaInicioTemporal()) : "No especificada" %>
+                    </p>
+                    <p><strong>Fecha de fin temporal:</strong>
+                      <%= postulacion.getFechaFinTemporal() != null ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(postulacion.getFechaFinTemporal()) : "No especificada" %>
+                    </p>
                   </div>
                 </div>
               </div>
 
               <!-- Fotos a la derecha -->
               <div class="col-md-6 text-center">
-                <img id="imagenHogar" class="img-fluid rounded mb-3" style="max-width: 300px; height: auto;" alt="Imagen del hogar" />
-                <img id="imagenPersona" class="img-fluid rounded mb-3" style="max-width: 300px; height: auto;" alt="Imagen de la persona" />
+                <img id="imagenHogar" class="img-fluid rounded mb-3"
+                     src="<%= postulacion.getFotosLugar() != null ? "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(postulacion.getFotosLugar()) : request.getContextPath() + "/assets/img/default_hogar.jpg" %>"
+                     alt="Imagen del hogar" style="max-width: 300px; height: auto;" />
               </div>
+              <% } else { %>
+              <p class="text-danger">No se encontraron detalles para este hogar aprobado.</p>
+              <% } %>
             </div>
           </div>
         </div>
@@ -76,33 +95,5 @@
     </footer>
   </div>
 </div>
-
-<script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const index = urlParams.get('index');
-  const data = [
-    { imagenPersona: "<%= request.getContextPath() %>/assets/img/persona1.jpg", imagenHogar: "<%= request.getContextPath() %>/assets/img/casa1.jpg", nombre: "Ana", apellido: "García", edad: 34, genero: "Femenino", celular: "987654321", direccion: "Calle 123", distrito: "Ancon", cuartos: 3, metraje: 120, tieneMascotas: "Sí", cantidadMascotas: 2, tipoMascotas: "Perros", tieneHijos: "Sí", viveSolo: "Con dependientes", trabaja: "Remoto", referencia: "Luis Pérez", contactoReferencia: "987654320", tiempoTemporal: "6 meses", rangoFechas: "01/01/2024 - 30/06/2024" },
-    // Agrega más objetos según sea necesario
-  ];
-
-  const hogar = data[index];
-
-  document.getElementById('imagenHogar').src = hogar.imagenHogar;
-  document.getElementById('imagenPersona').src = hogar.imagenPersona;
-  document.getElementById('nombre').textContent = hogar.nombre;
-  document.getElementById('apellido').textContent = hogar.apellido;
-  document.getElementById('edad').textContent = hogar.edad;
-  document.getElementById('genero').textContent = hogar.genero;
-  document.getElementById('celular').textContent = hogar.celular;
-  document.getElementById('direccion').textContent = hogar.direccion;
-  document.getElementById('distrito').textContent = hogar.distrito;
-  document.getElementById('cuartos').textContent = hogar.cuartos;
-  document.getElementById('metraje').textContent = hogar.metraje;
-  document.getElementById('tieneMascotas').textContent = hogar.tieneMascotas;
-  document.getElementById('tipoMascotas').textContent = hogar.tipoMascotas;
-  document.getElementById('tieneHijos').textContent = hogar.tieneHijos;
-  document.getElementById('viveSolo').textContent = hogar.viveSolo;
-  document.getElementById('trabaja').textContent = hogar.trabaja;
-</script>
 </body>
 </html>

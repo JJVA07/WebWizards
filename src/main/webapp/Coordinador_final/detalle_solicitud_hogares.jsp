@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.example.webapphr1_2023.Beans.Postulacion" %>
+<%@ page import="java.util.Base64" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -25,57 +27,74 @@
 
                 <div class="card mb-4">
                     <div class="card-body">
+                        <%
+                            Postulacion postulacion = (Postulacion) request.getAttribute("postulacionDetalles");
+                            if (postulacion != null) {
+                        %>
                         <div class="row">
                             <!-- Información del hogar en dos columnas (Izquierda) -->
                             <div class="col-md-6">
                                 <div class="row">
                                     <!-- Primera columna de información -->
                                     <div class="col-md-6">
-                                        <p><strong>Nombre:</strong> <span id="nombre"></span></p>
-                                        <p><strong>Apellido:</strong> <span id="apellido"></span></p>
-                                        <p><strong>Edad:</strong> <span id="edad"></span></p>
-                                        <p><strong>Género:</strong> <span id="genero"></span></p>
-                                        <p><strong>Celular:</strong> <span id="celular"></span></p>
-                                        <p><strong>Dirección:</strong> <span id="direccion"></span></p>
-                                        <p><strong>Distrito:</strong> <span id="distrito"></span></p>
-                                        <p><strong>Cantidad de cuartos:</strong> <span id="cuartos"></span></p>
-                                        <p><strong>Metraje de vivienda:</strong> <span id="metraje"></span> m²</p>
-                                        <p><strong>Tiene mascotas:</strong> <span id="tieneMascotas"></span></p>
-                                        <p><strong>Cantidad de mascotas:</strong> <span id="cantidadMascotas"></span></p>
+                                        <p><strong>Nombre:</strong> <%= postulacion.getNombre() %></p>
+                                        <p><strong>Apellido:</strong> <%= postulacion.getApellido() %></p>
+                                        <p><strong>Edad:</strong> <%= postulacion.getEdad() %></p>
+                                        <p><strong>Género:</strong> <%= postulacion.getGenero() %></p>
+                                        <p><strong>Celular:</strong> <%= postulacion.getCelular() %></p>
+                                        <p><strong>Dirección:</strong> <%= postulacion.getDireccion() %></p>
+                                        <p><strong>Distrito:</strong> <%= postulacion.getDistrito().getNombre() %></p>
+                                        <p><strong>Cantidad de cuartos:</strong> <%= postulacion.getCantidadCuartos() %></p>
+                                        <p><strong>Metraje de vivienda:</strong> <%= postulacion.getMetrajeVivienda() %> m²</p>
+                                        <p><strong>Tiene mascotas:</strong> <%= postulacion.getTieneMascotas() != null && postulacion.getTieneMascotas() ? "Sí" : "No" %></p>
+                                        <p><strong>Cantidad de mascotas:</strong> <%= postulacion.getCantidadMascotas() %></p>
+                                        <p><strong>Tipo de mascotas:</strong> <%= postulacion.getTipoMascotas() %></p>
+                                        <p><strong>Tiene hijos:</strong> <%= postulacion.getTieneHijos() != null && postulacion.getTieneHijos() ? "Sí" : "No" %></p>
                                     </div>
 
                                     <!-- Segunda columna de información -->
                                     <div class="col-md-6">
-                                        <p><strong>Tipo de mascotas:</strong> <span id="tipoMascotas"></span></p>
-                                        <p><strong>Tiene hijos:</strong> <span id="tieneHijos"></span></p>
-                                        <p><strong>Vive solo o con dependientes:</strong> <span id="viveSolo"></span></p>
-                                        <p><strong>Trabaja:</strong> <span id="trabaja"></span></p>
-                                        <p><strong>Persona de referencia:</strong> <span id="referencia"></span></p>
-                                        <p><strong>Número de contacto de referencia:</strong> <span id="contactoReferencia"></span></p>
-                                        <p><strong>Tiempo de temporal:</strong> <span id="tiempoTemporal"></span></p>
-                                        <p><strong>Rango de Fechas:</strong> <span id="rangoFechas"></span></p>
-                                        <p><strong>Fecha de visita inopinada:</strong> <span id="fechaVisita"></span></p>
-                                        <p><strong>Hora de visita inopinada:</strong> <span id="horaVisita"></span></p>
+                                        <p><strong>Vive solo o con dependientes:</strong> <%= postulacion.getViveConDependientes() != null && postulacion.getViveConDependientes() ? "Con dependientes" : "Solo" %></p>
+                                        <p><strong>Trabaja:</strong> <%= postulacion.getTrabajaRemoto() != null && postulacion.getTrabajaRemoto() ? "Remoto" : "Presencial" %></p>
+                                        <p><strong>Persona de referencia:</strong> <%= postulacion.getPersonaReferencia() %></p>
+                                        <p><strong>Número de contacto de referencia:</strong> <%= postulacion.getTelefonoReferencia() %></p>
+                                        <p><strong>Tiempo de temporal:</strong> <%= postulacion.getTiempoTemporal() %> meses</p>
+                                        <p><strong>Rango de Fechas:</strong>
+                                            <%= postulacion.getFechaInicioTemporal() != null ? postulacion.getFechaInicioTemporal().toString() : "" %> -
+                                            <%= postulacion.getFechaFinTemporal() != null ? postulacion.getFechaFinTemporal().toString() : "" %>
+                                        </p>
+                                        <p><strong>Fecha de visita inopinada:</strong> <%= postulacion.getFechaInopinada() %></p>
+                                        <p><strong>Hora de visita inopinada:</strong> <%= postulacion.getHoraInopinada() %></p>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Fotos a la derecha (Foto del hogar y de la persona) -->
+                            <!-- Fotos a la derecha (Foto del hogar) -->
                             <div class="col-md-6 text-center">
-                                <img id="imagenHogar" class="img-fluid rounded mb-3" style="max-width: 300px; height: auto;" alt="Imagen del hogar" />
-                                <img id="imagenPersona" class="img-fluid rounded mb-3" style="max-width: 300px; height: auto;" alt="Imagen de la persona" />
+                                <img id="imagenHogar" class="img-fluid rounded mb-3"
+                                     src="<%= postulacion.getFotosLugar() != null ? "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(postulacion.getFotosLugar()) : request.getContextPath() + "/assets/img/default_hogar.jpg" %>"
+                                     alt="Imagen del hogar" style="max-width: 300px; height: auto;" />
 
-                                <!-- Botones debajo de las imágenes -->
+                                <!-- Botones debajo de la imagen -->
                                 <div class="d-flex justify-content-center gap-5 mt-3">
-                                    <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalCheck">
-                                        <i class="fa-solid fa-check fa-2x"></i>
-                                    </button>
-                                    <button class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#modalRechazar">
-                                        <i class="fa-solid fa-xmark fa-2x"></i>
-                                    </button>
+                                    <form method="post" action="<%= request.getContextPath() %>/CoordinadorServlet?action=aprobarSolicitud">
+                                        <input type="hidden" name="idPostulacion" value="<%= postulacion.getIdPostulacion() %>" />
+                                        <button type="submit" class="btn btn-success btn-lg">
+                                            <i class="fa-solid fa-check fa-2x"></i> Aprobar
+                                        </button>
+                                    </form>
+                                    <form method="post" action="<%= request.getContextPath() %>/CoordinadorServlet?action=rechazarSolicitud">
+                                        <input type="hidden" name="idPostulacion" value="<%= postulacion.getIdPostulacion() %>" />
+                                        <button type="submit" class="btn btn-danger btn-lg">
+                                            <i class="fa-solid fa-xmark fa-2x"></i> Rechazar
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
+                        <% } else { %>
+                        <p class="text-danger">No se encontraron detalles para esta solicitud de hogar.</p>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -94,78 +113,5 @@
         </footer>
     </div>
 </div>
-
-<!-- Modal Check -->
-<div class="modal fade" id="modalCheck" tabindex="-1" aria-labelledby="modalCheckLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalCheckLabel">¿Estás seguro de aprobar?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Esta acción aprobará la solicitud de hogar.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" onclick="check()">Confirmar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Rechazar -->
-<div class="modal fade" id="modalRechazar" tabindex="-1" aria-labelledby="modalRechazarLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalRechazarLabel">¿Estás seguro de rechazar?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Esta acción rechazará la solicitud de hogar.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" onclick="rechazar()">Confirmar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const index = urlParams.get('index');
-    const data = [
-        { imagenPersona: "<%= request.getContextPath() %>/assets/img/persona1.jpg", imagenHogar: "<%= request.getContextPath() %>/assets/img/casa1.jpg", nombre: "Ana", apellido: "García", edad: 34, genero: "Femenino", celular: "987654321", direccion: "Calle 123", distrito: "Ancon", cuartos: 3, metraje: 120, tieneMascotas: "Sí", cantidadMascotas: 2, tipoMascotas: "Perros", tieneHijos: "Sí", viveSolo: "Con dependientes", trabaja: "Remoto", referencia: "Luis Pérez", contactoReferencia: "987654320", tiempoTemporal: "6 meses", rangoFechas: "01/01/2024 - 30/06/2024", fechaVisita: "12/07/2024", horaVisita: "14:30" },
-        // Resto de datos...
-    ];
-
-    const hogar = data[index];
-
-    document.getElementById('imagenHogar').src = hogar.imagenHogar;
-    document.getElementById('imagenPersona').src = hogar.imagenPersona;
-    document.getElementById('nombre').textContent = hogar.nombre;
-    document.getElementById('apellido').textContent = hogar.apellido;
-    document.getElementById('edad').textContent = hogar.edad;
-    document.getElementById('genero').textContent = hogar.genero;
-    document.getElementById('celular').textContent = hogar.celular;
-    document.getElementById('direccion').textContent = hogar.direccion;
-    document.getElementById('distrito').textContent = hogar.distrito;
-    document.getElementById('cuartos').textContent = hogar.cuartos;
-    document.getElementById('metraje').textContent = hogar.metraje;
-    document.getElementById('tieneMascotas').textContent = hogar.tieneMascotas;
-    document.getElementById('cantidadMascotas').textContent = hogar.cantidadMascotas;
-    document.getElementById('tipoMascotas').textContent = hogar.tipoMascotas;
-    document.getElementById('tieneHijos').textContent = hogar.tieneHijos;
-    document.getElementById('viveSolo').textContent = hogar.viveSolo;
-    document.getElementById('trabaja').textContent = hogar.trabaja;
-    document.getElementById('referencia').textContent = hogar.referencia;
-    document.getElementById('contactoReferencia').textContent = hogar.contactoReferencia;
-    document.getElementById('tiempoTemporal').textContent = hogar.tiempoTemporal;
-    document.getElementById('rangoFechas').textContent = hogar.rangoFechas;
-    document.getElementById('fechaVisita').textContent = hogar.fechaVisita;
-    document.getElementById('horaVisita').textContent = hogar.horaVisita;
-</script>
 </body>
 </html>

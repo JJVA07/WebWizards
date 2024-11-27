@@ -67,10 +67,10 @@
                       </button>
                       <ul class="dropdown-menu">
                         <li>
-                          <a class="dropdown-item" href="<%= request.getContextPath() %>/detalle_hogaresaprobados.jsp?id=<%= solicitud.getIdPostulacion() %>">Revisar</a>
+                          <a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=detalleHogarAprobado&id=<%= solicitud.getIdPostulacion() %>">Revisar</a>
                         </li>
                         <li>
-                          <a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=eliminar&id=<%= solicitud.getIdPostulacion() %>">Eliminar</a>
+                          <a class="dropdown-item" href="<%= request.getContextPath() %>/CoordinadorServlet?action=eliminarPublicacion&id=<%= solicitud.getIdPostulacion() %>">Eliminar</a>
                         </li>
                       </ul>
                     </div>
