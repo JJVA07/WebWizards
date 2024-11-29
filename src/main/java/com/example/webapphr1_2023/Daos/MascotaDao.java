@@ -74,7 +74,7 @@ public class MascotaDao extends DaoBase {
 
                     // Crear un objeto MascotaEstado y establecer sus valores
                     MascotaEstado estado = new MascotaEstado();
-                    estado.setIdMascotaEstado(rs.getInt("idMascota_estado"));
+                    estado.setIdMascotaEstado(rs.getInt("Mascota_estado_idMascota_estado"));
                     estado.setEstado(rs.getString("Estado"));
 
                     // Asignar el estado a la mascota

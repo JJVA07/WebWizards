@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,6 +28,9 @@ public class UsuarioServlet extends HttpServlet {
         DonacionesDao donacionesDao = new DonacionesDao();
         EventosDao eventosDao = new EventosDao();
         SolicitudDao.PostulacionDao postulacionDao = new SolicitudDao.PostulacionDao();
+        PublicacionDao publicacionDao = new PublicacionDao();
+        // Usar un ID de usuario fijo para pruebas
+        int idUsuario = 5; // Cambia esto a un ID válido que exista en tu base de datos
         switch (action) {
             case "pagPrincipal":
                 vista = "/Usuario_final/home.jsp";
@@ -46,13 +50,20 @@ public class UsuarioServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
             case "misEventos":
-                // Obtener el ID del usuario desde la sesión
-                int idUsuario = (int) request.getSession().getAttribute("idUsuario");
+
                 List<Eventos> eventos = eventosDao.obtenerEventosPorUsuario(idUsuario);
 
-                // Enviar eventos a la vista
-                request.setAttribute("eventos", eventos);
+                // Verifica si se obtuvieron eventos
+                if (eventos != null && !eventos.isEmpty()) {
+                    request.setAttribute("eventos", eventos);
+                } else {
+                    request.setAttribute("mensaje", "No tienes eventos registrados.");
+                }
+
+                // Redirigir a la vista de 'Mis Eventos'
                 vista = "/Usuario_final/mis_eventos.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
                 break;
             case "detallesEvento":
                 int idEvento = Integer.parseInt(request.getParameter("idEvento"));
@@ -85,8 +96,7 @@ public class UsuarioServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
             case "mostrarSolicitud":
-                int usuarioIds = 1; // ID del usuario
-                Postulacion postulacion = postulacionDao.obtenerSolicitudPorUsuario(usuarioIds);
+                Postulacion postulacion = postulacionDao.obtenerSolicitudPorUsuario(idUsuario);
                 request.setAttribute("postulacion", postulacion);
 
                 vista = "/Usuario_final/ver_solicitud.jsp";
@@ -94,11 +104,10 @@ public class UsuarioServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
             case "misSolicitudes":
-                int usuarioId = 1; // ID fijo del usuario
                 SolicitudDao solicitudDao = new SolicitudDao();
 
                 // Obtener todas las solicitudes para el usuario
-                List<Object[]> solicitudes = solicitudDao.obtenerSolicitudesPorUsuario(usuarioId);
+                List<Object[]> solicitudes = solicitudDao.obtenerSolicitudesPorUsuario(idUsuario);
 
                 // Pasar la lista de solicitudes a la JSP
                 request.setAttribute("solicitudes", solicitudes);
@@ -177,8 +186,7 @@ public class UsuarioServlet extends HttpServlet {
                 break;
 
             case "mostrarDonaciones":
-                int userId = 1; // Valor estático para userId
-                List<Donaciones> donaciones = donacionesDao.obtenerDonacionesPorUsuario(userId);
+                List<Donaciones> donaciones = donacionesDao.obtenerDonacionesPorUsuario(idUsuario);
                 request.setAttribute("donaciones", donaciones);
 
                 // Ruta actualizada para el archivo mis_donaciones.jsp
@@ -196,10 +204,25 @@ public class UsuarioServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
             case "miCuenta":
-                int idUsuarioo = 5; // Aquí especificas el ID del usuario
-                Usuarios usuario = userDao.obtenerUsuarioPorId(idUsuarioo);
+                Usuarios usuario = userDao.obtenerUsuarioPorId(idUsuario);
                 request.setAttribute("usuario", usuario);
                 rd = request.getRequestDispatcher("/Usuario_final/mi_cuenta.jsp");
+                rd.forward(request, response);
+                break;
+
+            case "misPublicaciones":
+                List<Publicacion> publicaciones = publicacionDao.obtenerPublicacionesPorUsuario(idUsuario);
+
+                // Si hay publicaciones, se pasan a la vista
+                if (publicaciones != null && !publicaciones.isEmpty()) {
+                    request.setAttribute("publicaciones", publicaciones);
+                } else {
+                    request.setAttribute("mensaje", "No tienes publicaciones registradas.");
+                }
+
+                // Ruta a la vista de publicaciones
+                vista = "/Usuario_final/mis_publicaciones.jsp";
+                rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
             default:
@@ -208,6 +231,7 @@ public class UsuarioServlet extends HttpServlet {
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
+
         }
     }
 

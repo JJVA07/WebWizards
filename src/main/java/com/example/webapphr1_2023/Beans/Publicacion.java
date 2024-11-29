@@ -25,6 +25,15 @@ public class Publicacion {
     private String fechaEncontrado;
     private Usuarios usuario; // Relación con Usuarios (usuario que realiza la publicación)
     private String comentario_coordinador;
+    private TipoPublicacion tipoPublicacion;
+
+    public TipoPublicacion getTipoPublicacion() {
+        return tipoPublicacion;
+    }
+
+    public void setTipoPublicacion(TipoPublicacion tipoPublicacion) {
+        this.tipoPublicacion = tipoPublicacion;
+    }
 
     public String getComentario_coordinador() {
         return comentario_coordinador;

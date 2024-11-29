@@ -19,7 +19,7 @@
                 <div class="collapse <%= ("eventos".equals(paginaActiva) || "mis_eventos".equals(paginaActiva)) ? "show" : "" %>" id="collapseEventos" aria-labelledby="headingEventos" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
                         <a class="nav-link <%= "eventos".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=eventos">Eventos</a>
-                        <a class="nav-link <%= "mis_eventos".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/mis_eventos.jsp">Mis eventos</a>
+                        <a class="nav-link <%= "mis_eventos".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=misEventos">Mis eventos</a>
                     </nav>
                 </div>
 
@@ -33,7 +33,7 @@
                 <div class="collapse <%= ("publicaciones".equals(paginaActiva) || "noticias".equals(paginaActiva) || "mis_publicaciones".equals(paginaActiva)) ? "show" : "" %>" id="collapsePublicaciones" aria-labelledby="headingPublicaciones" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
                         <a class="nav-link <%= "noticias".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/noticias.jsp">Noticias</a>
-                        <a class="nav-link <%= "mis_publicaciones".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/mis_publicaciones.jsp">Mis Publicaciones</a>
+                        <a class="nav-link <%= "mis_publicaciones".equals(paginaActiva) ? "active" : "" %>" href="<%= request.getContextPath() %>/Usuario?action=misPublicaciones">Mis Publicaciones</a>
                     </nav>
                 </div>
 

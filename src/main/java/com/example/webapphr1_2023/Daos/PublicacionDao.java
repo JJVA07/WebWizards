@@ -3,6 +3,7 @@ package com.example.webapphr1_2023.Daos;
 import com.example.webapphr1_2023.Beans.MascotaEstado;
 import com.example.webapphr1_2023.Beans.Mascotas;
 import com.example.webapphr1_2023.Beans.Publicacion;
+import com.example.webapphr1_2023.Beans.TipoPublicacion;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -69,46 +70,54 @@ public class PublicacionDao extends DaoBase {
         }
 
     }
-    public Publicacion obtenerPublicacionPorId(int id) {
-        String sql = "SELECT " +
-                "Nombre, " +
-                "Edad, " +
-                "Raza, " +
-                "Foto"+
-                "Tamano, " +
-                "Contacto, " +
-                "Distintivo, " +
-                "LugarPerdida AS lugar_perdida, " +
-                "HoraPerdida AS hora_perdida, " +
-                "Nombre_contacto, " +
-                "Recompensa " +
-                "FROM publicacion WHERE idPublicacion = ?";
-        Publicacion publicacion = null;
-        try (Connection conn = this.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    publicacion = new Publicacion();
-                    publicacion.setIdPublicacion(id); // ID de la publicación
-                    publicacion.setNombre(rs.getString("Nombre")); // Nombre de la mascota
-                    publicacion.setEdad(rs.getInt("Edad")); // Edad
-                    publicacion.setRaza(rs.getString("Raza")); // Raza
-                    publicacion.setTamano(rs.getString("Tamano")); // Tamaño
-                    publicacion.setNombreContacto(rs.getString("Contacto")); // Contacto (teléfono o email)
-                    publicacion.setDistintivo(rs.getString("Distintivo")); // Característica distintiva
-                    publicacion.setLugarPerdida(rs.getString("lugar_perdida")); // Lugar donde se perdió
-                    publicacion.setHoraPerdida(rs.getString("hora_perdida")); // Hora de la pérdida
-                    publicacion.setNombreContacto(rs.getString("Nombre_contacto")); // Nombre del contacto
-                    publicacion.setRecompensa(rs.getString("Recompensa")); // Recompensa
-                    publicacion.setFoto(rs.getBytes("Foto"));
-                }
-            }
+    // Método para obtener las publicaciones de un usuario
+    public List<Publicacion> obtenerPublicacionesPorUsuario(int idUsuario) {
+        List<Publicacion> publicaciones = new ArrayList<>();
 
+        String sql = "SELECT p.*, tp.tipo AS tipo_publicacion \n" +
+                "                 FROM publicacion p \n" +
+                "                 INNER JOIN tipo_publicacion tp ON p.Tipo_publicacion_Tipo_publicacion = tp.Tipo_publicacion \n" +
+                "                 WHERE p.Usuarios_ID = ?";
+
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idUsuario);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Crear instancia de Publicacion
+                Publicacion publicacion = new Publicacion();
+                publicacion.setIdPublicacion(rs.getInt("idPublicacion"));
+                publicacion.setDescripcion(rs.getString("Descripcion"));
+                publicacion.setNombre(rs.getString("Nombre"));
+                publicacion.setFoto(rs.getBytes("Foto"));
+
+                // Cargar datos del tipo de publicación
+                TipoPublicacion tipoPublicacion = new TipoPublicacion();
+                tipoPublicacion.setIdTipoPublicacion(rs.getInt("Tipo_publicacion_Tipo_publicacion"));
+                tipoPublicacion.setNombre(rs.getString("tipo_publicacion")); // Nombre del tipo de publicación
+                publicacion.setTipoPublicacion(tipoPublicacion);
+
+                // Agregar la publicación a la lista
+                publicaciones.add(publicacion);
+            }
         } catch (SQLException e) {
-            throw new RuntimeException("Error al obtener la publicación por ID", e);
+            e.printStackTrace();
         }
 
-        return publicacion;
+        return publicaciones;
+    }
+    // Eliminar una publicación por su ID
+    public void eliminarPublicacion(int idPublicacion) {
+        String query = "DELETE FROM publicacion WHERE idPublicacion = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, idPublicacion);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al eliminar publicación: " + e.getMessage());
+        }
     }
 }
