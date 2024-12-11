@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Lugares Habilitados</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href="../css/styles.css" rel="stylesheet" />
+        <link href="../css/styles_2.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="sb-nav-fixed" style="background-color: #e6ddcc;">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #000000;">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="Home.html">Administrador</a>
+            <!-- Sidebar Toggle-->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <!-- Navbar-->
+            <ul class="navbar-nav ms-auto me-3 me-lg-4">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user fa-fw"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="adm_micuenta.html">Ver Mi Cuenta</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #000000;">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Menú</div>
+                            <a class="nav-link" href="adm_indicadores.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
+                                Visualización de Indicadores
+                            </a>
+                            <a class="nav-link" href="adm_solicitudes.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
+                                Gestión de Solicitudes
+                            </a>
+                            <a class="nav-link active" href="#" data-bs-toggle="collapse" data-bs-target="#collapseluagres" aria-expanded="true" aria-controls="collapseluagres">
+                                <div class="sb-nav-link-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                Administración de Lugares
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse show" id="collapseluagres" aria-labelledby="headingThree" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="adm_lugares.html">Creación de lugares habilitados</a>
+                                    <a class="nav-link active" href="lugares_habilitados.html">Lugares Habilitados</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsecoordinadores" aria-expanded="false" aria-controls="collapsecoordinadores">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
+                                Administración de Coordinadores
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapsecoordinadores" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="adm_coordinadores.html">Creación de coordinadores</a>
+                                    <a class="nav-link" href="gestion_coordinadores.html">Gestión de coordinadores</a>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Lugares Habilitados</h1>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Lista de Lugares Habilitados
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="lugaresTable" class="table table-bordered">
+                                        <thead class="table-header" style="background-color: #4CAF50; color: white;">
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Dirección</th>
+
+                                                <th>Capacidad</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Albergue 1</td>
+                                                <td>Calle Falsa 123</td>
+                                             
+                                                <td>100</td>
+                                                <td>
+                                                    <select class="action-select" onchange="handleAction(this, 'Albergue1')">
+                                                        <option value="" disabled selected>Seleccionar acción</option>
+                                                        <option value="editar">Editar</option>
+                                                        <option value="aprobar">Aprobar</option>
+                                                        <option value="rechazar">Rechazar</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Albergue 2</td>
+                                                <td>Av. Siempreviva 742</td>
+                                               
+                                                <td>150</td>
+                                                <td>
+                                                    <select class="action-select" onchange="handleAction(this, 'Albergue2')">
+                                                        <option value="" disabled selected>Seleccionar acción</option>
+                                                        <option value="editar">Editar</option>
+                                                        <option value="aprobar">Aprobar</option>
+                                                        <option value="rechazar">Rechazar</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Librerías JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <!-- Función para inicializar DataTables -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const lugaresTable = document.getElementById('lugaresTable');
+                if (lugaresTable) {
+                    new simpleDatatables.DataTable(lugaresTable, {
+                        labels: {
+                            placeholder: "Buscar...",
+                            perPage: "Mostrar registros por página",
+                            noRows: "No se encontraron registros",
+                            info: "Mostrando {start} a {end} de {rows} registros",
+                        },
+                        perPageSelect: [5, 10, 15, 20],
+                        perPage: 10,
+                        searchable: true,
+                        sortable: true,
+                    });
+                }
+            });
+        </script>
+
+        <!-- Función para controlar el sidebar -->
+        <script>
+            document.getElementById('sidebarToggle').addEventListener('click', function () {
+                const body = document.body;
+                body.classList.toggle('sb-sidenav-toggled');
+            });
+        </script>
+
+        <!-- Función para manejar acciones del selector -->
+        <script>
+            function handleAction(select, lugar) {
+                const action = select.value;
+                if (action === 'editar') {
+                    Swal.fire('Editar', `Editar ${lugar}`, 'info');
+                } else if (action === 'aprobar') {
+                    Swal.fire('Aprobado', `Aprobaste ${lugar}`, 'success');
+                } else if (action === 'rechazar') {
+                    Swal.fire('Rechazado', `Rechazaste ${lugar}`, 'error');
+                }
+            }
+        </script>
+        <script src="../js/scripts.js"></script>
+    </body>
+</html>
