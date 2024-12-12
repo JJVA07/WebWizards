@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-@WebServlet(name ="UsuarioServlet" , value = "/Usuario")
+@WebServlet(name ="UsuarioServlet" , value = "/UsuarioServlet")
 @MultipartConfig
 public class UsuarioServlet extends HttpServlet {
     @Override

@@ -1,5 +1,6 @@
 package com.example.webapphr1_2023.Daos;
 
+import com.example.webapphr1_2023.Beans.Rol;
 import com.example.webapphr1_2023.Beans.Usuarios;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -82,8 +83,8 @@ public class UsuariosDao extends DaoBase {
     // UsuariosDao.java
     public Usuarios obtenerUsuarioPorId(int idUsuario) {
         Usuarios usuario = null;
-        String sql = "SELECT Nombre, Apellido, DNI, Telefono, Correo FROM Usuarios WHERE id = ?";
-
+        String sql = "SELECT u.Nombre, u.Apellido, u.DNI, u.Telefono, u.Correo ,r.idRol as id,r.Nombre as rolcito FROM usuarios u join rol r on r.idRol = u.Rol_idRol WHERE ID = ?";
+        Rol rol= new Rol();
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, idUsuario);
@@ -95,6 +96,10 @@ public class UsuariosDao extends DaoBase {
                     usuario.setDni(String.valueOf(rs.getInt("DNI")));
                     usuario.setTelefono(rs.getInt("Telefono"));
                     usuario.setCorreo(rs.getString("Correo"));
+                    rol.setIdRol(rs.getInt("id"));
+                    rol.setNombre(rs.getString("rolcito"));
+                    usuario.setRol(rol);
+
                 }
             }
         } catch (SQLException e) {

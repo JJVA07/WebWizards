@@ -17,20 +17,37 @@ public class LoginServlet extends HttpServlet {
         switch (action) {
             case "loginform":
                 Usuarios usuario = (Usuarios) request.getSession().getAttribute("usuarioSession");
+                UsuariosDao usuariosDao = new UsuariosDao();
+
                 if (usuario != null && usuario.getId() != 0) {
-                    response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=pagPrincipal");
+                    int a = usuario.getRol().getIdRol();
+                    switch (a) {
+                        case 1:
+                            response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=null");
+                        case 2:
+                            response.sendRedirect(request.getContextPath() + "/AlbergueServlet?action=null");
+                        case 3:
+                            response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=null");
+                        case 4:
+                            response.sendRedirect(request.getContextPath() + "/AdministradorServlet?action=null");
+                            break;
+
+
+                    }
+
                 } else {
                     view = request.getRequestDispatcher("/Usuario_final/inicio_sesion.jsp");
                     view.forward(request, response);
                 }
                 break;
-                case "logout":
+            case "logout":
                 HttpSession session = request.getSession();
                 session.invalidate();
-                response.sendRedirect(request.getContextPath()+"/LoginServlet?action=loginform");
+                response.sendRedirect(request.getContextPath() + "/LoginServlet?action=loginform");
                 break;
         }
     }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         UsuariosDao usuariosDao = new UsuariosDao();
@@ -40,10 +57,33 @@ public class LoginServlet extends HttpServlet {
         if (usuarios != null) {
             HttpSession session = request.getSession();
             session.setAttribute("usuarioSession", usuarios);
-            session.setMaxInactiveInterval(10 * 60); // 10 minutos
-            response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=null");
+            session.setMaxInactiveInterval(10 * 60); // 10 minutos de sesión
+
+            int a = usuarios.getRol().getIdRol();
+
+            if (!response.isCommitted()) { // Verificar que la respuesta no esté comprometida
+                switch (a) {
+                    case 1:
+                        response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=null");
+                        break;
+                    case 2:
+                        response.sendRedirect(request.getContextPath() + "/AlbergueServlet?action=null");
+                        break;
+                    case 3:
+                        response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=null");
+                        break;
+                    case 4:
+                        response.sendRedirect(request.getContextPath() + "/AdministradorServlet?action=null");
+                        break;
+                    default:
+                        response.sendRedirect(request.getContextPath() + "/LoginServlet?error");
+                        break;
+                }
+            }
         } else {
-            response.sendRedirect(request.getContextPath() + "/LoginServlet?error");
+            if (!response.isCommitted()) {
+                response.sendRedirect(request.getContextPath() + "/LoginServlet?error");
+            }
         }
     }
 }
