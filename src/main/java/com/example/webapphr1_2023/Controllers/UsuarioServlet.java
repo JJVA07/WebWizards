@@ -16,21 +16,33 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-@WebServlet(name ="UsuarioServlet" , value = "/UsuarioServlet")
+@WebServlet(name ="UsuarioServlet" , value = "/Usuario")
 @MultipartConfig
 public class UsuarioServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Verificar si la sesión existe y el usuario está autenticado
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("usuario") == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        // Obtener el ID del usuario desde la sesión
+        Usuarios usuarioSesion = (Usuarios) session.getAttribute("usuario");
+        int idUsuario = usuarioSesion.getId();
+
         String action = request.getParameter("action") == null ? "pagPrincipal" : request.getParameter("action");
         String vista;
         RequestDispatcher rd;
+
+        // DAOs necesarios
         UsuariosDao userDao = new UsuariosDao();
         DonacionesDao donacionesDao = new DonacionesDao();
         EventosDao eventosDao = new EventosDao();
         SolicitudDao.PostulacionDao postulacionDao = new SolicitudDao.PostulacionDao();
         PublicacionDao publicacionDao = new PublicacionDao();
-        // Usar un ID de usuario fijo para pruebas
-        int idUsuario = 5; // Cambia esto a un ID válido que exista en tu base de datos
+
         switch (action) {
             case "pagPrincipal":
                 vista = "/Usuario_final/home.jsp";
@@ -204,6 +216,8 @@ public class UsuarioServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
             case "miCuenta":
+                System.out.println("ID del usuario en sesión: " + idUsuario);
+
                 Usuarios usuario = userDao.obtenerUsuarioPorId(idUsuario);
                 request.setAttribute("usuario", usuario);
                 rd = request.getRequestDispatcher("/Usuario_final/mi_cuenta.jsp");
@@ -239,137 +253,97 @@ public class UsuarioServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+
+        // Verificar sesión y obtener el usuario autenticado
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("usuario") == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        // Obtener el objeto Usuario desde la sesión
+        Usuarios usuarioSesion = (Usuarios) session.getAttribute("usuario");
+
         String action = request.getParameter("action");
         PublicacionDao publicacionDao = new PublicacionDao();
         PostulacionDao postulacionDao = new PostulacionDao();
-        Usuarios usuario = new Usuarios();
-        int id_Usuario =5;
 
         switch (action) {
             case "reportarPOST":
                 Publicacion publicacion = new Publicacion();
 
-
-                usuario.setId(id_Usuario);
-
+                // Asignar usuario desde la sesión
+                publicacion.setUsuario(usuarioSesion);
 
                 String nombreMascota = request.getParameter("nombre");
-                if (nombreMascota.trim().isEmpty() || nombreMascota == null || nombreMascota.trim().isBlank()){
-                    System.out.println("Error, se ha enviado un nombre vacío ");
+                if (nombreMascota == null || nombreMascota.trim().isEmpty()) {
+                    System.out.println("Error, se ha enviado un nombre vacío.");
                 }
-                String edad = request.getParameter("edad");
-                String raza = request.getParameter("raza");
-                String tamano = request.getParameter("tamano");
-                String distintivo = request.getParameter("distintivo");
-                String nombreContacto = request.getParameter("nombre_contacto");
-                String lugarPerdida = request.getParameter("lugar_perdida");
-                String horaPerdida = request.getParameter("hora_perdida");
-                String celularContacto = request.getParameter("celular_contacto");
-                String descripcion = request.getParameter("descripcion");
-                String descripcionAdicional = request.getParameter("descripcion_adicional");
-                String recompensa = request.getParameter("recompensa");
-
-                byte[] archivoImagen = obtenerImagenComoByteArray(request.getPart("imagen").getInputStream());
 
                 publicacion.setNombre(nombreMascota);
-                publicacion.setEdad(Integer.parseInt(edad));
-                publicacion.setRaza(raza);
-                publicacion.setTamano(tamano);
-                publicacion.setDistintivo(distintivo);
-                publicacion.setNombreContacto(nombreContacto);
-                publicacion.setLugarPerdida(lugarPerdida);
-                publicacion.setHoraPerdida(horaPerdida);
-                publicacion.setTelefono(celularContacto);
-                publicacion.setDescripcion(descripcion);
-                publicacion.setFoto(archivoImagen);
-                publicacion.setDescripcionAdicional(descripcionAdicional);
-                publicacion.setRecompensa(recompensa);
-                publicacion.setUsuario(usuario);
+                publicacion.setEdad(Integer.parseInt(request.getParameter("edad")));
+                publicacion.setRaza(request.getParameter("raza"));
+                publicacion.setTamano(request.getParameter("tamano"));
+                publicacion.setDistintivo(request.getParameter("distintivo"));
+                publicacion.setNombreContacto(request.getParameter("nombre_contacto"));
+                publicacion.setLugarPerdida(request.getParameter("lugar_perdida"));
+                publicacion.setHoraPerdida(request.getParameter("hora_perdida"));
+                publicacion.setTelefono(request.getParameter("celular_contacto"));
+                publicacion.setDescripcion(request.getParameter("descripcion"));
+                publicacion.setFoto(obtenerImagenComoByteArray(request.getPart("imagen").getInputStream()));
+                publicacion.setDescripcionAdicional(request.getParameter("descripcion_adicional"));
+                publicacion.setRecompensa(request.getParameter("recompensa"));
+
                 publicacionDao.reportarMascota(publicacion);
-                response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+                response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=misPublicaciones");
                 break;
+
             case "denunciaPost":
                 Publicacion denuncia = new Publicacion();
+                denuncia.setUsuario(usuarioSesion);
 
-
-                usuario.setId(id_Usuario);
-
-                String nombreMaltratador = request.getParameter(("nombre_maltratador"));
-                String tipoMaltrato = request.getParameter(("tipo_maltrato"));
-                String tamanoMascota = request.getParameter(("tamano_mascota"));
-                String razaMascota = request.getParameter(("raza_mascota"));
-                String direccionMaltrato = request.getParameter(("direccion_maltrato"));
-                Boolean denunciaPolicial = Boolean.valueOf(request.getParameter(("denuncia_policial")));
-                String informacionExtra = request.getParameter(("informacion_extra"));
-
-                byte[] archivoAdjunto = obtenerImagenComoByteArray(request.getPart("archivo").getInputStream());
-
-                denuncia.setNombreMaltratador(nombreMaltratador);
-                denuncia.setTipoMaltrato(tipoMaltrato);
-                denuncia.setTamano(tamanoMascota);
-                denuncia.setRaza(razaMascota);
-                denuncia.setDireccionMaltrato(direccionMaltrato);
-                denuncia.setDenunciaPolicial(denunciaPolicial);
-                denuncia.setDescripcion(informacionExtra);
-                denuncia.setFoto(archivoAdjunto);
-                denuncia.setUsuario(usuario);
-
+                denuncia.setNombreMaltratador(request.getParameter("nombre_maltratador"));
+                denuncia.setTipoMaltrato(request.getParameter("tipo_maltrato"));
+                denuncia.setTamano(request.getParameter("tamano_mascota"));
+                denuncia.setRaza(request.getParameter("raza_mascota"));
+                denuncia.setDireccionMaltrato(request.getParameter("direccion_maltrato"));
+                denuncia.setDenunciaPolicial(Boolean.valueOf(request.getParameter("denuncia_policial")));
+                denuncia.setDescripcion(request.getParameter("informacion_extra"));
+                denuncia.setFoto(obtenerImagenComoByteArray(request.getPart("archivo").getInputStream()));
 
                 publicacionDao.denunciarMaltrato(denuncia);
-                response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+                response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=misPublicaciones");
                 break;
             case "adoptarMascota":
                 Postulacion postulacion = new Postulacion();
+                postulacion.setUsuario(usuarioSesion);
 
-                usuario.setId(id_Usuario);
-
-                // Obtener el idMascota del formulario
                 String idMascotaParam = request.getParameter("idMascota");
                 if (idMascotaParam != null && !idMascotaParam.isEmpty()) {
-                    int idMascota = Integer.parseInt(idMascotaParam);
                     Mascotas mascota = new Mascotas();
-                    mascota.setIdMascotas(idMascota);
+                    mascota.setIdMascotas(Integer.parseInt(idMascotaParam));
                     postulacion.setMascota(mascota);
                 } else {
-                    // Manejar el caso cuando idMascota no está presente o es inválido
-                    response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion"); // o la acción que prefieras
+                    response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=adopcion");
                     return;
                 }
 
-
-
-                String Nombre = request.getParameter(("Nombre"));
-                String Apellido = request.getParameter(("Apellido"));
-                String Genero = request.getParameter(("Genero"));
-                String Edad = request.getParameter(("Edad"));
-                String Direccion = request.getParameter(("Direccion"));
-                String metraje_vivienda = request.getParameter(("metraje_vivienda"));
-                String cantidad_cuartos = request.getParameter(("cantidad_cuartos"));
-                String celular = request.getParameter(("celular"));
-                String telefono_referencia = request.getParameter(("telefono_referencia"));
-                String vive_con_dependientes = request.getParameter(("vive_con_dependientes"));
-                String trabaja_remoto = request.getParameter(("trabaja_remoto"));
-                String Tiene_mascotas = request.getParameter(("Tiene_mascotas"));
-                String tiene_hijos = request.getParameter(("tiene_hijos"));
-
-                postulacion.setNombre(Nombre);
-                postulacion.setApellido(Apellido);
-                postulacion.setGenero(Genero);
-                postulacion.setEdad(Edad);
-                postulacion.setDireccion(Direccion);
-                postulacion.setMetrajeVivienda(Double.valueOf(metraje_vivienda));
-                postulacion.setCantidadCuartos(Integer.valueOf(cantidad_cuartos));
-                postulacion.setCelular(celular);
-                postulacion.setTelefonoReferencia(telefono_referencia);
-                postulacion.setViveConDependientes(Boolean.valueOf(vive_con_dependientes));
-                postulacion.setTrabajaRemoto(Boolean.valueOf(trabaja_remoto));
-                postulacion.setTieneMascotas(Boolean.valueOf(Tiene_mascotas));
-                postulacion.setTieneHijos(Boolean.valueOf(tiene_hijos));
-                postulacion.setUsuario(usuario);
-
+                postulacion.setNombre(request.getParameter("Nombre"));
+                postulacion.setApellido(request.getParameter("Apellido"));
+                postulacion.setGenero(request.getParameter("Genero"));
+                postulacion.setEdad(request.getParameter("Edad"));
+                postulacion.setDireccion(request.getParameter("Direccion"));
+                postulacion.setMetrajeVivienda(Double.valueOf(request.getParameter("metraje_vivienda")));
+                postulacion.setCantidadCuartos(Integer.valueOf(request.getParameter("cantidad_cuartos")));
+                postulacion.setCelular(request.getParameter("celular"));
+                postulacion.setTelefonoReferencia(request.getParameter("telefono_referencia"));
+                postulacion.setViveConDependientes(Boolean.valueOf(request.getParameter("vive_con_dependientes")));
+                postulacion.setTrabajaRemoto(Boolean.valueOf(request.getParameter("trabaja_remoto")));
+                postulacion.setTieneMascotas(Boolean.valueOf(request.getParameter("Tiene_mascotas")));
+                postulacion.setTieneHijos(Boolean.valueOf(request.getParameter("tiene_hijos")));
 
                 postulacionDao.postularAdopcion(postulacion);
-                response.sendRedirect(request.getContextPath() + "/Usuario?action=misSolicitudes");
+                response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=misSolicitudes");
                 break;
         }
     }

@@ -83,40 +83,54 @@ public class UsuariosDao extends DaoBase {
     // UsuariosDao.java
     public Usuarios obtenerUsuarioPorId(int idUsuario) {
         Usuarios usuario = null;
-        String sql = "SELECT u.Nombre, u.Apellido, u.DNI, u.Telefono, u.Correo ,r.idRol as id,r.Nombre as rolcito FROM usuarios u join rol r on r.idRol = u.Rol_idRol WHERE ID = ?";
-        Rol rol= new Rol();
+        String sql = "SELECT u.Nombre, u.Apellido, u.DNI, u.Telefono, u.Correo, r.idRol as id, r.Nombre as rolcito " +
+                "FROM usuarios u " +
+                "JOIN rol r ON r.idRol = u.Rol_idRol " +
+                "WHERE ID = ?"; // Consulta SQL para obtener el usuario
+
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, idUsuario);
+
+            pstmt.setInt(1, idUsuario); // Configurar el parámetro ID
+
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
+                    // Crear objeto Usuarios
                     usuario = new Usuarios();
+
+                    // *** Cambio importante: Asignar el ID del usuario ***
+                    usuario.setId(idUsuario); // Aquí se asigna el ID al objeto usuario
+
+                    // Asignar otros campos al objeto Usuarios
                     usuario.setNombre(rs.getString("Nombre"));
                     usuario.setApellido(rs.getString("Apellido"));
                     usuario.setDni(String.valueOf(rs.getInt("DNI")));
                     usuario.setTelefono(rs.getInt("Telefono"));
                     usuario.setCorreo(rs.getString("Correo"));
+
+                    // Crear y asignar el rol
+                    Rol rol = new Rol();
                     rol.setIdRol(rs.getInt("id"));
                     rol.setNombre(rs.getString("rolcito"));
                     usuario.setRol(rol);
-
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return usuario;
+        return usuario; // Retorna el objeto usuario
     }
     public Usuarios validarUsuarioPassword(String username, String password) {
-        Usuarios usuario= null;
-        String sql = "SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?";
+        Usuarios usuario = null;
+        String sql = "SELECT ID FROM usuarios WHERE correo = ? AND contrasena = ?";
         try (Connection conn = this.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
             pstmt.setString(2, password);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    int ID = rs.getInt(1); // Ajusta el índice según tu base de datos
+                    int ID = rs.getInt("ID"); // Usa el nombre exacto de la columna
+                    System.out.println("ID obtenido en validarUsuarioPassword: " + ID);
                     usuario = this.obtenerUsuarioPorId(ID);
                 }
             }

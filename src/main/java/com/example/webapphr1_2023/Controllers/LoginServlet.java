@@ -23,7 +23,7 @@ public class LoginServlet extends HttpServlet {
                     int a = usuario.getRol().getIdRol();
                     switch (a) {
                         case 1:
-                            response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=null");
+                            response.sendRedirect(request.getContextPath() + "/Usuario?action=pagPrincipal");
                         case 2:
                             response.sendRedirect(request.getContextPath() + "/AlbergueServlet?action=null");
                         case 3:
@@ -53,37 +53,36 @@ public class LoginServlet extends HttpServlet {
         UsuariosDao usuariosDao = new UsuariosDao();
         String username = request.getParameter("email");
         String password = request.getParameter("password");
-        Usuarios usuarios = usuariosDao.validarUsuarioPassword(username, password);
-        if (usuarios != null) {
+
+        // Validar el usuario
+        Usuarios usuario = usuariosDao.validarUsuarioPassword(username, password);
+
+        if (usuario != null) {
             HttpSession session = request.getSession();
-            session.setAttribute("usuarioSession", usuarios);
+            session.setAttribute("usuario", usuario); // Consistencia en el nombre de la sesión
             session.setMaxInactiveInterval(10 * 60); // 10 minutos de sesión
 
-            int a = usuarios.getRol().getIdRol();
+            int idRol = usuario.getRol() != null ? usuario.getRol().getIdRol() : -1; // Manejar nulos
 
-            if (!response.isCommitted()) { // Verificar que la respuesta no esté comprometida
-                switch (a) {
-                    case 1:
-                        response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=null");
-                        break;
-                    case 2:
-                        response.sendRedirect(request.getContextPath() + "/AlbergueServlet?action=null");
-                        break;
-                    case 3:
-                        response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=null");
-                        break;
-                    case 4:
-                        response.sendRedirect(request.getContextPath() + "/AdministradorServlet?action=null");
-                        break;
-                    default:
-                        response.sendRedirect(request.getContextPath() + "/LoginServlet?error");
-                        break;
-                }
+            switch (idRol) {
+                case 1:
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=pagPrincipal");
+                    break;
+                case 2:
+                    response.sendRedirect(request.getContextPath() + "/AlbergueServlet?action=null");
+                    break;
+                case 3:
+                    response.sendRedirect(request.getContextPath() + "/CoordinadorServlet?action=null");
+                    break;
+                case 4:
+                    response.sendRedirect(request.getContextPath() + "/AdministradorServlet?action=null");
+                    break;
+                default:
+                    response.sendRedirect(request.getContextPath() + "/LoginServlet?error");
+                    break;
             }
         } else {
-            if (!response.isCommitted()) {
-                response.sendRedirect(request.getContextPath() + "/LoginServlet?error");
-            }
+            response.sendRedirect(request.getContextPath() + "/LoginServlet?error");
         }
     }
 }
