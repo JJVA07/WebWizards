@@ -6,10 +6,7 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
+import jakarta.servlet.http.*;
 import com.example.webapphr1_2023.Daos.DonacionesDao;
 
 import com.example.webapphr1_2023.Daos.UsuariosDao;
@@ -29,13 +26,13 @@ public class UsuarioServlet extends HttpServlet {
         RequestDispatcher rd;
         UsuariosDao userDao = new UsuariosDao();
         DonacionesDao donacionesDao = new DonacionesDao();
-        SolicitudDao.PostulacionDao postulacionDao = new SolicitudDao.PostulacionDao();
+        PostulacionDao postulacionDao = new PostulacionDao();
 
         switch (action) {
             case "pagPrincipal":
                 vista = "/Usuario_final/home.jsp";
                 rd = request.getRequestDispatcher(vista);
-                rd.forward(request,response);
+                rd.forward(request, response);
                 break;
             case "adopcion":
                 // Instancia de MascotaDao para obtener las mascotas en adopción
@@ -110,16 +107,14 @@ public class UsuarioServlet extends HttpServlet {
                     Mascotas mascotaDetalles = mascotaDaoDetalles.obtenerMascotaPorId(idMascota);
                     if (mascotaDetalles == null) {
                         response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion");
-                    }
-                    else{
+                    } else {
                         request.setAttribute("mascota", mascotaDetalles);
                         vista = "/Usuario_final/formulario_adopcion.jsp";
                         request.setAttribute("paginaActiva", "adopcion");
                         rd = request.getRequestDispatcher(vista);
                         rd.forward(request, response);
                     }
-                }
-                catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion");
                 }
                 break;
@@ -127,13 +122,13 @@ public class UsuarioServlet extends HttpServlet {
                 vista = "/Usuario_final/mascotas_perdidas.jsp";
                 rd = request.getRequestDispatcher(vista);
                 request.setAttribute("paginaActiva", "mascotas_perdidas");
-                rd.forward(request,response);
+                rd.forward(request, response);
                 break;
             case "formularioDenuncia":
                 vista = "/Usuario_final/denuncias.jsp";
                 rd = request.getRequestDispatcher(vista);
                 request.setAttribute("paginaActiva", "denuncias");
-                rd.forward(request,response);
+                rd.forward(request, response);
                 break;
 
             case "mostrarDonaciones":
@@ -181,38 +176,75 @@ public class UsuarioServlet extends HttpServlet {
                 }
                 break;
 
+            case "listarpostulaciones":
+                try {
+                    // Obtén el usuarioId dinámicamente desde la sesión, si corresponde
+                    HttpSession session = request.getSession();
+                    int usuarioId = (session.getAttribute("usuarioId") != null)
+                            ? (int) session.getAttribute("usuarioId")
+                            : 1; // Valor por defecto para pruebas
 
-            case "misSolicitudes":
-                int usuarioId = 1; // ID fijo del usuario
-                SolicitudDao solicitudDao = new SolicitudDao();
+                    int estadoId = 1; // Estado fijo de la postulación
 
-                // Obtener todas las solicitudes para el usuario
-                List<Object[]> solicitudes = solicitudDao.obtenerSolicitudesPorUsuario(usuarioId);
+                    // Instancia del DAO
+                    postulacionDao = new PostulacionDao();
 
-                // Pasar la lista de solicitudes a la JSP
-                request.setAttribute("solicitudes", solicitudes);
+                    // Llamar al método del DAO
+                    List<Postulacion> postulaciones = postulacionDao.obtenerPostulacionesPorUsuarioYEstado(usuarioId, estadoId);
 
-                // Redirigir a la vista de "Mis Solicitudes"
-                vista = "/Usuario_final/mis_solicitudes.jsp";
-                rd = request.getRequestDispatcher(vista);
-                rd.forward(request, response);
+                    // Verificar si se obtuvieron postulaciones
+                    if (postulaciones != null && !postulaciones.isEmpty()) {
+                        System.out.println("Postulaciones encontradas: " + postulaciones.size());
+                        for (Postulacion p : postulaciones) {
+                            System.out.println("Postulación: " + p.getNombre() + " " + p.getApellido());
+                        }
+                    } else {
+                        System.out.println("No se encontraron postulaciones para usuarioId = " + usuarioId + " y estadoId = " + estadoId);
+                    }
+
+                    // Adjuntar la lista de postulaciones al request
+                    request.setAttribute("postulaciones", postulaciones);
+
+                    // Redirigir a la vista JSP
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/Usuario_final/mis_solicitudes.jsp");
+                    dispatcher.forward(request, response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    request.setAttribute("error", "Hubo un error al listar las postulaciones: " + e.getMessage());
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("error.jsp");
+                    dispatcher.forward(request, response);
+                }
                 break;
-            case "mostrarSolicitud":
-                int usuarioIds = 1; // ID del usuario
-                Postulacion postulacion = postulacionDao.obtenerSolicitudPorUsuario(usuarioIds);
-                request.setAttribute("postulacion", postulacion);
 
-                vista = "/Usuario_final/ver_solicitud.jsp";
-                rd = request.getRequestDispatcher(vista);
-                rd.forward(request, response);
+            case "detallePostulacion":
+                // Obtener el parámetro idPostulacion desde la URL
+                String idPostulacionStr = request.getParameter("idPostulacion");
+                if (idPostulacionStr != null && !idPostulacionStr.isEmpty()) {
+                    try {
+                        int idPostulacion = Integer.parseInt(idPostulacionStr);
+                        Postulacion postulacion = postulacionDao.obtenerPostulacionPorId(idPostulacion);
+                        String idParam = request.getParameter("idPostulacion");
+                        System.out.println("ID recibido: " + idParam);
+
+                        if (postulacion != null) {
+                            request.setAttribute("postulacion", postulacion);
+                            RequestDispatcher dispatcher = request.getRequestDispatcher("/Usuario_final/ver_solicitud.jsp");
+                            dispatcher.forward(request, response);
+
+                        } else {
+                            response.sendRedirect("error.jsp?message=No se encontró la postulación");
+                        }
+                    } catch (NumberFormatException e) {
+                        response.sendRedirect("error.jsp?message=ID de postulación no válido");
+                    }
+                } else {
+                    response.sendRedirect("error.jsp?message=ID de postulación faltante");
+                }
                 break;
-
 
             default:
-                // Acción por defecto en caso de que no haya coincidencias con las acciones especificadas
-                vista = "/Usuario_final/home.jsp";
-                rd = request.getRequestDispatcher(vista);
-                rd.forward(request, response);
+                // Manejar acciones no válidas
+                response.sendRedirect("error.jsp?message=Acción no válida");
                 break;
         }
     }
@@ -223,8 +255,6 @@ public class UsuarioServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         PublicacionDao publicacionDao = new PublicacionDao();
-        SolicitudDao.PostulacionDao postulacionDao = new SolicitudDao.PostulacionDao();
-        SolicitudDao solicitudDao = new SolicitudDao();
         DonacionesDao donacionesDao; // Declaración como variable miembro
         donacionesDao = new DonacionesDao();
 
@@ -340,6 +370,77 @@ public class UsuarioServlet extends HttpServlet {
                 }
                 break;
 
+            case "registrarPostulacion":
+                try {
+                    // Captura de datos
+                    String nombre = request.getParameter("nombre");
+                    String apellido = request.getParameter("apellido");
+                    String genero = request.getParameter("genero");
+                    edad = String.valueOf(Integer.parseInt(request.getParameter("edad")));
+                    String direccion = request.getParameter("direccion");
+                    double metraje = Double.parseDouble(request.getParameter("metraje"));
+                    String tipoMascotas = request.getParameter("mascotas");
+                    int cantidadMascotas = Integer.parseInt(request.getParameter("cantidad_mascotas"));
+                    int tiempoTemporal = Integer.parseInt(request.getParameter("tiempo_temporal"));
+                    java.sql.Date fechaInicio = java.sql.Date.valueOf(request.getParameter("fecha_inicio"));
+                    java.sql.Date fechaFin = java.sql.Date.valueOf(request.getParameter("fecha_fin"));
+                    int cantidadCuartos = Integer.parseInt(request.getParameter("cuartos"));
+
+                    // Nuevos campos
+                    String personaReferencia = request.getParameter("persona_referencia");
+                    String telefonoReferencia = request.getParameter("telefono_referencia");
+                    String celular = request.getParameter("celular");
+
+                    boolean tieneHijos = "si".equalsIgnoreCase(request.getParameter("hijos"));
+                    boolean viveConDependientes = "dependientes".equalsIgnoreCase(request.getParameter("vivienda"));
+                    boolean trabajaRemoto = "remoto".equalsIgnoreCase(request.getParameter("trabajo"));
+                    String tieneMascotas = request.getParameter("mascota");
+
+                    // Crear objeto Postulacion
+                    Postulacion postulacion = new Postulacion();
+                    postulacion.setNombre(nombre);
+                    postulacion.setApellido(apellido);
+                    postulacion.setGenero(genero);
+                    postulacion.setEdad(edad);
+                    postulacion.setDireccion(direccion);
+                    postulacion.setMetrajeVivienda(metraje);
+                    postulacion.setTipoMascotas(tipoMascotas);
+                    postulacion.setCantidadMascotas(cantidadMascotas);
+                    postulacion.setTiempoTemporal(tiempoTemporal);
+                    postulacion.setFechaInicioTemporal(fechaInicio);
+                    postulacion.setFechaFinTemporal(fechaFin);
+                    postulacion.setCantidadCuartos(cantidadCuartos);
+                    postulacion.setPersonaReferencia(personaReferencia);
+                    postulacion.setTelefonoReferencia(telefonoReferencia);
+                    postulacion.setCelular(celular);
+
+                    postulacion.setTieneHijos(tieneHijos);
+                    postulacion.setViveConDependientes(viveConDependientes);
+                    postulacion.setTrabajaRemoto(trabajaRemoto);
+                    postulacion.setTieneMascotas(tieneMascotas);
+
+                    // Valores fijos
+                    usuario = new Usuarios();
+                    usuario.setId(1); // Usuario_ID fijo
+                    postulacion.setUsuario(usuario);
+
+                    PostulacionEstado estado = new PostulacionEstado();
+                    estado.setIdPostulacionEstado(3); // Estado fijo
+                    postulacion.setPostulacionEstado(estado);
+
+                    // Guardar
+                    PostulacionDao postulacionDao = new PostulacionDao();
+                    postulacionDao.insertarPostulacion(postulacion);
+
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=listarpostulaciones");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    request.setAttribute("error", "Error al procesar la solicitud: " + e.getMessage());
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("error.jsp");
+                    dispatcher.forward(request, response);
+                }
+                break;
 
 
             // Otros casos...

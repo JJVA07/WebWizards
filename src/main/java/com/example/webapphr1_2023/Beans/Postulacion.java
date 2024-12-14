@@ -19,7 +19,7 @@ public class Postulacion {
     private Date fechaFinTemporal;
     private PostulacionEstado postulacionEstado; // Relación con PostulacionEstado
     private Usuarios usuario; // Relación con Usuarios (usuario que hace la postulación)
-    private Boolean tieneMascotas;
+    private String tieneMascotas;
     private String nombre;
     private String apellido;
     private String edad;
@@ -132,6 +132,7 @@ public class Postulacion {
         this.telefonoReferencia = telefonoReferencia;
     }
 
+
     public Date getFechaInicioTemporal() {
         return fechaInicioTemporal;
     }
@@ -146,6 +147,7 @@ public class Postulacion {
 
     public void setFechaFinTemporal(Date fechaFinTemporal) {
         this.fechaFinTemporal = fechaFinTemporal;
+
     }
 
     public PostulacionEstado getPostulacionEstado() {
@@ -164,12 +166,12 @@ public class Postulacion {
         this.usuario = usuario;
     }
 
-    public Boolean getTieneMascotas() {
+    public String getTieneMascotas() {
         return tieneMascotas;
     }
 
     public void setTieneMascotas(String tieneMascotas) {
-        this.tieneMascotas = Boolean.valueOf(tieneMascotas);
+        this.tieneMascotas = tieneMascotas;
     }
 
     public String getEdad() {

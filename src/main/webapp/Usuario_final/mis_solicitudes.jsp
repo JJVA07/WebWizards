@@ -1,20 +1,24 @@
 <%@ page import="java.util.Base64" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.example.webapphr1_2023.Beans.Postulacion" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Mis Solicitudes</title>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Home</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-        <link href="<%= request.getContextPath() %>/css/styles.css" rel="stylesheet">
+        <link href="<%= request.getContextPath() %>/css/styles.css" rel="stylesheet" />
+        <link href="<%= request.getContextPath() %>/css/styles_2.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
     <body class="sb-nav-fixed" style="background-color: white;">
         <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: rgb(27, 94, 87);">
-            <a class="navbar-brand ps-3" href="Home.html">Usuario Final</a>
+            <a class="navbar-brand ps-3" href="<%= request.getContextPath() %>/home.jsp">Usuario Final</a>
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <ul class="navbar-nav ms-auto me-3 me-lg-4">
                 <li class="nav-item dropdown">
@@ -22,55 +26,78 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="<%= request.getContextPath() %>/Usuario?action=miCuenta">Mi cuenta</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="inicio_sesion.html">Cerrar Sesión</a></li>
+                        <li><a class="dropdown-item" href="<%= request.getContextPath() %>/inicio_sesion.jsp">Cerrar Sesión</a></li>
                     </ul>
                 </li>
-                <a class="nav-link" href="home.html" role="button"><i class="fa-solid fa-paw"></i></a>
+                <a class="nav-link " id="navbarDropdown2" href="<%= request.getContextPath() %>/Usuario?action=pagPrincipal" role="button"><i class="fa-solid fa-paw"></i></a>
             </ul>
         </nav>
-
         <div id="layoutSidenav">
             <jsp:include page="/WEB-INF/sidebar.jsp" />
             <div id="layoutSidenav_content">
                 <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Mis Solicitudes</h1>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Historial de Solicitudes
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="solicitudesTable" class="table table-bordered">
+                                        <thead class="table-header" style="background-color:rgb(27, 94, 87); color: white;">
+                                            <tr>
+                                                <th>NOMBRE</th>
+                                                <th>DIRECCIÓN</th>
+                                                <th>CELULAR</th>
+                                                <th>METRAJE DE VIVIENDA (m^2)</th>
+                                                <th>TIEMPO TEMPORAL (SEMANAS)</th>
+                                                <th>DETALLE</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <%
+                                                List<Postulacion> postulaciones = (List<Postulacion>) request.getAttribute("postulaciones");
+                                                if (postulaciones != null && !postulaciones.isEmpty()) {
+                                                    for (Postulacion postulacion : postulaciones) {
+                                            %>
+                                            <tr>
+                                                <td><%= postulacion.getNombre() %> <%= postulacion.getApellido() %> </td>
 
-                    <% List<Object[]> solicitudes = (List<Object[]>) request.getAttribute("solicitudes"); %>
-                    <div class="container-fluid">
-                        <h2 class="mt-4 text-center">MIS SOLICITUDES</h2>
-                        <div class="row justify-content-center mt-3">
-                            <% for (Object[] solicitud : solicitudes) { %>
-                            <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center">
-                                <div class="card mb-4" style="width: 100%;">
-                                    <!-- Mostrar la imagen de la solicitud -->
-                                    <img src="data:image/jpeg;base64,<%= Base64.getEncoder().encodeToString((byte[]) solicitud[1]) %>"
-                                         class="card-img-top img-fluid" alt="Foto de Lugar" style="height: 200px; object-fit: cover;">
+                                                <td><%= postulacion.getDireccion() %></td>
+                                                <td><%= postulacion.getCelular() %></td>
+                                                <td><%= postulacion.getMetrajeVivienda() %></td>
+                                                <td><%= postulacion.getTiempoTemporal() %></td>
+                                                <td>
+                                                        <a href="<%= request.getContextPath() %>/Usuario?action=detallePostulacion&idPostulacion=<%= postulacion.getIdPostulacion() %>"
+                                                       class="btn inscribirse-btn d-inline-flex align-items-center">
+                                                        <i class="fas fa-info-circle" style="color: #808080; font-size: 2rem; margin-right: 0.5rem;"></i>
+                                                        <span style="color: #808080; font-size: 1.2rem;">Más detalles</span>
+                                                    </a>
 
-                                    <div class="card-body">
-                                        <h5 class="card-title">Estado: <%= (String) solicitud[0] %></h5>
+                                                </td>
+                                            </tr>
+                                            <%
+                                                }
+                                            } else {
+                                            %>
+                                            <tr>
+                                                <td colspan="7" style="text-align:center;">No hay solicitudes disponibles</td>
+                                            </tr>
+                                            <%
+                                                }
+                                            %>
+                                        </tbody>
 
-                                        <div class="text-center">
-                                            <!-- Condición para mostrar el botón adecuado según el estado -->
-                                            <% if ("Aprobada".equals(solicitud[0])) { %>
-                                            <a href="<%= request.getContextPath() %>//Usuario?action=mostrarSolicitud" class="btn inscribirse-btn d-inline-flex align-items-center">
-                                                <i class="fas fa-info-circle" style="color: #808080; font-size: 2rem; margin-right: 0.5rem;"></i>
-                                                <span style="color: #808080; font-size: 1.2rem;">Más detalles</span>
-                                            </a>
-                                            <% } else { %>
-                                            <a href="editar_solicitud.html" class="btn btn-aprove">
-                                                <i class="fa-solid fa-pen-to-square" style="color: #808080; font-size: 2rem; margin-right: 0.5rem;"></i>
-                                            </a>
-                                            <% } %>
-                                            <a href="#" class="btn btn-trash eliminar-btn">
-                                                <i class="fa-solid fa-trash" style="color: #e53434; font-size: 2rem;"></i>
-                                            </a>
-                                        </div>
-                                    </div>
+                                    </table>
                                 </div>
                             </div>
-                            <% } %>
                         </div>
                     </div>
                 </main>
+
+
                 <footer class="py-4 mt-auto" style="background-color: black;">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
@@ -85,32 +112,34 @@
                 </footer>
             </div>
         </div>
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="/js/scripts.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="<%= request.getContextPath() %>/js/scripts.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="<%= request.getContextPath() %>/assets/demo/chart-area-demo.js"></script>
+        <script src="<%= request.getContextPath() %>/assets/demo/chart-bar-demo.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+        <script src="<%= request.getContextPath() %>/js/datatables-simple-demo.js"></script>
         <script>
-            document.querySelectorAll('.eliminar-btn').forEach(button => {
-                button.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    Swal.fire({
-                        title: '¿Estás seguro de eliminar?',
-                        showDenyButton: true,
-                        confirmButtonText: '<i class="fa-solid fa-check" style="color: #008000; font-size: 1.5rem;"></i>',
-                        denyButtonText: '<i class="fa-solid fa-x" style="color: #e53434; font-size: 1.5rem;"></i>',
-                        buttonsStyling: false,
-                        customClass: {
-                            confirmButton: 'btn btn-light mx-2',
-                            denyButton: 'btn btn-light mx-2'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Swal.fire('Eliminado!', '', 'success');
-                        } else if (result.isDenied) {
-                            Swal.fire('No se eliminó', '', 'info');
-                        }
+            document.addEventListener('DOMContentLoaded', function () {
+                const solicitudesTable = document.getElementById('solicitudesTable');
+                if (solicitudesTable) {
+                    new simpleDatatables.DataTable(solicitudesTable, {
+                        labels: {
+                            placeholder: "Buscar...",
+                            perPage: "Mostrar registros por página",
+                            noRows: "No se encontraron registros",
+                            info: "Mostrando {start} a {end} de {rows} registros",
+                            loading: "Cargando...",
+                            infoFiltered: " - filtrado de {rows} registros totales",
+                            infoEmpty: "Mostrando 0 a 0 de 0 registros"
+                        },
+                        perPageSelect: [5, 10, 15, 20],
+                        perPage: 10,
+                        searchable: true,
+                        sortable: true,
+                        fixedHeight: true
                     });
-                });
+                }
             });
         </script>
     </body>
