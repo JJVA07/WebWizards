@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*" %>
+<%@ page import="com.example.webapphr1_2023.Beans.DonacionMesDTO" %>
+<%@ page import="com.example.webapphr1_2023.Beans.Usuarios" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,22 +86,26 @@
                         <div class="col-lg-6">
                             <div class="card">
                                 <div class="card-header">Donaciones por Albergue
-                                    <select id="selectAlbergue" class="form-select form-select-sm">
+                                    <select id="selectAlbergue" class="form-select form-select-sm" onchange="filtrarDonaciones()">
                                         <%
-                                            List<String> albergues = (List<String>) request.getAttribute("listaAlbergues");
+                                            List<Usuarios> albergues = (List<Usuarios>) request.getAttribute("listaAlbergues");
                                             if (albergues != null) {
-                                                for (String albergue : albergues) {
+                                                for (Usuarios albergue : albergues) {
+                                                    if (albergue.getId() > 0) { // Validar que ID sea válido
                                         %>
-                                        <option value="<%= albergue %>"><%= albergue %></option>
+                                        <option value="<%= albergue.getId() %>"><%= albergue.getNombreAlbergue() %></option>
                                         <%
+                                                    }
                                                 }
                                             }
                                         %>
                                     </select>
+
                                 </div>
                                 <div class="card-body">
                                     <div class="chart-container">
-                                        <canvas id="donacionesAlbergueChart"></canvas>
+                                        <canvas id="donacionesChart"></canvas>
+
                                     </div>
                                 </div>
                             </div>
@@ -162,14 +168,53 @@
     <!-- Gráficos con Chart.js -->
     <script>
         // Donaciones por Albergue
-        const donacionesAlbergueChart = new Chart(document.getElementById('donacionesAlbergueChart'), {
+            function filtrarDonaciones() {
+            const albergueSeleccionado = document.getElementById("selectAlbergue").value;
+            console.log("Albergue Seleccionado:", albergueSeleccionado); // Depuración
+
+            if (albergueSeleccionado) {
+            // Redirige al servlet con el parámetro correcto
+            window.location.href = `<%= request.getContextPath() %>/AdministradorServlet?action=indicadores&albergueId=` + albergueSeleccionado;
+        } else {
+            console.log("No se ha seleccionado ningún albergue.");
+        }
+        }
+
+
+
+// Datos dinámicos del servlet
+        <%
+    List<DonacionMesDTO> listaDonaciones = (List<DonacionMesDTO>) request.getAttribute("listaDonaciones");
+    if (listaDonaciones != null && !listaDonaciones.isEmpty()) {
+        List<String> meses = new ArrayList<>();
+        List<Integer> cantidades = new ArrayList<>();
+        for (DonacionMesDTO donacion : listaDonaciones) {
+            meses.add(donacion.getMes());
+            cantidades.add(donacion.getCantidadDonaciones());
+        }
+%>
+        const meses = <%= meses %>;
+        const cantidades = <%= cantidades %>;
+        <%
+            } else {
+        %>
+        console.log("No se encontraron donaciones para el albergue seleccionado.");
+        const meses = [];
+        const cantidades = [];
+        <%
+            }
+        %>
+
+
+        const ctx = document.getElementById('donacionesChart').getContext('2d');
+        new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Enero', 'Febrero', 'Marzo'],
+                labels: meses, // Si está vacío, no se mostrará el gráfico
                 datasets: [{
-                    label: 'Donaciones por Albergue',
-                    data: [500, 700, 800],
-                    backgroundColor: '#6b8e23'  // Color verde oliva suave
+                    label: 'Donaciones en los últimos 3 meses',
+                    data: cantidades,
+                    backgroundColor: '#6b8e23'
                 }]
             },
             options: {
@@ -192,7 +237,7 @@
                     data: [100, 90, 80, 70, 60, 50, 40, 30, 20, 10],
                     backgroundColor: '#ffa07a' // Color salmón claro
                 }]
-            },h
+            },
             options: {
                 responsive: true,
                 scales: {

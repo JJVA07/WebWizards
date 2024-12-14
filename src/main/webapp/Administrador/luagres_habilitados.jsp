@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*" %>
+<%@ page import="com.example.webapphr1_2023.Beans.Lugares" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -41,34 +42,35 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>Albergue 1</td>
-                                                <td>Calle Falsa 123</td>
-                                             
-                                                <td>100</td>
-                                                <td>
-                                                    <select class="action-select" onchange="handleAction(this, 'Albergue1')">
-                                                        <option value="" disabled selected>Seleccionar acción</option>
-                                                        <option value="editar">Editar</option>
-                                                        <option value="aprobar">Aprobar</option>
-                                                        <option value="rechazar">Rechazar</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Albergue 2</td>
-                                                <td>Av. Siempreviva 742</td>
-                                               
-                                                <td>150</td>
-                                                <td>
-                                                    <select class="action-select" onchange="handleAction(this, 'Albergue2')">
-                                                        <option value="" disabled selected>Seleccionar acción</option>
-                                                        <option value="editar">Editar</option>
-                                                        <option value="aprobar">Aprobar</option>
-                                                        <option value="rechazar">Rechazar</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
+                                        <%
+                                            // Recupera la lista de lugares habilitados del servlet
+                                            List<Lugares> listaLugares = (List<Lugares>) request.getAttribute("listaLugares");
+                                            if (listaLugares != null && !listaLugares.isEmpty()) {
+                                                for (Lugares lugar : listaLugares) {
+                                        %>
+                                        <tr>
+                                            <td><%= lugar.getNombreLugar() %></td>
+                                            <td><%= lugar.getDireccion() %></td>
+                                            <td><%= lugar.getAforo() %></td>
+                                            <td>
+                                                <select class="action-select" onchange="handleAction(this, '<%= lugar.getNombreLugar() %>')">
+                                                    <option value="" disabled selected>Seleccionar acción</option>
+                                                    <option value="editar">Editar</option>
+                                                    <option value="aprobar">Aprobar</option>
+                                                    <option value="rechazar">Rechazar</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <%
+                                            }
+                                        } else {
+                                        %>
+                                        <tr>
+                                            <td colspan="4" class="text-center">No hay lugares habilitados disponibles.</td>
+                                        </tr>
+                                        <%
+                                            }
+                                        %>
                                         </tbody>
                                     </table>
                                 </div>

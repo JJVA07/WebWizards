@@ -1,5 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*" %>
+<%@ page import="com.example.webapphr1_2023.Beans.Usuarios" %>
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -98,41 +101,43 @@
                                 <div class="table-responsive">
                                     <table id="solicitudesTable" class="table table-bordered">
                                         <thead class="table-header" style="background-color: #ffc107; color: black;">
-                                            <tr>
-                                                <th>Nombre de Albergue</th>
-                                                <th>Correo Electrónico</th>
-                                                <th>Fecha de Solicitud</th>
-                                                <th>Red Social</th>
-                                                <th>Acciones</th>
-                                            </tr>
+                                        <tr>
+                                            <th>Nombre de Albergue</th>
+                                            <th>Correo Electrónico</th>
+                                            <th>Fecha de Solicitud</th>
+                                            <th>Red Social</th>
+                                            <th>Acciones</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>Albergue1</td>
-                                                <td>albergue1@example.com</td>
-                                                <td>01/09/2024</td>
-                                                <td>Facebook</td>
-                                                <td>
-                                                    <select class="action-select">
-                                                        <option value="" disabled selected>Seleccionar acción</option>
-                                                        <option value="aprobar">Aprobar</option>
-                                                        <option value="rechazar">Rechazar</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Albergue2</td>
-                                                <td>albergue2@example.com</td>
-                                                <td>02/09/2024</td>
-                                                <td>Instagram</td>
-                                                <td>
-                                                    <select class="action-select">
-                                                        <option value="" disabled selected>Seleccionar acción</option>
-                                                        <option value="aprobar">Aprobar</option>
-                                                        <option value="rechazar">Rechazar</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
+                                        <%
+                                            List<Usuarios> solicitudes = (List<Usuarios>) request.getAttribute("solicitudes");
+                                            if (solicitudes != null && !solicitudes.isEmpty()) {
+                                                for (Usuarios usuario : solicitudes) {
+                                        %>
+                                        <tr>
+                                            <td><%= usuario.getNombreAlbergue() %></td>
+                                            <td><%= usuario.getCorreo() %></td>
+                                            <td><%= usuario.getFechaRegistro() %></td>
+                                            <td><%= usuario.getUrlFbig() %></td>
+                                            <td>
+                                                <select class="action-select">
+                                                    <option value="" disabled selected>Seleccionar acción</option>
+                                                    <option value="aprobar">Aprobar</option>
+                                                    <option value="rechazar">Rechazar</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <%
+                                            }
+                                        } else {
+                                        %>
+                                        <tr>
+                                            <td colspan="5">No hay solicitudes disponibles.</td>
+                                        </tr>
+                                        <%
+                                            }
+                                        %>
                                         </tbody>
                                     </table>
                                 </div>

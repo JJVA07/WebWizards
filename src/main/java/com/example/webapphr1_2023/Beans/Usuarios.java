@@ -30,6 +30,15 @@ public class Usuarios {
     private Donaciones donaciones; // Relación con Donaciones
     private Integer Edad;
     private String Genero;
+    private String ZonaAsignada;
+
+    public String getZonaAsignada() {
+        return ZonaAsignada;
+    }
+
+    public void setZonaAsignada(String zonaAsignada) {
+        ZonaAsignada = zonaAsignada;
+    }
 
     public String getGenero() {
         return Genero;

@@ -1,326 +1,170 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.*" %>
+
+<%@ page import="com.example.webapphr1_2023.Beans.Usuarios" %>
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Dashboard - SB Admin</title>
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-        <link href="<%= request.getContextPath() %>/css/styles.css" rel="stylesheet">
-        <link href="<%= request.getContextPath() %>/css/styles_2.css" rel="stylesheet">
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f4f9;
-                color: #333;
-                margin: 20px;
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Gestión de Usuarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="<%= request.getContextPath() %>/css/styles.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed" style="background-color: #e6ddcc;">
+<jsp:include page="/WEB-INF/navbar_admi.jsp" />
+<div id="layoutSidenav">
+    <jsp:include page="/WEB-INF/sidebar_admi.jsp" />
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">Gestión General</h1>
 
-            h2, h3 {
-                color: #4a4a8c;
-            }
-
-            /* Estilo de la tabla */
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 20px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                background-color: #ffffff;
-                border-radius: 8px;
-                overflow: hidden;
-            }
-
-            th, td {
-                padding: 12px 15px;
-                text-align: left;
-                color: black;
-            }
-
-            th {
-                background-color: #ffc107;
-                color: black;
-                font-weight: bold;
-            }
-
-            tr:nth-child(even) {
-                background-color: #f9f9f9;
-            }
-
-            tr:hover {
-                background-color: #f1f1f1;
-            }
-
-            .action-select {
-                padding: 8px;
-                border-radius: 4px;
-                border: 1px solid #ccc;
-                font-size: 14px;
-                background-color: #fff;
-                color: #333;
-                cursor: pointer;
-                width: 150px;
-            }
-
-            .action-button {
-                padding: 6px 12px;
-                background-color: #dc3545;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-
-            .text-field {
-                padding: 6px 10px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                width: 200px;
-            }
-        </style>
-    </head>
-    <body class="sb-nav-fixed" style="background-color: #e6ddcc;">
-    <jsp:include page="/WEB-INF/navbar_admi.jsp" />
-
-    <div id="layoutSidenav">
-        <jsp:include page="/WEB-INF/sidebar_admi.jsp" />
-            <div id="layoutSidenav_content">
-                <main>
-                    <!-- Coordinadores Registrados -->
-                    <div id="coordinadores" class="section" style="display: block;">
-                        <h2>Gestión de Coordinadores </h2>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                Coordinadores Registrados
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="coordinadoresTable" class="table table-bordered">
-                                        <thead class="table-header" style="background-color: #ffc107; color: black;">
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Apellido</th>
-                                                <th>DNI</th>
-                                                <th>Teléfono</th>
-                                                <th>Correo</th>
-                                                <th>Zona Asignada</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Juan</td>
-                                                <td>Pérez</td>
-                                                <td>12345678</td>
-                                                <td>+5491123456789</td>
-                                                <td>juan.perez@example.com</td>
-                                                <td>Zona 1</td>
-                                                <td>
-                                                    <select class="action-select" onchange="handleAction(this, '12345678')">
-                                                        <option value="" disabled selected>Seleccionar acción</option>
-                                                        <option value="editar">Editar</option>
-                                                        <option value="aprobar">Aprobar</option>
-                                                        <option value="rechazar">Rechazar</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Maria</td>
-                                                <td>Gómez</td>
-                                                <td>87654321</td>
-                                                <td>+5491198765432</td>
-                                                <td>maria.gomez@example.com</td>
-                                                <td>Zona 2</td>
-                                                <td>
-                                                    <select class="action-select" onchange="handleAction(this, '87654321')">
-                                                        <option value="" disabled selected>Seleccionar acción</option>
-                                                        <option value="editar">Editar</option>
-                                                        <option value="aprobar">Aprobar</option>
-                                                        <option value="rechazar">Rechazar</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Tabla 1: Coordinadores -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i> Coordinadores Registrados
                     </div>
-
-                    <!-- Usuarios Registrados -->
-                    <div id="usuarios" class="section" style="display: block;">
-                        <h2>Gestión de Usuarios</h2>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                Usuarios Registrados
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="usuariosTable" class="table table-bordered">
-                                        <thead class="table-header" style="background-color: #ffc107; color: black;">
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Apellido</th>
-                                                <th>DNI</th>
-                                                <th>Teléfono</th>
-                                                <th>Correo</th>
-                                                <th>Comentarios</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Carlos</td>
-                                                <td>Martinez</td>
-                                                <td>11223344</td>
-                                                <td>+549111223344</td>
-                                                <td>carlos.martinez@example.com</td>
-                                                <td><input type="text" class="text-field" placeholder="Agregar comentario" /></td>
-                                                <td><button class="action-button" onclick="eliminarRegistro('11223344')">Eliminar</button></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="card-body">
+                        <table id="tableCoordinadores" class="table table-bordered">
+                            <thead style="background-color: #ffc107; color: black;">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>DNI</th>
+                                <th>Teléfono</th>
+                                <th>Correo</th>
+                                <th>Zona</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <%
+                                List<Usuarios> listaCoordinadores = (List<Usuarios>) request.getAttribute("listaCoordinadores");
+                                if (listaCoordinadores != null) {
+                                    for (Usuarios u : listaCoordinadores) { %>
+                            <tr>
+                                <td><%= u.getNombre() %></td>
+                                <td><%= u.getApellido() %></td>
+                                <td><%= u.getDni() %></td>
+                                <td><%= u.getTelefono() %></td>
+                                <td><%= u.getCorreo() %></td>
+                                <td><%= u.getZonaAsignada() %></td>
+                                <td>
+                                    <select class="action-select">
+                                        <option value="" disabled selected>Seleccionar acción</option>
+                                        <option value="editar">Editar</option>
+                                        <option value="aprobar">Aprobar</option>
+                                        <option value="rechazar">Rechazar</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <%      }
+                            } %>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
 
-                    <!-- Albergues Registrados -->
-                    <div id="albergues" class="section" style="display: block;">
-                        <h2>Gestión de Albergues</h2>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                Albergues Registrados
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table id="alberguesTable" class="table table-bordered">
-                                        <thead class="table-header" style="background-color: #ffc107; color: black;">
-                                            <tr>
-                                                <th>Nombre de Albergue</th>
-                                                <th>Nombre de Encargado</th>
-                                                <th>Teléfono</th>
-                                                <th>Correo</th>
-                                                <th>Comentarios</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Albergue Esperanza</td>
-                                                <td>Ana Fernandez</td>
-                                                <td>+5491145678910</td>
-                                                <td>ana.fernandez@example.com</td>
-                                                <td><input type="text" class="text-field" placeholder="Agregar comentario" /></td>
-                                                <td><button class="action-button" onclick="eliminarRegistro('AlbergueEsperanza')">Eliminar</button></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Tabla 2: Usuarios -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i> Usuarios Registrados
                     </div>
-                </main>
+                    <div class="card-body">
+                        <table id="tableUsuarios" class="table table-bordered">
+                            <thead style="background-color: #ffc107; color: black;">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>DNI</th>
+                                <th>Teléfono</th>
+                                <th>Correo</th>
+                                <th>Comentarios</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <%
+                                List<Usuarios> listaUsuarios = (List<Usuarios>) request.getAttribute("listaUsuarios");
+                                if (listaUsuarios != null) {
+                                    for (Usuarios u : listaUsuarios) { %>
+                            <tr>
+                                <td><%= u.getNombre() %></td>
+                                <td><%= u.getApellido() %></td>
+                                <td><%= u.getDni() %></td>
+                                <td><%= u.getTelefono() %></td>
+                                <td><%= u.getCorreo() %></td>
+                                <td><input type="text" class="form-control" placeholder="Agregar comentario"></td>
+                                <td>
+                                    <button class="btn btn-danger" onclick="eliminarRegistro('<%= u.getDni() %>')">Eliminar</button>
+                                </td>
+                            </tr>
+                            <%      }
+                            } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tabla 3: Albergues -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i> Albergues Registrados
+                    </div>
+                    <div class="card-body">
+                        <table id="tableAlbergues" class="table table-bordered">
+                            <thead style="background-color: #ffc107; color: black;">
+                            <tr>
+                                <th>Nombre del Albergue</th>
+                                <th>Encargado</th>
+                                <th>Teléfono</th>
+                                <th>Correo</th>
+                                <th>Comentarios</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <%
+                                List<Usuarios> listaAlbergues = (List<Usuarios>) request.getAttribute("listaAlbergues");
+                                if (listaAlbergues != null) {
+                                    for (Usuarios u : listaAlbergues) { %>
+                            <tr>
+                                <td><%= u.getNombreAlbergue() %></td>
+                                <td><%= u.getNombre() %></td>
+                                <td><%= u.getTelefono() %></td>
+                                <td><%= u.getCorreo() %></td>
+                                <td><input type="text" class="form-control" placeholder="Agregar comentario"></td>
+                                <td>
+                                    <button class="btn btn-danger" onclick="eliminarRegistro('<%= u.getNombreAlbergue() %>')">Eliminar</button>
+                                </td>
+                            </tr>
+                            <%      }
+                            } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
+        </main>
+    </div>
+</div>
 
-        <!-- Librerías JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="<%= request.getContextPath() %>/assets/js/scripts.js"></script>
-        <!-- Función para inicializar DataTables -->
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const coordinadoresTable = document.getElementById('coordinadoresTable');
-                const usuariosTable = document.getElementById('usuariosTable');
-                const alberguesTable = document.getElementById('alberguesTable');
+<!-- Librerías JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new simpleDatatables.DataTable("#tableCoordinadores");
+        new simpleDatatables.DataTable("#tableUsuarios");
+        new simpleDatatables.DataTable("#tableAlbergues");
+    });
 
-                if (coordinadoresTable) {
-                    new simpleDatatables.DataTable(coordinadoresTable, {
-                        labels: {
-                            placeholder: "Buscar...",
-                            perPage: "Mostrar registros por página",
-                            noRows: "No se encontraron registros",
-                            info: "Mostrando {start} a {end} de {rows} registros",
-                        },
-                        perPageSelect: [5, 10, 15, 20],
-                        perPage: 10,
-                        searchable: true,
-                        sortable: true,
-                    });
-                }
-
-                if (usuariosTable) {
-                    new simpleDatatables.DataTable(usuariosTable, {
-                        labels: {
-                            placeholder: "Buscar...",
-                            perPage: "Mostrar registros por página",
-                            noRows: "No se encontraron registros",
-                            info: "Mostrando {start} a {end} de {rows} registros",
-                        },
-                        perPageSelect: [5, 10, 15, 20],
-                        perPage: 10,
-                        searchable: true,
-                        sortable: true,
-                    });
-                }
-
-                if (alberguesTable) {
-                    new simpleDatatables.DataTable(alberguesTable, {
-                        labels: {
-                            placeholder: "Buscar...",
-                            perPage: "Mostrar registros por página",
-                            noRows: "No se encontraron registros",
-                            info: "Mostrando {start} a {end} de {rows} registros",
-                        },
-                        perPageSelect: [5, 10, 15, 20],
-                        perPage: 10,
-                        searchable: true,
-                        sortable: true,
-                    });
-                }
-            });
-        </script>
-
-        <!-- Función para abrir/cerrar el sidebar -->
-        <script>
-            document.getElementById('sidebarToggle').addEventListener('click', function () {
-                const body = document.body;
-                body.classList.toggle('sb-sidenav-toggled');
-            });
-        </script>
-
-        <!-- Función para manejar acciones del botón eliminar -->
-        <script>
-            function eliminarRegistro(id) {
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: `Eliminar el registro con ID ${id} no se podrá deshacer.`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Eliminar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire(
-                            'Eliminado',
-                            `El registro con ID ${id} ha sido eliminado.`,
-                            'success'
-                        );
-                    }
-                });
-            }
-        </script>
-
-    </body>
+    function eliminarRegistro(id) {
+        alert("Registro con ID " + id + " eliminado.");
+    }
+</script>
+</body>
 </html>

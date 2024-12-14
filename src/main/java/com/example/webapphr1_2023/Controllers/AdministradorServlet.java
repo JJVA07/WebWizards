@@ -38,15 +38,86 @@ public class AdministradorServlet extends HttpServlet {
             case "indicadores":
                 // Obtener número de lugares habilitados
                 int totalLugares = adm.getNumeroDeLugaresHabilitados();
-                List<String> listaAlbergues = adm.getListaDeAlbergues();
+                List<Usuarios> listaAlbergues = adm.getListaDeAlbergues();
                 request.setAttribute("listaAlbergues", listaAlbergues);
                 request.setAttribute("totalLugares", totalLugares);
+                String albergueIdParam = request.getParameter("albergueId"); // Recupera como String
+                System.out.println("Parámetro albergueId recibido: " + albergueIdParam);
+                if (albergueIdParam != null && !albergueIdParam.isEmpty()) {
+                    int albergueId = Integer.parseInt(albergueIdParam); // Convierte a int
+                    // Obtener la lista de donaciones por mes
+                    List<DonacionMesDTO> listaDonaciones = adm.obtenerDonacionesPorMes(albergueId);
+                    System.out.println("Lista de Donaciones: " + listaDonaciones);
+                    request.setAttribute("listaDonaciones", listaDonaciones);
+                }
+
                 // Redirigir a adm_indicadores.jsp
                 vista = "/Administrador/adm_indicadores.jsp";
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
+            case "cuenta":
+                // Redirigir a adm_indicadores.jsp
+                vista = "/Administrador/micuenta.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "solicitudes":
+                List<Usuarios> listaSolicitudes = adm.obtenerSolicitudesAcceso();
+                System.out.println("Lista de solicitudes: " + listaSolicitudes.size());
+                for (Usuarios u : listaSolicitudes) {
+                    System.out.println("Nombre Albergue: " + u.getNombreAlbergue());
+                    System.out.println("Correo: " + u.getCorreo());
+                }
 
+                // Pasar datos como atributo
+                request.setAttribute("solicitudes", listaSolicitudes);
+
+                // Redirigir a JSP
+                vista = "/Administrador/adm_solicitudes.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "crearlugares":
+                // Redirigir a adm_indicadores.jsp
+                vista = "/Administrador/adm_lugares.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "lugares":
+                // Redirigir a adm_indicadores.jsp
+                List<Lugares> listaLugares = adm.obtenerLugaresHabilitados();
+                request.setAttribute("listaLugares", listaLugares);
+                vista = "/Administrador/luagres_habilitados.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "crearcoordinadores":
+                // Redirigir a adm_indicadores.jsp
+                vista = "/Administrador/adm_coordinadores.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "coordinadores":
+                // Listas de usuarios según el rolId
+                int rolIdCoordinadores = 3; // Coordinadores
+                int rolIdUsuarios = 1;      // Usuarios
+                int rolIdAlbergues = 2;     // Albergues
+
+                List<Usuarios> listaCoordinadores = adm.obtenerUsuariosPorRol(rolIdCoordinadores);
+                List<Usuarios> listaUsuarios = adm.obtenerUsuariosPorRol(rolIdUsuarios);
+                List<Usuarios> listaAlbergue = adm.obtenerUsuariosPorRol(rolIdAlbergues);
+
+                // Enviar las listas como atributos al JSP
+                request.setAttribute("listaCoordinadores", listaCoordinadores);
+                request.setAttribute("listaUsuarios", listaUsuarios);
+                request.setAttribute("listaAlbergues", listaAlbergue);
+
+                // Redirigir al JSP
+                vista = "/Administrador/gestion_coordinadores.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
             default:
                 // Página principal por defecto
                 vista = "/Administrador/indicadores.jsp";

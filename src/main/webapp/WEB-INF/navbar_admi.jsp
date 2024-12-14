@@ -10,9 +10,9 @@
                 <i class="fas fa-user fa-fw"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="adm_micuenta.jsp">Ver Mi Cuenta</a></li>
+                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/AdministradorServlet?action=cuenta">Ver Mi Cuenta</a></li>
                 <li><hr class="dropdown-divider" /></li>
-                <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li>
+                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/LoginServlet?action=logout">Cerrar Sesión</a></li>
             </ul>
         </li>
     </ul>
