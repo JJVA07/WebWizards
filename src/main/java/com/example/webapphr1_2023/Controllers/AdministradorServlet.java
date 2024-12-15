@@ -41,15 +41,19 @@ public class AdministradorServlet extends HttpServlet {
                 List<Usuarios> listaAlbergues = adm.getListaDeAlbergues();
                 request.setAttribute("listaAlbergues", listaAlbergues);
                 request.setAttribute("totalLugares", totalLugares);
-                String albergueIdParam = request.getParameter("albergueId"); // Recupera como String
-                System.out.println("Parámetro albergueId recibido: " + albergueIdParam);
-                if (albergueIdParam != null && !albergueIdParam.isEmpty()) {
-                    int albergueId = Integer.parseInt(albergueIdParam); // Convierte a int
-                    // Obtener la lista de donaciones por mes
-                    List<DonacionMesDTO> listaDonaciones = adm.obtenerDonacionesPorMes(albergueId);
-                    System.out.println("Lista de Donaciones: " + listaDonaciones);
-                    request.setAttribute("listaDonaciones", listaDonaciones);
+                String albergueIdParam = request.getParameter("albergueId");
+                int albergueId;
+
+                if (albergueIdParam == null || albergueIdParam.isEmpty()) {
+                    // ID predeterminado, por ejemplo, el primer albergue con donaciones.
+                    albergueId = 7; // Asegúrate de colocar aquí el ID correcto.
+                } else {
+                    albergueId = Integer.parseInt(albergueIdParam);
                 }
+
+// Obtener la lista de donaciones
+                List<DonacionMesDTO> listaDonaciones = adm.obtenerDonacionesPorMes(albergueId);
+                request.setAttribute("listaDonaciones", listaDonaciones);
 
                 // Redirigir a adm_indicadores.jsp
                 vista = "/Administrador/adm_indicadores.jsp";

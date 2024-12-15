@@ -23,17 +23,14 @@
             color: #333;
             margin: 20px;
         }
-
         h2, h3 {
             color: #4a4a8c;
         }
-
         .card {
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
-
         .card-header {
             background-color: #4a4a8c;
             color: white;
@@ -42,11 +39,9 @@
             border-top-left-radius: 12px;
             border-top-right-radius: 12px;
         }
-
         .dashboard-row {
             margin-bottom: 20px;
         }
-
         .chart-container {
             position: relative;
             height: 300px; /* Ajustado para reducir el espacio */
@@ -56,242 +51,222 @@
 <body class="sb-nav-fixed">
 <jsp:include page="/WEB-INF/navbar_admi.jsp" />
 
-    <div id="layoutSidenav">
-        <jsp:include page="/WEB-INF/sidebar_admi.jsp" />
+<div id="layoutSidenav">
+    <jsp:include page="/WEB-INF/sidebar_admi.jsp" />
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">Administrador - Dashboard con Gráficos</h1>
+                <hr>
 
-        <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <h1 class="mt-4">Administrador - Dashboard con Gráficos</h1>
-                    <hr>
-
-                    <!-- Row of statistic cards -->
-                    <div class="row dashboard-row">
-                        <div class="col-lg-4 col-md-6">
-                            <div class="card">
-                                <div class="card-header">Lugares Habilitados</div>
-                                <div class="card-body">
-                                    <div>
-                                        <div class="stat-title">Total</div>
-                                        <h2><%= request.getAttribute("totalLugares") %></h2>
-                                    </div>
-                                    <i class="fas fa-map-marker-alt"></i>
+                <!-- Row of statistic cards -->
+                <div class="row dashboard-row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card">
+                            <div class="card-header">Lugares Habilitados</div>
+                            <div class="card-body">
+                                <div>
+                                    <div class="stat-title">Total</div>
+                                    <h2><%= request.getAttribute("totalLugares") %></h2>
                                 </div>
+                                <i class="fas fa-map-marker-alt"></i>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Donaciones recibidas por albergue -->
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header">Donaciones por Albergue
-                                    <select id="selectAlbergue" class="form-select form-select-sm" onchange="filtrarDonaciones()">
-                                        <%
-                                            List<Usuarios> albergues = (List<Usuarios>) request.getAttribute("listaAlbergues");
-                                            if (albergues != null) {
-                                                for (Usuarios albergue : albergues) {
-                                                    if (albergue.getId() > 0) { // Validar que ID sea válido
-                                        %>
-                                        <option value="<%= albergue.getId() %>"><%= albergue.getNombreAlbergue() %></option>
-                                        <%
-                                                    }
+                <!-- Donaciones recibidas por albergue -->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">Donaciones por Albergue
+                                <%
+                                    String albergueSeleccionado = request.getParameter("albergueId");
+                                %>
+                                <select id="selectAlbergue" class="form-select form-select-sm" onchange="filtrarDonaciones()">
+                                    <%
+                                        List<Usuarios> albergues = (List<Usuarios>) request.getAttribute("listaAlbergues");
+                                        if (albergues != null) {
+                                            for (Usuarios albergue : albergues) {
+                                                if (albergue.getId() > 0) {
+                                                    String seleccionado = (albergueSeleccionado != null && albergueSeleccionado.equals(String.valueOf(albergue.getId()))) ? "selected" : "";
+                                    %>
+                                    <option value="<%= albergue.getId() %>" <%= seleccionado %>><%= albergue.getNombreAlbergue() %></option>
+                                    <%
                                                 }
                                             }
-                                        %>
-                                    </select>
-
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-container">
-                                        <canvas id="donacionesChart"></canvas>
-
-                                    </div>
-                                </div>
+                                        }
+                                    %>
+                                </select>
                             </div>
-                        </div>
-
-                        <!-- Top 10 Usuarios que más han donado -->
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header">Top 10 Donantes</div>
-                                <div class="card-body">
-                                    <div class="chart-container">
-                                        <canvas id="topDonantesChart"></canvas>
-                                    </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="donacionesChart"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Mascotas perdidas y encontradas -->
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-header">Mascotas Perdidas vs Encontradas
-                                    <select id="selectPeriodo" class="form-select form-select-sm">
-                                        <option value="3meses">Últimos 3 meses</option>
-                                        <option value="anual">Anual</option>
-                                    </select>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-container">
-                                        <canvas id="mascotasPerdidasEncontradasChart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Albergues registrados y Usuarios activos/baneados en gráfico circular -->
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-header">Albergues y Usuarios Activos vs Baneados (Gráfico Circular)</div>
-                                <div class="card-body">
-                                    <div class="chart-container">
-                                        <canvas id="alberguesUsuariosPieChart"></canvas>
-                                    </div>
+                    <!-- Top 10 Usuarios que más han donado -->
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">Top 10 Donantes</div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="topDonantesChart"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </main>
-        </div>
+
+                <!-- Mascotas perdidas y encontradas -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">Mascotas Perdidas vs Encontradas
+                                <select id="selectPeriodo" class="form-select form-select-sm">
+                                    <option value="3meses">Últimos 3 meses</option>
+                                    <option value="anual">Anual</option>
+                                </select>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="mascotasPerdidasEncontradasChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Albergues registrados y Usuarios activos/baneados en gráfico circular -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">Albergues y Usuarios Activos vs Baneados (Gráfico Circular)</div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="alberguesUsuariosPieChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-
-    <!-- Librerías JS de Bootstrap y Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Gráficos con Chart.js -->
-    <script>
-        // Donaciones por Albergue
-            function filtrarDonaciones() {
-            const albergueSeleccionado = document.getElementById("selectAlbergue").value;
-            console.log("Albergue Seleccionado:", albergueSeleccionado); // Depuración
-
-            if (albergueSeleccionado) {
-            // Redirige al servlet con el parámetro correcto
-            window.location.href = `<%= request.getContextPath() %>/AdministradorServlet?action=indicadores&albergueId=` + albergueSeleccionado;
-        } else {
-            console.log("No se ha seleccionado ningún albergue.");
-        }
-        }
+</div>
 
 
+<!-- Librerías JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-// Datos dinámicos del servlet
-        <%
+<!-- Scripts dinámicos -->
+<%
     List<DonacionMesDTO> listaDonaciones = (List<DonacionMesDTO>) request.getAttribute("listaDonaciones");
+    StringBuilder meses = new StringBuilder("[");
+    StringBuilder cantidades = new StringBuilder("[");
     if (listaDonaciones != null && !listaDonaciones.isEmpty()) {
-        List<String> meses = new ArrayList<>();
-        List<Integer> cantidades = new ArrayList<>();
-        for (DonacionMesDTO donacion : listaDonaciones) {
-            meses.add(donacion.getMes());
-            cantidades.add(donacion.getCantidadDonaciones());
+        for (int i = 0; i < listaDonaciones.size(); i++) {
+            DonacionMesDTO donacion = listaDonaciones.get(i);
+            meses.append("\"").append(donacion.getMes()).append("\"");
+            cantidades.append(donacion.getCantidadDonaciones());
+            if (i < listaDonaciones.size() - 1) {
+                meses.append(",");
+                cantidades.append(",");
+            }
         }
+    }
+    meses.append("]");
+    cantidades.append("]");
 %>
-        const meses = <%= meses %>;
-        const cantidades = <%= cantidades %>;
-        <%
-            } else {
-        %>
-        console.log("No se encontraron donaciones para el albergue seleccionado.");
-        const meses = [];
-        const cantidades = [];
-        <%
-            }
-        %>
+<script>
+    function filtrarDonaciones() {
+        const albergueSeleccionado = document.getElementById("selectAlbergue").value;
+        window.location.href = `<%= request.getContextPath() %>/AdministradorServlet?action=indicadores&albergueId=` + albergueSeleccionado;
+    }
 
+    const meses = <%= meses.toString() %>;
+    const cantidades = <%= cantidades.toString() %>;
 
-        const ctx = document.getElementById('donacionesChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: meses, // Si está vacío, no se mostrará el gráfico
-                datasets: [{
-                    label: 'Donaciones en los últimos 3 meses',
-                    data: cantidades,
-                    backgroundColor: '#6b8e23'
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+    const ctx = document.getElementById('donacionesChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: meses,
+            datasets: [{
+                label: 'Donaciones en los últimos 3 meses',
+                data: cantidades,
+                backgroundColor: '#6b8e23'
+            }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
+    // Top 10 Donantes
+    const topDonantesChart = new Chart(document.getElementById('topDonantesChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Usuario 1', 'Usuario 2', 'Usuario 3', 'Usuario 4', 'Usuario 5', 'Usuario 6', 'Usuario 7', 'Usuario 8', 'Usuario 9', 'Usuario 10'],
+            datasets: [{
+                label: 'Cantidad Donada',
+                data: [100, 90, 80, 70, 60, 50, 40, 30, 20, 10],
+                backgroundColor: '#ffa07a' // Color salmón claro
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
+        }
+    });
 
-        // Top 10 Donantes
-        const topDonantesChart = new Chart(document.getElementById('topDonantesChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Usuario 1', 'Usuario 2', 'Usuario 3', 'Usuario 4', 'Usuario 5', 'Usuario 6', 'Usuario 7', 'Usuario 8', 'Usuario 9', 'Usuario 10'],
-                datasets: [{
-                    label: 'Cantidad Donada',
-                    data: [100, 90, 80, 70, 60, 50, 40, 30, 20, 10],
-                    backgroundColor: '#ffa07a' // Color salmón claro
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+    // Mascotas Perdidas vs Encontradas
+    const mascotasPerdidasEncontradasChart = new Chart(document.getElementById('mascotasPerdidasEncontradasChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Enero', 'Febrero', 'Marzo'],
+            datasets: [
+                {
+                    label: 'Mascotas Perdidas',
+                    data: [30, 40, 50],
+                    backgroundColor: '#f0e68c'  // Color amarillo suave
+                },
+                {
+                    label: 'Mascotas Encontradas',
+                    data: [20, 25, 30],
+                    backgroundColor: '#87ceeb'  // Color azul cielo
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
+        }
+    });
 
-        // Mascotas Perdidas vs Encontradas
-        const mascotasPerdidasEncontradasChart = new Chart(document.getElementById('mascotasPerdidasEncontradasChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Enero', 'Febrero', 'Marzo'],
-                datasets: [
-                    {
-                        label: 'Mascotas Perdidas',
-                        data: [30, 40, 50],
-                        backgroundColor: '#f0e68c'  // Color amarillo suave
-                    },
-                    {
-                        label: 'Mascotas Encontradas',
-                        data: [20, 25, 30],
-                        backgroundColor: '#87ceeb'  // Color azul cielo
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Albergues Registrados y Usuarios Activos vs Baneados - Gráfico Circular
-        const alberguesUsuariosPieChart = new Chart(document.getElementById('alberguesUsuariosPieChart'), {
-            type: 'pie',
-            data: {
-                labels: ['Albergues Registrados', 'Usuarios Activos', 'Usuarios Baneados'],
-                datasets: [{
-                    label: 'Cantidad',
-                    data: [15, 200, 10],
-                    backgroundColor: ['#ffdab9', '#98fb98', '#ffb6c1'] // Colores suaves
-                }]
-            },
-            options: {
-                responsive: true
-            }
-        });
-    </script>
+    // Albergues Registrados y Usuarios Activos vs Baneados - Gráfico Circular
+    const alberguesUsuariosPieChart = new Chart(document.getElementById('alberguesUsuariosPieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Albergues Registrados', 'Usuarios Activos', 'Usuarios Baneados'],
+            datasets: [{
+                label: 'Cantidad',
+                data: [15, 200, 10],
+                backgroundColor: ['#ffdab9', '#98fb98', '#ffb6c1'] // Colores suaves
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
 <script src="<%= request.getContextPath() %>/assets/js/scripts.js"></script>
 </body>
 </html>
