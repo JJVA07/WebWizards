@@ -50,10 +50,11 @@ public class AdministradorServlet extends HttpServlet {
                 } else {
                     albergueId = Integer.parseInt(albergueIdParam);
                 }
-
+                List<DonacionTopDTO> topDonantes = adm.obtenerTop10Donantes();
 // Obtener la lista de donaciones
                 List<DonacionMesDTO> listaDonaciones = adm.obtenerDonacionesPorMes(albergueId);
                 request.setAttribute("listaDonaciones", listaDonaciones);
+                request.setAttribute("topDonantes", topDonantes);
 
                 // Redirigir a adm_indicadores.jsp
                 vista = "/Administrador/adm_indicadores.jsp";

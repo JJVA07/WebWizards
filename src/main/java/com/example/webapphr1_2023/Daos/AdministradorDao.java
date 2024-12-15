@@ -159,4 +159,33 @@ public class AdministradorDao extends DaoBase{
         }
         return listaUsuarios;
     }
+    public List<DonacionTopDTO> obtenerTop10Donantes() {
+        List<DonacionTopDTO> topDonantes = new ArrayList<>();
+        String sql = "SELECT u.Nombre AS nombreUsuario, COUNT(d.idDonaciones) AS cantidadDonaciones " +
+                "FROM donaciones d " +
+                "JOIN usuarios u ON d.Usuarios_ID = u.ID " +
+                "JOIN donacion_estado de ON d.Donacion_estado_idDonacion_estado = de.idDonacion_estado " +
+                "WHERE u.Rol_idRol = 1 AND de.Donacion_estado = 'Donado' " +
+                "GROUP BY u.ID, u.Nombre " +
+                "ORDER BY cantidadDonaciones DESC " +
+                "LIMIT 10";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                String nombreUsuario = rs.getString("nombreUsuario");
+                int cantidadDonaciones = rs.getInt("cantidadDonaciones");
+
+                // Agregar a la lista usando un DTO
+                topDonantes.add(new DonacionTopDTO(nombreUsuario, cantidadDonaciones));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return topDonantes;
     }
+
+}

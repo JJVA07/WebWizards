@@ -2,6 +2,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="com.example.webapphr1_2023.Beans.DonacionMesDTO" %>
 <%@ page import="com.example.webapphr1_2023.Beans.Usuarios" %>
+<%@ page import="com.example.webapphr1_2023.Beans.DonacionTopDTO" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -180,6 +181,28 @@
     meses.append("]");
     cantidades.append("]");
 %>
+<%
+    List<DonacionTopDTO> topDonantes = (List<DonacionTopDTO>) request.getAttribute("topDonantes");
+    StringBuilder nombresUsuarios = new StringBuilder("[");
+    StringBuilder cantidadesDonadas = new StringBuilder("[");
+
+    if (topDonantes != null && !topDonantes.isEmpty()) {
+        for (int i = 0; i < topDonantes.size(); i++) {
+            DonacionTopDTO donante = topDonantes.get(i);
+            nombresUsuarios.append("\"").append(donante.getNombreUsuario()).append("\"");
+            cantidadesDonadas.append(donante.getCantidadDonaciones());
+
+            if (i < topDonantes.size() - 1) {
+                nombresUsuarios.append(",");
+                cantidadesDonadas.append(",");
+            }
+        }
+    }
+    nombresUsuarios.append("]");
+    cantidadesDonadas.append("]");
+%>
+
+
 <script>
     function filtrarDonaciones() {
         const albergueSeleccionado = document.getElementById("selectAlbergue").value;
@@ -203,13 +226,16 @@
         options: { responsive: true, scales: { y: { beginAtZero: true } } }
     });
     // Top 10 Donantes
+    const nombresUsuarios = <%= nombresUsuarios.toString() %>;
+    const cantidadesDonadas = <%= cantidadesDonadas.toString() %>;
+
     const topDonantesChart = new Chart(document.getElementById('topDonantesChart'), {
         type: 'bar',
         data: {
-            labels: ['Usuario 1', 'Usuario 2', 'Usuario 3', 'Usuario 4', 'Usuario 5', 'Usuario 6', 'Usuario 7', 'Usuario 8', 'Usuario 9', 'Usuario 10'],
+            labels: nombresUsuarios, // Nombres de los usuarios
             datasets: [{
                 label: 'Cantidad Donada',
-                data: [100, 90, 80, 70, 60, 50, 40, 30, 20, 10],
+                data: cantidadesDonadas, // Cantidad donada
                 backgroundColor: '#ffa07a' // Color salmón claro
             }]
         },
@@ -223,7 +249,7 @@
         }
     });
 
-    // Mascotas Perdidas vs Encontradas
+// Mascotas Perdidas vs Encontradas
     const mascotasPerdidasEncontradasChart = new Chart(document.getElementById('mascotasPerdidasEncontradasChart'), {
         type: 'bar',
         data: {
