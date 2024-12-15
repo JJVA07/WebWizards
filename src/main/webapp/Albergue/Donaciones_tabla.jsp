@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.example.webapphr1_2023.Beans.Donaciones" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,81 +16,10 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-<nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #581925;">
-    <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="Albergue.jsp">Albergue</a>
-    <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-    <!-- Navbar-->
-    <ul class="navbar-nav ms-auto me-3 me-lg-4">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="mi_cuenta.jsp">Mi cuenta</a></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li>
-            </ul>
-        </li>
-        <a class="nav-link" id="navbarDropdown" href="Albergue.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
-    </ul>
-</nav>
+<%@ include file="/WEB-INF/navbar_albergue.jsp" %>
 
 <div id="layoutSidenav">
-    <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #581925;">
-            <div class="sb-sidenav-menu">
-                <div class="nav">
-                    <!-- Crear Publicación -->
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                       data-bs-target="#collapseCrearPublicacion" aria-expanded="false" aria-controls="collapseCrearPublicacion">
-                        <div class="sb-nav-link-icon"><i class="fas fa-edit"></i></div>
-                        Crear Publicación
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapseCrearPublicacion" aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="Albergue_adopcion.jsp">Adopción</a>
-                            <a class="nav-link" href="Albergue_donacion.jsp">Donación</a>
-                            <a class="nav-link" href="Albergue_eventos.jsp">Eventos Benéficos</a>
-                        </nav>
-                    </div>
-
-                    <!-- Publicaciones -->
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                       data-bs-target="#collapsePublicaciones" aria-expanded="false" aria-controls="collapsePublicaciones">
-                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                        Publicaciones
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse" id="collapsePublicaciones" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="Adopciones_publicaciones.jsp">Adopciones</a>
-                            <a class="nav-link" href="Donaciones_publicaciones.jsp">Donaciones</a>
-                            <a class="nav-link" href="Hogares_publicaciones.jsp">Hogares Temporales</a>
-                            <a class="nav-link" href="Eventos_publicaciones.jsp">Eventos Benéficos</a>
-                        </nav>
-                    </div>
-
-                    <!-- Mis Actividades (Abierta y Activa) -->
-                    <a class="nav-link collapsed active" href="#" data-bs-toggle="collapse"
-                       data-bs-target="#collapseTemporal" aria-expanded="true" aria-controls="collapseTemporal">
-                        <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
-                        Mis Actividades
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse show" id="collapseTemporal" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                        <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="Adopciones_tabla.jsp">Adopciones</a>
-                            <a class="nav-link active" href="Donaciones_tabla.jsp">Donaciones</a>
-                            <a class="nav-link" href="Hogares_tabla.jsp">Hogares Temporales</a>
-                            <a class="nav-link" href="Eventos_tabla.jsp">Eventos Benéficos</a>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </div>
-
+    <%@ include file="/WEB-INF/sidebar_albergue.jsp" %>
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
@@ -108,22 +39,28 @@
                                     <th>Punto de Eventos</th>
                                     <th>Tipos de Donaciones</th>
                                     <th>Cantidad de Donaciones</th>
-                                    <th>Dinero (Uso)</th>
                                     <th>Fechas de Recepción</th>
                                     <th>Horas de Recepción</th>
                                     <th>Acciones</th>
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <%
+                                    // Obtiene la lista de donaciones pasada desde el servlet
+                                    List<Donaciones> listaDonaciones = (List<Donaciones>) request.getAttribute("listaDonaciones");
+
+                                    // Verifica si la lista tiene elementos
+                                    if (listaDonaciones != null && !listaDonaciones.isEmpty()) {
+                                        for (Donaciones donacion : listaDonaciones) {
+                                %>
                                 <tr>
-                                    <td>123456789</td>
-                                    <td>Juan Pérez</td>
-                                    <td>Lima, Perú</td>
-                                    <td>Alimentos, Ropa</td>
-                                    <td>100 unidades</td>
-                                    <td>Medicinas</td>
-                                    <td>2024-10-15</td>
-                                    <td>09:00 - 18:00</td>
+                                    <td><%= donacion.getUsuario().getTelefono() %></td>
+                                    <td><%= donacion.getUsuario().getNombre() %></td>
+                                    <td><%= donacion.getPuntoEntrega() %></td>
+                                    <td><%= donacion.getTipoDonacion() %></td>
+                                    <td><%= donacion.getCantidadDonacion() %></td>
+                                    <td><%= donacion.getFechaDonacion() %></td>
+                                    <td><%= donacion.getHoraEntrega() %></td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -136,6 +73,14 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <%
+                                    }
+                                } else {
+                                %>
+                                <tr>
+                                    <td colspan="8">No hay donaciones registradas.</td>
+                                </tr>
+                                <% } %>
                                 </tbody>
                             </table>
                         </div>

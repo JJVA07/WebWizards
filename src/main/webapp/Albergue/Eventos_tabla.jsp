@@ -16,32 +16,13 @@
   <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-<nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: #581925;">
-  <a class="navbar-brand ps-3" href="Albergue.jsp">Albergue</a>
-  <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-  <ul class="navbar-nav ms-auto me-3 me-lg-4">
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-        <li><a class="dropdown-item" href="mi_cuenta.jsp">Mi cuenta</a></li>
-        <li><hr class="dropdown-divider" /></li>
-        <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li>
-      </ul>
-    </li>
-    <a class="nav-link" id="navbarDropdown" href="Albergue.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
-  </ul>
-</nav>
+
+<%@ include file="/WEB-INF/navbar_albergue.jsp" %>
+
 
 <div id="layoutSidenav">
-  <div id="layoutSidenav_nav">
-    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #581925;">
-      <div class="sb-sidenav-menu">
-        <div class="nav">
-          <!-- Aquí irían tus enlaces de navegación -->
-        </div>
-      </div>
-    </nav>
-  </div>
+
+  <%@ include file="/WEB-INF/sidebar_albergue.jsp" %>
 
   <div id="layoutSidenav_content">
     <main>
@@ -72,7 +53,7 @@
                 <tbody>
                 <%
                   List<Eventos> eventos = (List<Eventos>) request.getAttribute("eventos");
-                  if (eventos != null) {
+                  if (eventos != null && !eventos.isEmpty()) {
                     for (Eventos evento : eventos) {
                 %>
                 <tr>

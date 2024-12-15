@@ -70,24 +70,14 @@
                                                 <td><%= donacion.getPuntoEntrega() != null ? donacion.getPuntoEntrega() : "No especificado" %></td>
                                                 <td><%= donacion.getCantidadDonacion() %></td>
                                                 <td>
-                                                    <%
-                                                        Integer idDonacion = donacion.getIdDonaciones();
-                                                        if (idDonacion != null) {
-                                                    %>
-                                                    <a href="<%= request.getContextPath() %>/Usuario?action=detalleDonacion&idDonaciones=<%= idDonacion %>"
+                                                    <a href="<%= request.getContextPath() %>/Usuario?action=detalleDonacion&donacionId=<%= donacion.getIdDonaciones() %>"
                                                        class="btn inscribirse-btn d-inline-flex align-items-center"
                                                        style="text-align: center; padding: 5px 10px; border-radius: 8px; background-color: transparent; text-decoration: none;">
                                                         <i class="fas fa-info-circle" style="color: #808080; font-size: 2rem; margin-right: 0.5rem;"></i>
                                                         <span style="color: #808080; font-size: 1.2rem;">Más detalles</span>
                                                     </a>
-                                                    <% } else { %>
-                                                    <span>No disponible</span>
-                                                    <% } %>
+
                                                 </td>
-
-
-
-
                                             </tr>
                                             <%
                                                 }

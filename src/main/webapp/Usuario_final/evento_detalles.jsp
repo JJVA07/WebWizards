@@ -14,8 +14,9 @@
 </head>
 <body class="sb-nav-fixed" style="background-color: white;">
 
+<!-- Barra de navegación superior -->
 <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: rgb(27, 94, 87);">
-    <a class="navbar-brand ps-3" href="<%= request.getContextPath() %>/home.jsp">Usuario Final</a>
+    <a class="navbar-brand ps-3" href="<%= request.getContextPath() %>/Usuario?action=home">Usuario Final</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
     <ul class="navbar-nav ms-auto me-3 me-lg-4">
         <li class="nav-item dropdown">
@@ -23,15 +24,16 @@
                 <i class="fas fa-user fa-fw"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/mi_cuenta.jsp">Mi cuenta</a></li>
+                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/Usuario?action=miCuenta">Mi cuenta</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/inicio_sesion.jsp">Cerrar Sesión</a></li>
+                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/Usuario?action=logout">Cerrar Sesión</a></li>
             </ul>
         </li>
-        <a class="nav-link" href="<%= request.getContextPath() %>/home.jsp" role="button"><i class="fa-solid fa-paw"></i></a>
+        <a class="nav-link" href="<%= request.getContextPath() %>/Usuario?action=home" role="button"><i class="fa-solid fa-paw"></i></a>
     </ul>
 </nav>
 
+<!-- Layout principal -->
 <div id="layoutSidenav">
     <jsp:include page="/WEB-INF/sidebar.jsp" />
 
@@ -41,6 +43,12 @@
                 <h2 class="mt-5 text-center">Detalles del Evento</h2>
                 <%
                     Eventos evento = (Eventos) request.getAttribute("evento");
+                    if (evento == null) {
+                %>
+                <div class="alert alert-danger mt-4" role="alert">
+                    No se encontraron detalles para este evento.
+                </div>
+                <% } else {
                     String base64Image = Base64.getEncoder().encodeToString(evento.getFoto());
                 %>
                 <div class="card mb-3 mt-4 w-100">
@@ -49,7 +57,7 @@
                             <img src="data:image/jpeg;base64,<%= base64Image %>" class="img-fluid rounded-start" style="height: auto; width: 100%; object-fit: cover;">
                             <div class="card-body text-center">
                                 <h5 class="card-title">Costo</h5>
-                                <p class="card-text">S/. <%= evento.getDonaciones().getCantidadDonacion() %> </p>
+                                <p class="card-text">S/. <%= evento.getDonaciones() != null ? evento.getDonaciones().getCantidadDonacion() : "N/A" %></p>
                                 <h5 class="card-title">Fecha del evento</h5>
                                 <p class="card-text"><%= evento.getFecha() %></p>
                                 <h5 class="card-title">Vacantes disponibles</h5>
@@ -65,11 +73,11 @@
                                 <h5 class="card-title">Hora del evento</h5>
                                 <p class="card-text"><%= evento.getHora() %></p>
                                 <h5 class="card-title">Artistas o proveedores invitados</h5>
-                                <p class="card-text"><%= evento.getArtistasInvitados() %></p>
+                                <p class="card-text"><%= evento.getArtistasInvitados() != null ? evento.getArtistasInvitados() : "No especificado" %></p>
                                 <h5 class="card-title">Descripción del evento</h5>
                                 <p class="card-text"><%= evento.getDescripcion() %></p>
                                 <h5 class="card-title">Propósito del evento</h5>
-                                <p class="card-text"><%= evento.getRazon() %></p>
+                                <p class="card-text"><%= evento.getRazon() != null ? evento.getRazon() : "No especificado" %></p>
                             </div>
                         </div>
                     </div>
@@ -80,20 +88,16 @@
                         Inscribirse
                     </a>
                 </div>
-            </div>
-            <div class="text-center mb-4">
-                    <a href="#" class="btn btn-secondary postular-btn" style="color: white; font-size: 1.2rem; text-decoration: none;">
-                        Inscribirse
-                    </a>
-
+                <% } %>
             </div>
         </main>
+
         <footer class="py-4 mt-auto" style="background-color: black;">
             <div class="container-fluid px-4">
                 <div class="d-flex align-items-center justify-content-between small">
                     <div class="text-muted" style="color: white;">© Huella Viva</div>
                     <div>
-                        <a style="color: white;">Correo: </a> <a href="#" style="color: white;">info@alberguegosu.com</a>
+                        <a style="color: white;">Correo: </a><a href="#" style="color: white;">info@alberguegosu.com</a>
                         <a style="color: white;">Teléfono: </a><a href="#" style="color: white;">+123 456 7890</a>
                     </div>
                 </div>
@@ -106,7 +110,7 @@
 <script src="<%= request.getContextPath() %>/js/scripts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    document.querySelector('.postular-btn').addEventListener('click', function (e) {
+    document.querySelector('.postular-btn')?.addEventListener('click', function (e) {
         e.preventDefault();
         Swal.fire({
             title: '¿Estás seguro de tu inscripción?',
@@ -116,7 +120,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire('Inscripción completada!', '', 'success')
-                    .then(() => { window.location.href = "<%= request.getContextPath() %>/Evento?action=misEventos"; });
+                    .then(() => { window.location.href = "<%= request.getContextPath() %>/Usuario?action=misEventos"; });
             } else if (result.isDenied) {
                 Swal.fire('Inscripción cancelada', '', 'info')
             }

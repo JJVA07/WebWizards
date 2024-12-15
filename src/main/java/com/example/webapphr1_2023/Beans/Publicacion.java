@@ -5,7 +5,7 @@ public class Publicacion {
     private String descripcion;
     private byte[] foto;
     private String nombre;
-    private Integer edad;
+    private int edad;
     private String raza;
     private String tamano;
     private String distintivo;
@@ -24,6 +24,32 @@ public class Publicacion {
     private String fechaPublicacion;
     private String fechaEncontrado;
     private Usuarios usuario; // Relación con Usuarios (usuario que realiza la publicación)
+    private String comentario_coordinador;
+    private TipoPublicacion tipoPublicacion;
+
+    public TipoPublicacion getTipoPublicacion() {
+        return tipoPublicacion;
+    }
+
+    public void setTipoPublicacion(TipoPublicacion tipoPublicacion) {
+        this.tipoPublicacion = tipoPublicacion;
+    }
+
+    public String getComentario_coordinador() {
+        return comentario_coordinador;
+    }
+
+    public void setComentario_coordinador(String comentario_coordinador) {
+        this.comentario_coordinador = comentario_coordinador;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
 
     public Publicacion() {
     }
@@ -58,14 +84,6 @@ public class Publicacion {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public Integer getEdad() {
-        return edad;
-    }
-
-    public void setEdad(Integer edad) {
-        this.edad = edad;
     }
 
     public String getRaza() {

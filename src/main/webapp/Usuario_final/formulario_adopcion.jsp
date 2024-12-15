@@ -38,6 +38,7 @@
         <a class="nav-link" href="<%= request.getContextPath() %>/Usuario?action=pagPrincipal" role="button"><i class="fa-solid fa-paw"></i></a>
     </ul>
 </nav>
+
 <div id="layoutSidenav">
     <!-- Incluir el sidebar común -->
     <jsp:include page="/WEB-INF/sidebar.jsp" />

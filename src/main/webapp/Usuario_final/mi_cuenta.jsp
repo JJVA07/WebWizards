@@ -67,9 +67,9 @@
                                 <label for="correo" class="form-label">Correo electrónico:</label>
                                 <input type="email" id="correo" name="correo" class="form-control" value="<%= usuario != null ? usuario.getCorreo() : "" %>" readonly>
                             </div>
-                            <div class="text-center mt-4 mb-3">
+                            <%--<div class="text-center mt-4 mb-3">
                                 <a href="<%= request.getContextPath() %>/editar_cuenta.jsp" class="btn btn-secondary">Editar</a>
-                            </div>
+                            </div>--%>
                         </form>
                     </div>
 

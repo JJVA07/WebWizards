@@ -6,14 +6,14 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-import com.example.webapphr1_2023.Daos.DonacionesDao;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-import com.example.webapphr1_2023.Daos.UsuariosDao;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Date;
 import java.util.List;
 
 @WebServlet(name ="UsuarioServlet" , value = "/Usuario")
@@ -21,18 +21,33 @@ import java.util.List;
 public class UsuarioServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Verificar si la sesión existe y el usuario está autenticado
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("usuario") == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        // Obtener el ID del usuario desde la sesión
+        Usuarios usuarioSesion = (Usuarios) session.getAttribute("usuario");
+        int idUsuario = usuarioSesion.getId();
+
         String action = request.getParameter("action") == null ? "pagPrincipal" : request.getParameter("action");
         String vista;
         RequestDispatcher rd;
+
+        // DAOs necesarios
         UsuariosDao userDao = new UsuariosDao();
         DonacionesDao donacionesDao = new DonacionesDao();
-        PostulacionDao postulacionDao = new PostulacionDao();
+        EventosDao eventosDao = new EventosDao();
+        SolicitudDao.PostulacionDao postulacionDao = new SolicitudDao.PostulacionDao();
+        PublicacionDao publicacionDao = new PublicacionDao();
 
         switch (action) {
             case "pagPrincipal":
                 vista = "/Usuario_final/home.jsp";
                 rd = request.getRequestDispatcher(vista);
-                rd.forward(request, response);
+                rd.forward(request,response);
                 break;
             case "adopcion":
                 // Instancia de MascotaDao para obtener las mascotas en adopción
@@ -46,23 +61,71 @@ public class UsuarioServlet extends HttpServlet {
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
+            case "misEventos":
+
+                List<Eventos> eventos = eventosDao.obtenerEventosPorUsuario(idUsuario);
+
+                // Verifica si se obtuvieron eventos
+                if (eventos != null && !eventos.isEmpty()) {
+                    request.setAttribute("eventos", eventos);
+                } else {
+                    request.setAttribute("mensaje", "No tienes eventos registrados.");
+                }
+
+                // Redirigir a la vista de 'Mis Eventos'
+                vista = "/Usuario_final/mis_eventos.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "detallesEvento":
+                int idEvento = Integer.parseInt(request.getParameter("idEvento"));
+                Eventos evento = eventosDao.obtenerDetallesEvento(idEvento);
+                request.setAttribute("evento", evento);
+                vista = "/Usuario_final/evento_detalles.jsp";
+                rd = request.getRequestDispatcher(vista);
+                request.setAttribute("paginaActiva", "eventos");
+                rd.forward(request, response);
+                break;
             case "eventos":
                 int pagina = request.getParameter("pagina") == null ? 1 : Integer.parseInt(request.getParameter("pagina"));
                 int offset = (pagina - 1) * 6;
-
-                // Crear una instancia de EventosDao
-                EventosDao eventosDao = new EventosDao();
-                List<Eventos> eventos = eventosDao.obtenerEventosActivosPaginados(offset, 6);
+                List<Eventos> eventasos = eventosDao.obtenerEventosActivosPaginados(offset, 6);
 
                 int totalEventos = eventosDao.contarEventosActivos();
                 int totalPaginas = (int) Math.ceil((double) totalEventos / 6);
 
-                request.setAttribute("eventos", eventos);
+                // Imprimir logs para verificar los datos enviados
+                System.out.println("Eventos obtenidos: " + eventasos.size());
+                System.out.println("Página actual: " + pagina);
+                System.out.println("Total páginas: " + totalPaginas);
+
+                // Asegurarte de enviar correctamente los datos al JSP
+                request.setAttribute("eventos", eventasos);
                 request.setAttribute("paginaActual", pagina);
                 request.setAttribute("totalPaginas", totalPaginas);
 
+                rd = request.getRequestDispatcher("/Usuario_final/eventos.jsp");
+                rd.forward(request, response);
+                break;
+            case "mostrarSolicitud":
+                Postulacion postulacion = postulacionDao.obtenerSolicitudPorUsuario(idUsuario);
+                request.setAttribute("postulacion", postulacion);
 
-                vista = "src/main/webapp/Usuario_final/eventos.jsp";
+                vista = "/Usuario_final/ver_solicitud.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            case "misSolicitudes":
+                SolicitudDao solicitudDao = new SolicitudDao();
+
+                // Obtener todas las solicitudes para el usuario
+                List<Object[]> solicitudes = solicitudDao.obtenerSolicitudesPorUsuario(idUsuario);
+
+                // Pasar la lista de solicitudes a la JSP
+                request.setAttribute("solicitudes", solicitudes);
+
+                // Redirigir a la vista de "Mis Solicitudes"
+                vista = "/Usuario_final/mis_solicitudes.jsp";
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
@@ -107,33 +170,35 @@ public class UsuarioServlet extends HttpServlet {
                     Mascotas mascotaDetalles = mascotaDaoDetalles.obtenerMascotaPorId(idMascota);
                     if (mascotaDetalles == null) {
                         response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion");
-                    } else {
+                    }
+                    else{
                         request.setAttribute("mascota", mascotaDetalles);
                         vista = "/Usuario_final/formulario_adopcion.jsp";
                         request.setAttribute("paginaActiva", "adopcion");
                         rd = request.getRequestDispatcher(vista);
                         rd.forward(request, response);
                     }
-                } catch (NumberFormatException e) {
+                }
+                catch(NumberFormatException e) {
                     response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion");
                 }
                 break;
+
             case "formularioPerdida":
                 vista = "/Usuario_final/mascotas_perdidas.jsp";
                 rd = request.getRequestDispatcher(vista);
                 request.setAttribute("paginaActiva", "mascotas_perdidas");
-                rd.forward(request, response);
+                rd.forward(request,response);
                 break;
             case "formularioDenuncia":
                 vista = "/Usuario_final/denuncias.jsp";
                 rd = request.getRequestDispatcher(vista);
                 request.setAttribute("paginaActiva", "denuncias");
-                rd.forward(request, response);
+                rd.forward(request,response);
                 break;
 
             case "mostrarDonaciones":
-                int userId = 1; // Valor estático para userId
-                List<Donaciones> donaciones = donacionesDao.obtenerDonacionesPorUsuario(userId);
+                List<Donaciones> donaciones = donacionesDao.obtenerDonacionesPorUsuario(idUsuario);
                 request.setAttribute("donaciones", donaciones);
 
                 // Ruta actualizada para el archivo mis_donaciones.jsp
@@ -144,108 +209,43 @@ public class UsuarioServlet extends HttpServlet {
                 break;
 
             case "detalleDonacion":
-                // Obtener el ID desde la URL
-                String idDonacionesParam = request.getParameter("idDonaciones");
+                Donaciones donacion = donacionesDao.vistaDetallesDonacionPorUsuarioFijo();
+                request.setAttribute("donacion", donacion);
 
-                if (idDonacionesParam == null || idDonacionesParam.trim().isEmpty()) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Falta el parámetro idDonaciones");
-                    return;
-                }
+                rd = request.getRequestDispatcher("/Usuario_final/donacion_detalle.jsp");
+                rd.forward(request, response);
+                break;
+            case "miCuenta":
+                System.out.println("ID del usuario en sesión: " + idUsuario);
 
-                try {
-                    // Convertir el ID a entero
-                    int idDonaciones = Integer.parseInt(idDonacionesParam);
-
-                    // Buscar la donación en la base de datos
-                    Donaciones donacion = donacionesDao.obtenerDonacionPorId(idDonaciones);
-
-                    if (donacion == null) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND, "Donación no encontrada");
-                        return;
-                    }
-
-                    // Pasar la donación al JSP
-                    request.setAttribute("donacion", donacion);
-
-                    // Redirigir al JSP de detalles
-                    rd = request.getRequestDispatcher("/Usuario_final/donacion_detalle.jsp");
-                    rd.forward(request, response);
-
-                } catch (NumberFormatException e) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "El parámetro idDonaciones no es válido");
-                }
+                Usuarios usuario = userDao.obtenerUsuarioPorId(idUsuario);
+                request.setAttribute("usuario", usuario);
+                rd = request.getRequestDispatcher("/Usuario_final/mi_cuenta.jsp");
+                rd.forward(request, response);
                 break;
 
-            case "listarpostulaciones":
-                try {
-                    // Obtén el usuarioId dinámicamente desde la sesión, si corresponde
-                    HttpSession session = request.getSession();
-                    int usuarioId = (session.getAttribute("usuarioId") != null)
-                            ? (int) session.getAttribute("usuarioId")
-                            : 1; // Valor por defecto para pruebas
+            case "misPublicaciones":
+                List<Publicacion> publicaciones = publicacionDao.obtenerPublicacionesPorUsuario(idUsuario);
 
-                    int estadoId = 1; // Estado fijo de la postulación
-
-                    // Instancia del DAO
-                    postulacionDao = new PostulacionDao();
-
-                    // Llamar al método del DAO
-                    List<Postulacion> postulaciones = postulacionDao.obtenerPostulacionesPorUsuarioYEstado(usuarioId, estadoId);
-
-                    // Verificar si se obtuvieron postulaciones
-                    if (postulaciones != null && !postulaciones.isEmpty()) {
-                        System.out.println("Postulaciones encontradas: " + postulaciones.size());
-                        for (Postulacion p : postulaciones) {
-                            System.out.println("Postulación: " + p.getNombre() + " " + p.getApellido());
-                        }
-                    } else {
-                        System.out.println("No se encontraron postulaciones para usuarioId = " + usuarioId + " y estadoId = " + estadoId);
-                    }
-
-                    // Adjuntar la lista de postulaciones al request
-                    request.setAttribute("postulaciones", postulaciones);
-
-                    // Redirigir a la vista JSP
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/Usuario_final/mis_solicitudes.jsp");
-                    dispatcher.forward(request, response);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    request.setAttribute("error", "Hubo un error al listar las postulaciones: " + e.getMessage());
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("error.jsp");
-                    dispatcher.forward(request, response);
-                }
-                break;
-
-            case "detallePostulacion":
-                // Obtener el parámetro idPostulacion desde la URL
-                String idPostulacionStr = request.getParameter("idPostulacion");
-                if (idPostulacionStr != null && !idPostulacionStr.isEmpty()) {
-                    try {
-                        int idPostulacion = Integer.parseInt(idPostulacionStr);
-                        Postulacion postulacion = postulacionDao.obtenerPostulacionPorId(idPostulacion);
-                        String idParam = request.getParameter("idPostulacion");
-                        System.out.println("ID recibido: " + idParam);
-
-                        if (postulacion != null) {
-                            request.setAttribute("postulacion", postulacion);
-                            RequestDispatcher dispatcher = request.getRequestDispatcher("/Usuario_final/ver_solicitud.jsp");
-                            dispatcher.forward(request, response);
-
-                        } else {
-                            response.sendRedirect("error.jsp?message=No se encontró la postulación");
-                        }
-                    } catch (NumberFormatException e) {
-                        response.sendRedirect("error.jsp?message=ID de postulación no válido");
-                    }
+                // Si hay publicaciones, se pasan a la vista
+                if (publicaciones != null && !publicaciones.isEmpty()) {
+                    request.setAttribute("publicaciones", publicaciones);
                 } else {
-                    response.sendRedirect("error.jsp?message=ID de postulación faltante");
+                    request.setAttribute("mensaje", "No tienes publicaciones registradas.");
                 }
+
+                // Ruta a la vista de publicaciones
+                vista = "/Usuario_final/mis_publicaciones.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
+                break;
+            default:
+                // Acción por defecto en caso de que no haya coincidencias con las acciones especificadas
+                vista = "/Usuario_final/home.jsp";
+                rd = request.getRequestDispatcher(vista);
+                rd.forward(request, response);
                 break;
 
-            default:
-                // Manejar acciones no válidas
-                response.sendRedirect("error.jsp?message=Acción no válida");
-                break;
         }
     }
 
@@ -253,208 +253,100 @@ public class UsuarioServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+
+        // Verificar sesión y obtener el usuario autenticado
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("usuario") == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        // Obtener el objeto Usuario desde la sesión
+        Usuarios usuarioSesion = (Usuarios) session.getAttribute("usuario");
+
         String action = request.getParameter("action");
         PublicacionDao publicacionDao = new PublicacionDao();
-        DonacionesDao donacionesDao; // Declaración como variable miembro
-        donacionesDao = new DonacionesDao();
+        PostulacionDao postulacionDao = new PostulacionDao();
 
         switch (action) {
             case "reportarPOST":
                 Publicacion publicacion = new Publicacion();
-                int id_Usuario =5;
-                Usuarios usuario = new Usuarios();
-                usuario.setId(id_Usuario);
 
+                // Asignar usuario desde la sesión
+                publicacion.setUsuario(usuarioSesion);
 
                 String nombreMascota = request.getParameter("nombre");
-                if (nombreMascota.trim().isEmpty() || nombreMascota == null || nombreMascota.trim().isBlank()){
-                    System.out.println("Error, se ha enviado un nombre vacío ");
+                if (nombreMascota == null || nombreMascota.trim().isEmpty()) {
+                    System.out.println("Error, se ha enviado un nombre vacío.");
                 }
-                String edad = request.getParameter("edad");
-                String raza = request.getParameter("raza");
-                String tamano = request.getParameter("tamano");
-                String distintivo = request.getParameter("distintivo");
-                String nombreContacto = request.getParameter("nombre_contacto");
-                String lugarPerdida = request.getParameter("lugar_perdida");
-                String horaPerdida = request.getParameter("hora_perdida");
-                String celularContacto = request.getParameter("celular_contacto");
-                String descripcion = request.getParameter("descripcion");
-                String descripcionAdicional = request.getParameter("descripcion_adicional");
-                String recompensa = request.getParameter("recompensa");
-
-                byte[] archivoImagen = obtenerImagenComoByteArray(request.getPart("imagen").getInputStream());
 
                 publicacion.setNombre(nombreMascota);
-                publicacion.setEdad(Integer.parseInt(edad));
-                publicacion.setRaza(raza);
-                publicacion.setTamano(tamano);
-                publicacion.setDistintivo(distintivo);
-                publicacion.setNombreContacto(nombreContacto);
-                publicacion.setLugarPerdida(lugarPerdida);
-                publicacion.setHoraPerdida(horaPerdida);
-                publicacion.setTelefono(celularContacto);
-                publicacion.setDescripcion(descripcion);
-                publicacion.setFoto(archivoImagen);
-                publicacion.setDescripcionAdicional(descripcionAdicional);
-                publicacion.setRecompensa(recompensa);
-                publicacion.setUsuario(usuario);
+                publicacion.setEdad(Integer.parseInt(request.getParameter("edad")));
+                publicacion.setRaza(request.getParameter("raza"));
+                publicacion.setTamano(request.getParameter("tamano"));
+                publicacion.setDistintivo(request.getParameter("distintivo"));
+                publicacion.setNombreContacto(request.getParameter("nombre_contacto"));
+                publicacion.setLugarPerdida(request.getParameter("lugar_perdida"));
+                publicacion.setHoraPerdida(request.getParameter("hora_perdida"));
+                publicacion.setTelefono(request.getParameter("celular_contacto"));
+                publicacion.setDescripcion(request.getParameter("descripcion"));
+                publicacion.setFoto(obtenerImagenComoByteArray(request.getPart("imagen").getInputStream()));
+                publicacion.setDescripcionAdicional(request.getParameter("descripcion_adicional"));
+                publicacion.setRecompensa(request.getParameter("recompensa"));
+
                 publicacionDao.reportarMascota(publicacion);
-                response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+                response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=misPublicaciones");
                 break;
 
-            case "guardarDonacion":
-                try {
-                    // Recibir parámetros del formulario
-                    String cantidad = request.getParameter("cantidad");
-                    String unidades = request.getParameter("unidades");
-                    String tipoDonacion = request.getParameter("tipo-donacion");
-                    String marca = request.getParameter("nombre-producto");
-                    String puntoEntrega = request.getParameter("lugar-entrega");
-                    String nombreAlbergue = request.getParameter("albergue");
-                    String fechaEntregaStr = request.getParameter("fecha");
+            case "denunciaPost":
+                Publicacion denuncia = new Publicacion();
+                denuncia.setUsuario(usuarioSesion);
 
-                    // Validaciones básicas
-                    if (cantidad == null || unidades == null || tipoDonacion == null || marca == null ||
-                            puntoEntrega == null || nombreAlbergue == null || fechaEntregaStr == null ||
-                            cantidad.trim().isEmpty() || unidades.trim().isEmpty() || tipoDonacion.trim().isEmpty() ||
-                            marca.trim().isEmpty() || puntoEntrega.trim().isEmpty() || nombreAlbergue.trim().isEmpty() ||
-                            fechaEntregaStr.trim().isEmpty()) {
-                        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Todos los campos son obligatorios.");
-                        return;
-                    }
+                denuncia.setNombreMaltratador(request.getParameter("nombre_maltratador"));
+                denuncia.setTipoMaltrato(request.getParameter("tipo_maltrato"));
+                denuncia.setTamano(request.getParameter("tamano_mascota"));
+                denuncia.setRaza(request.getParameter("raza_mascota"));
+                denuncia.setDireccionMaltrato(request.getParameter("direccion_maltrato"));
+                denuncia.setDenunciaPolicial(Boolean.valueOf(request.getParameter("denuncia_policial")));
+                denuncia.setDescripcion(request.getParameter("informacion_extra"));
+                denuncia.setFoto(obtenerImagenComoByteArray(request.getPart("archivo").getInputStream()));
 
-                    // Concatenar cantidad y unidades
-                    String cantidadDonacion = cantidad + " " + unidades;
+                publicacionDao.denunciarMaltrato(denuncia);
+                response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=misPublicaciones");
+                break;
+            case "adoptarMascota":
+                Postulacion postulacion = new Postulacion();
+                postulacion.setUsuario(usuarioSesion);
 
-                    // Parsear la fecha de entrega
-                    Date fechaEntrega = java.sql.Date.valueOf(fechaEntregaStr);
-
-                    // Obtener el ID del albergue por su nombre
-                    int usuariosAlbergueId = donacionesDao.obtenerIdAlberguePorNombre(nombreAlbergue);
-
-                    if (usuariosAlbergueId == 0) {
-                        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Albergue seleccionado no válido.");
-                        return;
-                    }
-
-                    // Crear el objeto Donaciones
-                    Donaciones nuevaDonacion = new Donaciones();
-                    nuevaDonacion.setCantidadDonacion(cantidadDonacion); // Se guarda la concatenación
-                    nuevaDonacion.setTipoDonacion(tipoDonacion);
-                    nuevaDonacion.setMarca(marca);
-                    nuevaDonacion.setPuntoEntrega(puntoEntrega);
-                    nuevaDonacion.setFechaEntrega(fechaEntrega);
-
-                    // Usuario que realiza la donación (fijo)
-                    Usuarios usuarioDonador = new Usuarios();
-                    usuarioDonador.setId(1); // Usuario fijo con ID 1
-                    nuevaDonacion.setUsuario(usuarioDonador);
-
-                    // Albergue receptor
-                    Usuarios usuarioAlbergue = new Usuarios();
-                    usuarioAlbergue.setId(usuariosAlbergueId);
-                    nuevaDonacion.setUsuarioAlbergue(usuarioAlbergue);
-
-                    // Guardar la donación en la base de datos
-                    boolean exito = donacionesDao.guardarDonacion(nuevaDonacion);
-
-                    if (exito) {
-                        // Redirigir a la página de mis donaciones tras el guardado exitoso
-                        response.sendRedirect(request.getContextPath() + "/Usuario?action=mostrarDonaciones");
-                    } else {
-                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al guardar la donación.");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error procesando la donación.");
+                String idMascotaParam = request.getParameter("idMascota");
+                if (idMascotaParam != null && !idMascotaParam.isEmpty()) {
+                    Mascotas mascota = new Mascotas();
+                    mascota.setIdMascotas(Integer.parseInt(idMascotaParam));
+                    postulacion.setMascota(mascota);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=adopcion");
+                    return;
                 }
+
+                postulacion.setNombre(request.getParameter("Nombre"));
+                postulacion.setApellido(request.getParameter("Apellido"));
+                postulacion.setGenero(request.getParameter("Genero"));
+                postulacion.setEdad(request.getParameter("Edad"));
+                postulacion.setDireccion(request.getParameter("Direccion"));
+                postulacion.setMetrajeVivienda(Double.valueOf(request.getParameter("metraje_vivienda")));
+                postulacion.setCantidadCuartos(Integer.valueOf(request.getParameter("cantidad_cuartos")));
+                postulacion.setCelular(request.getParameter("celular"));
+                postulacion.setTelefonoReferencia(request.getParameter("telefono_referencia"));
+                postulacion.setViveConDependientes(Boolean.valueOf(request.getParameter("vive_con_dependientes")));
+                postulacion.setTrabajaRemoto(Boolean.valueOf(request.getParameter("trabaja_remoto")));
+                postulacion.setTieneMascotas(Boolean.valueOf(request.getParameter("Tiene_mascotas")));
+                postulacion.setTieneHijos(Boolean.valueOf(request.getParameter("tiene_hijos")));
+
+                postulacionDao.postularAdopcion(postulacion);
+                response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=misSolicitudes");
                 break;
-
-            case "registrarPostulacion":
-                try {
-                    // Captura de datos
-                    String nombre = request.getParameter("nombre");
-                    String apellido = request.getParameter("apellido");
-                    String genero = request.getParameter("genero");
-                    edad = String.valueOf(Integer.parseInt(request.getParameter("edad")));
-                    String direccion = request.getParameter("direccion");
-                    double metraje = Double.parseDouble(request.getParameter("metraje"));
-                    String tipoMascotas = request.getParameter("mascotas");
-                    int cantidadMascotas = Integer.parseInt(request.getParameter("cantidad_mascotas"));
-                    int tiempoTemporal = Integer.parseInt(request.getParameter("tiempo_temporal"));
-                    java.sql.Date fechaInicio = java.sql.Date.valueOf(request.getParameter("fecha_inicio"));
-                    java.sql.Date fechaFin = java.sql.Date.valueOf(request.getParameter("fecha_fin"));
-                    int cantidadCuartos = Integer.parseInt(request.getParameter("cuartos"));
-
-                    // Nuevos campos
-                    String personaReferencia = request.getParameter("persona_referencia");
-                    String telefonoReferencia = request.getParameter("telefono_referencia");
-                    String celular = request.getParameter("celular");
-
-                    boolean tieneHijos = "si".equalsIgnoreCase(request.getParameter("hijos"));
-                    boolean viveConDependientes = "dependientes".equalsIgnoreCase(request.getParameter("vivienda"));
-                    boolean trabajaRemoto = "remoto".equalsIgnoreCase(request.getParameter("trabajo"));
-                    String tieneMascotas = request.getParameter("mascota");
-
-                    // Crear objeto Postulacion
-                    Postulacion postulacion = new Postulacion();
-                    postulacion.setNombre(nombre);
-                    postulacion.setApellido(apellido);
-                    postulacion.setGenero(genero);
-                    postulacion.setEdad(edad);
-                    postulacion.setDireccion(direccion);
-                    postulacion.setMetrajeVivienda(metraje);
-                    postulacion.setTipoMascotas(tipoMascotas);
-                    postulacion.setCantidadMascotas(cantidadMascotas);
-                    postulacion.setTiempoTemporal(tiempoTemporal);
-                    postulacion.setFechaInicioTemporal(fechaInicio);
-                    postulacion.setFechaFinTemporal(fechaFin);
-                    postulacion.setCantidadCuartos(cantidadCuartos);
-                    postulacion.setPersonaReferencia(personaReferencia);
-                    postulacion.setTelefonoReferencia(telefonoReferencia);
-                    postulacion.setCelular(celular);
-
-                    postulacion.setTieneHijos(tieneHijos);
-                    postulacion.setViveConDependientes(viveConDependientes);
-                    postulacion.setTrabajaRemoto(trabajaRemoto);
-                    postulacion.setTieneMascotas(tieneMascotas);
-
-                    // Valores fijos
-                    usuario = new Usuarios();
-                    usuario.setId(1); // Usuario_ID fijo
-                    postulacion.setUsuario(usuario);
-
-                    PostulacionEstado estado = new PostulacionEstado();
-                    estado.setIdPostulacionEstado(3); // Estado fijo
-                    postulacion.setPostulacionEstado(estado);
-
-                    // Guardar
-                    PostulacionDao postulacionDao = new PostulacionDao();
-                    postulacionDao.insertarPostulacion(postulacion);
-
-                    response.sendRedirect(request.getContextPath() + "/Usuario?action=listarpostulaciones");
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    request.setAttribute("error", "Error al procesar la solicitud: " + e.getMessage());
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("error.jsp");
-                    dispatcher.forward(request, response);
-                }
-                break;
-
-
-            // Otros casos...
-            default:
-                // Acción por defecto
-                response.sendRedirect(request.getContextPath() + "/Usuario_final/home.jsp");
-                break;
-
-
         }
-
-
     }
-
     public static byte[] obtenerImagenComoByteArray(InputStream inputStream) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;

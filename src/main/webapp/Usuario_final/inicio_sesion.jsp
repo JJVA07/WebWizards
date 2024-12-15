@@ -35,7 +35,6 @@
         #layoutAuthentication_footer {
             flex-shrink: 0;
         }
-
         .forgot-password,
         .register-link {
             color: #dd9013;
@@ -82,7 +81,7 @@
                                 <h3 class="text-center font-weight-light my-2">Inicio de Sesión</h3>
                             </div>
                             <div class="card-body">
-                                <form action="<%= request.getContextPath() %>/home.jsp" method="post">
+                                <form action="<%=request.getContextPath()%>/LoginServlet" method="post">
                                     <div class="form-floating mb-3">
                                         <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" required />
                                         <label for="inputEmail">Correo Electrónico</label>
@@ -90,7 +89,11 @@
                                     <div class="form-floating mb-3">
                                         <input class="form-control" id="inputPassword" name="password" type="password" placeholder="Password" required />
                                         <label for="inputPassword">Contraseña</label>
+
                                     </div>
+                                    <% if (request.getParameter("error") != null) { %>
+                                    <div >Error en usuario o contraseña</div>
+                                    <% } %>
                                     <div class="form-check mb-3">
                                         <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
                                         <label class="form-check-label" for="inputRememberPassword">Recordar Contraseña</label>
