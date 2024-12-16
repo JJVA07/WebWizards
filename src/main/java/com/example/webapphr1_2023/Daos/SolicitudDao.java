@@ -75,7 +75,7 @@ public class SolicitudDao extends DaoBase {
                     postulacion.setFotosLugar(rs.getBytes("fotos_lugar"));
                     postulacion.setDireccion(rs.getString("Direccion"));
                     postulacion.setFechaFinTemporal(rs.getDate("fecha_fin_temporal"));
-                    postulacion.setTieneMascotas(rs.getBoolean("tiene_mascotas"));
+                    postulacion.setTieneMascotas(String.valueOf(rs.getBoolean("tiene_mascotas")));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

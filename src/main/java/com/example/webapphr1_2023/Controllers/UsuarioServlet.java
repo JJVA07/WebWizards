@@ -219,8 +219,8 @@ public class UsuarioServlet extends HttpServlet {
                 break;
 
             case "detalleDonacion":
-                Donaciones donacion = donacionesDao.vistaDetallesDonacionPorUsuarioFijo();
-                request.setAttribute("donacion", donacion);
+                //Donaciones donacion = donacionesDao.vistaDetallesDonacionPorUsuarioFijo();
+                //request.setAttribute("donacion", donacion);
 
                 rd = request.getRequestDispatcher("/Usuario_final/donacion_detalle.jsp");
                 rd.forward(request, response);
@@ -325,36 +325,47 @@ public class UsuarioServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=misPublicaciones");
                 break;
             case "adoptarMascota":
-                Postulacion postulacion = new Postulacion();
-                postulacion.setUsuario(usuarioSesion);
+                try {
+                    Postulacion postulacion = new Postulacion();
+                    postulacion.setUsuario(usuarioSesion);
 
-                String idMascotaParam = request.getParameter("idMascota");
-                if (idMascotaParam != null && !idMascotaParam.isEmpty()) {
-                    Mascotas mascota = new Mascotas();
-                    mascota.setIdMascotas(Integer.parseInt(idMascotaParam));
-                    postulacion.setMascota(mascota);
-                } else {
-                    response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=adopcion");
-                    return;
+                    // Obtener datos del formulario
+                    String idMascotaParam = request.getParameter("idMascota");
+                    if (idMascotaParam != null && !idMascotaParam.isEmpty()) {
+                        Mascotas mascota = new Mascotas();
+                        mascota.setIdMascotas(Integer.parseInt(idMascotaParam));
+                        postulacion.setMascota(mascota);
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion");
+                        return;
+                    }
+
+                    postulacion.setNombre(request.getParameter("Nombre"));
+                    postulacion.setApellido(request.getParameter("Apellido"));
+                    postulacion.setGenero(request.getParameter("Genero"));
+                    postulacion.setEdad(request.getParameter("Edad"));
+                    postulacion.setDireccion(request.getParameter("Direccion"));
+                    postulacion.setMetrajeVivienda(Double.valueOf(request.getParameter("metraje_vivienda")));
+                    postulacion.setCantidadCuartos(Integer.valueOf(request.getParameter("cantidad_cuartos")));
+                    postulacion.setCelular(request.getParameter("celular"));
+                    postulacion.setTelefonoReferencia(request.getParameter("telefono_referencia"));
+                    postulacion.setViveConDependientes(Boolean.parseBoolean(request.getParameter("vive_con_dependientes")));
+                    postulacion.setTrabajaRemoto(Boolean.parseBoolean(request.getParameter("trabaja_remoto")));
+                    postulacion.setTieneMascotas(request.getParameter("Tiene_mascotas"));
+                    postulacion.setTieneHijos(Boolean.parseBoolean(request.getParameter("tiene_hijos")));
+
+                    // Llamar al método del DAO
+                    postulacionDao.postularAdopcion(postulacion);
+
+                    // Redirigir a mis solicitudes después del registro exitoso
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=misSolicitudes");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=adopcion");
                 }
-
-                postulacion.setNombre(request.getParameter("Nombre"));
-                postulacion.setApellido(request.getParameter("Apellido"));
-                postulacion.setGenero(request.getParameter("Genero"));
-                postulacion.setEdad(request.getParameter("Edad"));
-                postulacion.setDireccion(request.getParameter("Direccion"));
-                postulacion.setMetrajeVivienda(Double.valueOf(request.getParameter("metraje_vivienda")));
-                postulacion.setCantidadCuartos(Integer.valueOf(request.getParameter("cantidad_cuartos")));
-                postulacion.setCelular(request.getParameter("celular"));
-                postulacion.setTelefonoReferencia(request.getParameter("telefono_referencia"));
-                postulacion.setViveConDependientes(Boolean.valueOf(request.getParameter("vive_con_dependientes")));
-                postulacion.setTrabajaRemoto(Boolean.valueOf(request.getParameter("trabaja_remoto")));
-                postulacion.setTieneMascotas(Boolean.valueOf(request.getParameter("Tiene_mascotas")));
-                postulacion.setTieneHijos(Boolean.valueOf(request.getParameter("tiene_hijos")));
-
-                postulacionDao.postularAdopcion(postulacion);
-                response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=misSolicitudes");
                 break;
+
             case "inscribirseEvento":
                 try {
                     int idEvento = Integer.parseInt(request.getParameter("idEvento"));

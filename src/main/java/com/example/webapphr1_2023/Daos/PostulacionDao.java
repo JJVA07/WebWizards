@@ -138,6 +138,43 @@ public class PostulacionDao extends DaoBase {
         return postulacion;
     }
 
+    public void postularAdopcion(Postulacion postulacion) {
+        String sql = "INSERT INTO postulacion (Usuarios_ID, Mascotas_idMascotas, Nombre, Apellido, Edad, Genero, Direccion, " +
+                "metraje_vivienda, cantidad_cuartos, Celular, telefono_referencia, vive_con_dependientes, " +
+                "trabaja_remoto, Tiene_mascotas, tiene_hijos, Postulacion_estado_idPostulacion_estado) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, postulacion.getUsuario().getId());
+            stmt.setInt(2, postulacion.getMascota().getIdMascotas());
+            stmt.setString(3, postulacion.getNombre());
+            stmt.setString(4, postulacion.getApellido());
+            stmt.setString(5, postulacion.getEdad());
+            stmt.setString(6, postulacion.getGenero());
+            stmt.setString(7, postulacion.getDireccion());
+            stmt.setDouble(8, postulacion.getMetrajeVivienda());
+            stmt.setInt(9, postulacion.getCantidadCuartos());
+            stmt.setString(10, postulacion.getCelular());
+            stmt.setString(11, postulacion.getTelefonoReferencia());
+            stmt.setBoolean(12, postulacion.getViveConDependientes());
+            stmt.setBoolean(13, postulacion.getTrabajaRemoto());
+            stmt.setBoolean(14, Boolean.parseBoolean(postulacion.getTieneMascotas()));
+            stmt.setBoolean(15, postulacion.getTieneHijos());
+            stmt.setInt(16, 4); // Estado por defecto: "Revisión"
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al insertar postulación: " + e.getMessage());
+        }
+    }
+
+
+
+
 
 
 }

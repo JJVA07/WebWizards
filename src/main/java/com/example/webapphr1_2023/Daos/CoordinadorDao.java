@@ -427,7 +427,7 @@ public class CoordinadorDao extends DaoBase{
 
                     postulacion.setCantidadCuartos(rs.getInt("cantidad_cuartos"));
                     postulacion.setMetrajeVivienda(rs.getDouble("metraje_vivienda"));
-                    postulacion.setTieneMascotas(rs.getString("TieneMascotas").equals("Sí"));
+                    postulacion.setTieneMascotas(String.valueOf(rs.getString("TieneMascotas").equals("Sí")));
                     postulacion.setCantidadMascotas(rs.getInt("CantidadMascotas"));
                     postulacion.setTipoMascotas(rs.getString("TipoMascotas"));
                     postulacion.setTieneHijos(rs.getString("TieneHijos").equals("Sí"));
@@ -513,7 +513,7 @@ public class CoordinadorDao extends DaoBase{
                     postulacion.setMetrajeVivienda(rs.getDouble("metraje_vivienda"));
 
                     // Procesar campos booleanos como "Sí" o "No"
-                    postulacion.setTieneMascotas("Sí".equals(rs.getString("Tiene_mascotas")));
+                    postulacion.setTieneMascotas(String.valueOf("Sí".equals(rs.getString("Tiene_mascotas"))));
                     postulacion.setCantidadMascotas(rs.getInt("cantidad_mascotas"));
                     postulacion.setTipoMascotas(rs.getString("tipo_mascotas"));
                     postulacion.setTieneHijos("Sí".equals(rs.getString("Tiene_hijos")));
@@ -580,7 +580,7 @@ public class CoordinadorDao extends DaoBase{
 
                     postulacion.setCantidadCuartos(rs.getInt("cantidad_cuartos"));
                     postulacion.setMetrajeVivienda(rs.getDouble("metraje_vivienda"));
-                    postulacion.setTieneMascotas("Sí".equals(rs.getString("Tiene mascotas")));
+                    postulacion.setTieneMascotas(String.valueOf("Sí".equals(rs.getString("Tiene mascotas"))));
                     postulacion.setCantidadMascotas(rs.getInt("cantidad_mascotas"));
                     postulacion.setTipoMascotas(rs.getString("tipo_mascotas"));
                     postulacion.setTieneHijos("Sí".equals(rs.getString("Tiene hijos")));
