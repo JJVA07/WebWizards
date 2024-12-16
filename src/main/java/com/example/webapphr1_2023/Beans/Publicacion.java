@@ -5,7 +5,7 @@ public class Publicacion {
     private String descripcion;
     private byte[] foto;
     private String nombre;
-    private int edad;
+    private Integer edad;
     private String raza;
     private String tamano;
     private String distintivo;
@@ -43,11 +43,11 @@ public class Publicacion {
         this.comentario_coordinador = comentario_coordinador;
     }
 
-    public int getEdad() {
+    public Integer getEdad() {
         return edad;
     }
 
-    public void setEdad(int edad) {
+    public void setEdad(Integer edad) {
         this.edad = edad;
     }
 

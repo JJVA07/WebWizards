@@ -22,7 +22,19 @@
 <body class="sb-nav-fixed" style="background-color: white;">
 
 <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: rgb(27, 94, 87);">
-    <a class="navbar-brand ps-3" href="<%= request.getContextPath() %>/Usuario?action=pagPrincipal">Usuario Final</a>
+    <a class="navbar-brand ps-3" href="<%= request.getContextPath() %>/home.jsp">Usuario Final</a>
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    <ul class="navbar-nav ms-auto me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/Usuario?action=miCuenta">Mi cuenta</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="<%= request.getContextPath() %>/LoginServlet?action=logout">Cerrar Sesión</a></li>
+            </ul>
+        </li>
+        <a class="nav-link " id="navbarDropdown2" href="<%= request.getContextPath() %>/Usuario?action=pagPrincipal" role="button"><i class="fa-solid fa-paw"></i></a>
+    </ul>
 </nav>
 
 <div id="layoutSidenav">
@@ -41,6 +53,7 @@
                         <table class="table table-bordered">
                             <thead class="table-header" style="background-color:rgb(27, 94, 87); color: white;">
                             <tr>
+                                <th>NOMBRE DEL EVENTO</th> <!-- Nueva columna -->
                                 <th>FECHA</th>
                                 <th>HORA</th>
                                 <th>ALBERGUE</th>
@@ -51,13 +64,14 @@
                             <tbody>
                             <% for (Eventos evento : eventos) { %>
                             <tr>
+                                <td><%= evento.getNombreEvento() %></td> <!-- Mostrar nombre del evento -->
                                 <td><%= dateFormat.format(evento.getFecha()) %></td>
                                 <td><%= timeFormat.format(evento.getHora()) %></td>
                                 <td><%= evento.getAlbergue().getNombreAlbergue() %></td>
                                 <td><%= evento.getAforo() %> personas</td>
                                 <td>
                                     <a href="<%= request.getContextPath() %>/Usuario?action=detallesEvento&idEvento=<%= evento.getIdEventos() %>"
-                                       class="btn btn-sm btn-primary">
+                                       class="btn btn-sm btn-secondary">
                                         <i class="fas fa-info-circle"></i> Más detalles
                                     </a>
                                 </td>
@@ -76,5 +90,8 @@
         </main>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="<%= request.getContextPath() %>/js/scripts.js"></script>
+
 </body>
 </html>

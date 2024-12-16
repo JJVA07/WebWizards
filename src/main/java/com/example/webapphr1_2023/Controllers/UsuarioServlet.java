@@ -6,10 +6,7 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -246,9 +243,49 @@ public class UsuarioServlet extends HttpServlet {
 
                 // Ruta a la vista de publicaciones
                 vista = "/Usuario_final/mis_publicaciones.jsp";
+                request.setAttribute("paginaActiva", "mis_publicaciones");
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
+            case "noticias":
+                NoticiasDao noticiasDao = new NoticiasDao();
+                List<Object[]> noticias = noticiasDao.obtenerNoticiasMezcladas();
+
+                // Pasar la lista de noticias a la JSP
+                request.setAttribute("noticias", noticias);
+
+                // Redirige a noticias.jsp
+                request.setAttribute("paginaActiva", "noticias");
+                rd = request.getRequestDispatcher("/Usuario_final/noticias.jsp");
+                rd.forward(request, response);
+                break;
+            case "editarPublicacion":
+                try {
+                    int idPublicacionEditar = Integer.parseInt(request.getParameter("id"));
+                    Publicacion publicacionEditar = publicacionDao.obtenerPublicacionPorId(idPublicacionEditar);
+
+                    if (publicacionEditar != null) {
+                        request.setAttribute("publicacion", publicacionEditar);
+                        rd = request.getRequestDispatcher("/Usuario_final/editar_publicacion.jsp");
+                        rd.forward(request, response);
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: ID de publicación inválido.");
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+                }
+                break;
+
+
+
+            case "eliminarPublicacion":
+                int idPublicacionEliminar = Integer.parseInt(request.getParameter("idPublicacion"));
+                publicacionDao.eliminarPublicacion(idPublicacionEliminar);
+                response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+                break;
+
+
             default:
                 // Acción por defecto en caso de que no haya coincidencias con las acciones especificadas
                 vista = "/Usuario_final/home.jsp";
@@ -278,9 +315,9 @@ public class UsuarioServlet extends HttpServlet {
         PublicacionDao publicacionDao = new PublicacionDao();
         PostulacionDao postulacionDao = new PostulacionDao();
         EventosDao eventosDao = new EventosDao();
+        Publicacion publicacion = new Publicacion();
         switch (action) {
             case "reportarPOST":
-                Publicacion publicacion = new Publicacion();
 
                 // Asignar usuario desde la sesión
                 publicacion.setUsuario(usuarioSesion);
@@ -305,7 +342,7 @@ public class UsuarioServlet extends HttpServlet {
                 publicacion.setRecompensa(request.getParameter("recompensa"));
 
                 publicacionDao.reportarMascota(publicacion);
-                response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=misPublicaciones");
+                response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
                 break;
 
             case "denunciaPost":
@@ -322,7 +359,7 @@ public class UsuarioServlet extends HttpServlet {
                 denuncia.setFoto(obtenerImagenComoByteArray(request.getPart("archivo").getInputStream()));
 
                 publicacionDao.denunciarMaltrato(denuncia);
-                response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=misPublicaciones");
+                response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
                 break;
             case "adoptarMascota":
                 try {
@@ -384,6 +421,97 @@ public class UsuarioServlet extends HttpServlet {
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     response.sendRedirect(request.getContextPath() + "/Usuario?action=eventos");
+                }
+                break;
+
+
+            case "actualizarPublicacion":
+                try {
+                    int idPublicacion = Integer.parseInt(request.getParameter("idPublicacion"));
+
+                    // Obtener la publicación existente
+                    Publicacion publicacionActual = publicacionDao.obtenerPublicacionPorId(idPublicacion);
+
+                    if (publicacionActual != null) {
+                        // Validar y actualizar campos comunes
+                        String descripcion = request.getParameter("descripcion");
+                        if (descripcion != null && !descripcion.trim().isEmpty()) {
+                            publicacionActual.setDescripcion(descripcion);
+                        }
+
+                        // Validar si una nueva imagen fue subida
+                        Part imagenPart = request.getPart("imagen");
+                        if (imagenPart != null && imagenPart.getSize() > 0) {
+                            InputStream inputStream = imagenPart.getInputStream();
+                            publicacionActual.setFoto(obtenerImagenComoByteArray(inputStream)); // Actualizar con nueva imagen
+                        }
+
+                        // Actualización específica para cada tipo de publicación
+                        int tipoPublicacion = publicacionActual.getTipoPublicacion().getIdTipoPublicacion();
+
+                        if (tipoPublicacion == 1) { // Mascota perdida
+                            String nombre = request.getParameter("nombre");
+                            String edadParam = request.getParameter("edad");
+                            String raza = request.getParameter("raza");
+                            String tamano = request.getParameter("tamano");
+                            String distintivo = request.getParameter("distintivo");
+
+                            if (nombre != null && !nombre.trim().isEmpty()) publicacionActual.setNombre(nombre);
+                            if (edadParam != null && !edadParam.trim().isEmpty()) publicacionActual.setEdad(Integer.parseInt(edadParam));
+                            if (raza != null && !raza.trim().isEmpty()) publicacionActual.setRaza(raza);
+                            if (tamano != null && !tamano.trim().isEmpty()) publicacionActual.setTamano(tamano);
+                            if (distintivo != null && !distintivo.trim().isEmpty()) publicacionActual.setDistintivo(distintivo);
+
+                        } else if (tipoPublicacion == 2) { // Denuncia
+                            String nombreMaltratador = request.getParameter("nombreMaltratador");
+                            String tipoMaltrato = request.getParameter("tipoMaltrato");
+                            String direccionMaltrato = request.getParameter("direccionMaltrato");
+                            String denunciaPolicialParam = request.getParameter("denunciaPolicial");
+
+                            if (nombreMaltratador != null && !nombreMaltratador.trim().isEmpty())
+                                publicacionActual.setNombreMaltratador(nombreMaltratador);
+                            if (tipoMaltrato != null && !tipoMaltrato.trim().isEmpty())
+                                publicacionActual.setTipoMaltrato(tipoMaltrato);
+                            if (direccionMaltrato != null && !direccionMaltrato.trim().isEmpty())
+                                publicacionActual.setDireccionMaltrato(direccionMaltrato);
+                            if (denunciaPolicialParam != null)
+                                publicacionActual.setDenunciaPolicial(Boolean.parseBoolean(denunciaPolicialParam));
+                        }
+
+                        // Llamar al método del DAO para actualizar la publicación
+                        publicacionDao.actualizarPublicacion(publicacionActual);
+
+                        // Redirigir a mis publicaciones
+                        response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+                    } else {
+                        // Manejo en caso de que no se encuentre la publicación
+                        response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones&error=notFound");
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones&error=updateFailed");
+                }
+                break;
+
+
+
+
+
+            case "eliminarPublicacion":
+                System.out.println("Intentando eliminar publicación");
+                String idParam = request.getParameter("idPublicacion");
+                System.out.println("ID Publicacion: " + idParam);
+                try {
+                    int idPublicacionEliminar = Integer.parseInt(idParam);
+                    PublicacionDao publicacionDaoEliminar = new PublicacionDao();
+                    publicacionDaoEliminar.eliminarPublicacion(idPublicacionEliminar);
+                    System.out.println("Publicación eliminada exitosamente.");
+
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=misPublicaciones&error=failedToDelete");
                 }
                 break;
 
