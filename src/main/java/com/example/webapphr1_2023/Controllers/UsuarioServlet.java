@@ -62,51 +62,61 @@ public class UsuarioServlet extends HttpServlet {
                 rd.forward(request, response);
                 break;
             case "misEventos":
+                request.setAttribute("paginaActiva", "mis_eventos");
+                List<Eventos> eventosInscritos = eventosDao.obtenerEventosInscritosPorUsuario(idUsuario);
 
-                List<Eventos> eventos = eventosDao.obtenerEventosPorUsuario(idUsuario);
-
-                // Verifica si se obtuvieron eventos
-                if (eventos != null && !eventos.isEmpty()) {
-                    request.setAttribute("eventos", eventos);
+                // Verifica si hay eventos inscritos y los envía a la vista
+                if (eventosInscritos != null && !eventosInscritos.isEmpty()) {
+                    request.setAttribute("eventos", eventosInscritos);
                 } else {
-                    request.setAttribute("mensaje", "No tienes eventos registrados.");
+                    request.setAttribute("mensaje", "No estás inscrito en ningún evento.");
                 }
 
-                // Redirigir a la vista de 'Mis Eventos'
-                vista = "/Usuario_final/mis_eventos.jsp";
-                rd = request.getRequestDispatcher(vista);
+                // Redirige a mis_eventos.jsp
+                request.setAttribute("paginaActiva", "mis_eventos");
+                rd = request.getRequestDispatcher("/Usuario_final/mis_eventos.jsp");
                 rd.forward(request, response);
                 break;
             case "detallesEvento":
-                int idEvento = Integer.parseInt(request.getParameter("idEvento"));
-                Eventos evento = eventosDao.obtenerDetallesEvento(idEvento);
-                request.setAttribute("evento", evento);
-                vista = "/Usuario_final/evento_detalles.jsp";
-                rd = request.getRequestDispatcher(vista);
+                try {
+                    int idEvento = Integer.parseInt(request.getParameter("idEvento"));
+                    Eventos evento = eventosDao.obtenerDetallesEvento(idEvento);
+
+                    // Verificar si el usuario está inscrito
+                    boolean yaInscrito = eventosDao.verificarInscripcion(idUsuario, idEvento);
+
+                    request.setAttribute("evento", evento);
+                    request.setAttribute("yaInscrito", yaInscrito);
+
+                    vista = "/Usuario_final/evento_albergue.jsp";
+                } catch (NumberFormatException e) {
+                    vista = "/Usuario?action=eventos";
+                    request.setAttribute("mensaje", "ID de evento inválido.");
+                }
                 request.setAttribute("paginaActiva", "eventos");
+                rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
                 break;
+
             case "eventos":
                 int pagina = request.getParameter("pagina") == null ? 1 : Integer.parseInt(request.getParameter("pagina"));
                 int offset = (pagina - 1) * 6;
-                List<Eventos> eventasos = eventosDao.obtenerEventosActivosPaginados(offset, 6);
+                int idUsuarioActual = usuarioSesion.getId(); // Obtener el ID del usuario actual
+
+                List<Eventos> eventasos = eventosDao.obtenerEventosActivosPaginados(idUsuarioActual, offset, 6);
 
                 int totalEventos = eventosDao.contarEventosActivos();
                 int totalPaginas = (int) Math.ceil((double) totalEventos / 6);
 
-                // Imprimir logs para verificar los datos enviados
-                System.out.println("Eventos obtenidos: " + eventasos.size());
-                System.out.println("Página actual: " + pagina);
-                System.out.println("Total páginas: " + totalPaginas);
-
-                // Asegurarte de enviar correctamente los datos al JSP
                 request.setAttribute("eventos", eventasos);
                 request.setAttribute("paginaActual", pagina);
                 request.setAttribute("totalPaginas", totalPaginas);
+                request.setAttribute("paginaActiva", "eventos");
 
                 rd = request.getRequestDispatcher("/Usuario_final/eventos.jsp");
                 rd.forward(request, response);
                 break;
+
             case "mostrarSolicitud":
                 Postulacion postulacion = postulacionDao.obtenerSolicitudPorUsuario(idUsuario);
                 request.setAttribute("postulacion", postulacion);
@@ -267,7 +277,7 @@ public class UsuarioServlet extends HttpServlet {
         String action = request.getParameter("action");
         PublicacionDao publicacionDao = new PublicacionDao();
         PostulacionDao postulacionDao = new PostulacionDao();
-
+        EventosDao eventosDao = new EventosDao();
         switch (action) {
             case "reportarPOST":
                 Publicacion publicacion = new Publicacion();
@@ -345,7 +355,31 @@ public class UsuarioServlet extends HttpServlet {
                 postulacionDao.postularAdopcion(postulacion);
                 response.sendRedirect(request.getContextPath() + "/UsuarioServlet?action=misSolicitudes");
                 break;
+            case "inscribirseEvento":
+                try {
+                    int idEvento = Integer.parseInt(request.getParameter("idEvento"));
+                    int idUsuarioPost = usuarioSesion.getId();
+
+                    // Verificar si el usuario ya está inscrito
+                    boolean yaInscritoPost = eventosDao.verificarInscripcion(idUsuarioPost, idEvento);
+
+                    if (!yaInscritoPost) {
+                        // Registrar la inscripción y reducir una vacante
+                        eventosDao.inscribirUsuarioEnEvento(idUsuarioPost, idEvento);
+                    }
+
+                    // Redirigir a la página de "Mis Eventos"
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=misEventos");
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    response.sendRedirect(request.getContextPath() + "/Usuario?action=eventos");
+                }
+                break;
+
+
+
         }
+
     }
     public static byte[] obtenerImagenComoByteArray(InputStream inputStream) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();

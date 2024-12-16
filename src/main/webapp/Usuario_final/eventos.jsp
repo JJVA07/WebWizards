@@ -13,23 +13,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Eventos</title>
 
-    <!-- CSS externo de librerías y estilos locales -->
+    <!-- CSS externo -->
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="<%= request.getContextPath() %>/css/styles.css" rel="stylesheet" />
-    <link href="<%= request.getContextPath() %>/css/styles_2.css" rel="stylesheet" />
-
-    <!-- Font Awesome -->
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="sb-nav-fixed" style="background-color: white;">
 
-<!-- Barra de navegación superior -->
+<!-- Barra de navegación -->
 <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: rgb(27, 94, 87);">
     <a class="navbar-brand ps-3" href="<%= request.getContextPath() %>/Usuario?action=home">Usuario Final</a>
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
-
-    <!-- Navegación de usuario -->
     <ul class="navbar-nav ms-auto me-3 me-lg-4">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -41,21 +35,18 @@
                 <li><a class="dropdown-item" href="<%= request.getContextPath() %>/Usuario?action=logout">Cerrar Sesión</a></li>
             </ul>
         </li>
-        <a class="nav-link" id="navbarDropdown" href="<%= request.getContextPath() %>/Usuario?action=home" role="button"><i class="fa-solid fa-paw"></i></a>
     </ul>
 </nav>
 
-<!-- Layout principal con la barra lateral -->
+<!-- Layout principal -->
 <div id="layoutSidenav">
-    <!-- Incluir el sidebar común -->
     <jsp:include page="/WEB-INF/sidebar.jsp" />
-
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
                 <h2 class="mt-4 text-center">NUESTROS EVENTOS</h2>
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                    <!-- Generar dinámicamente las tarjetas de eventos -->
+                    <!-- Tarjetas de eventos -->
                     <%
                         List<Eventos> eventos = (List<Eventos>) request.getAttribute("eventos");
                         if (eventos != null && !eventos.isEmpty()) {
@@ -63,6 +54,9 @@
                                 String encodedImage = evento.getFoto() != null
                                         ? Base64.getEncoder().encodeToString(evento.getFoto())
                                         : null;
+
+                                int vacantesDisponibles = Integer.parseInt(evento.getVacantesDisponibles());
+                                boolean hayVacantes = vacantesDisponibles > 0;
                     %>
                     <div class="col d-flex justify-content-center">
                         <div class="card" style="width: 25rem;">
@@ -71,7 +65,13 @@
                             <div class="card-body">
                                 <h5 class="card-title"><%= evento.getNombreEvento() %></h5>
                                 <p class="card-text"><%= evento.getDescripcion() %></p>
-                                <a href="<%= request.getContextPath() %>/Usuario?action=detallesEvento&idEvento=<%= evento.getIdEventos() %>" class="btn btn-primary">Más detalles</a>
+                                <span class="badge <%= hayVacantes ? "bg-success" : "bg-danger" %>">
+                                    Vacantes: <%= vacantesDisponibles %> / <%= evento.getAforo() %>
+                                </span>
+                                <a href="<%= hayVacantes ? request.getContextPath() + "/Usuario?action=detallesEvento&idEvento=" + evento.getIdEventos() : "#" %>"
+                                   class="btn <%= hayVacantes ? "btn-secondary" : "btn-secondary disabled" %> mt-2">
+                                    <%= hayVacantes ? "Más detalles" : "Evento lleno" %>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -119,23 +119,18 @@
         </main>
 
         <!-- Pie de página -->
-        <footer class="py-4 mt-auto mt-3" style="background-color: black;">
+        <footer class="py-4 mt-auto bg-dark text-white">
             <div class="container-fluid px-4">
                 <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted" style="color: white !important;">© Huella Viva</div>
-                    <div>
-                        <a style="color: white;">Correo: </a><a href="#" style="color: white;"> info@alberguegosu.com</a>
-                        <a style="color: white;">Teléfono: </a><a href="#" style="color: white;"> +123 456 7890</a>
-                        <a style="color: white;">Ubicación: </a><a href="#" style="color: white;"> Calle Ejemplo 123, Ciudad, País</a>
-                    </div>
+                    <div>&copy; Huella Viva | info@alberguegosu.com</div>
                 </div>
             </div>
         </footer>
     </div>
 </div>
 
-<!-- Archivos JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="<%= request.getContextPath() %>/js/scripts.js"></script>
 </body>
 </html>
