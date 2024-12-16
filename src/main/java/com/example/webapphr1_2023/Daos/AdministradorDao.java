@@ -187,5 +187,127 @@ public class AdministradorDao extends DaoBase{
         }
         return topDonantes;
     }
+    public List<MascotasPerdidasEncontradasDTO> obtenerMascotasPerdidasEncontradas() {
+        List<MascotasPerdidasEncontradasDTO> lista = new ArrayList<>();
+        String sql = "SELECT " +
+                "    'Últimos 3 Meses' AS periodo, " +
+                "    SUM(CASE WHEN Publicacion_estado_idPublicacion_estado = 1 THEN 1 ELSE 0 END) AS mascotasPerdidas, " +
+                "    SUM(CASE WHEN Publicacion_estado_idPublicacion_estado = 2 THEN 1 ELSE 0 END) AS mascotasEncontradas " +
+                "FROM publicacion " +
+                "WHERE Tipo_publicacion_Tipo_publicacion = 1 " +
+                "  AND Fecha_publicacion >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) " +
+                "UNION ALL " +
+                "SELECT " +
+                "    'Anual' AS periodo, " +
+                "    SUM(CASE WHEN Publicacion_estado_idPublicacion_estado = 1 THEN 1 ELSE 0 END) AS mascotasPerdidas, " +
+                "    SUM(CASE WHEN Publicacion_estado_idPublicacion_estado = 2 THEN 1 ELSE 0 END) AS mascotasEncontradas " +
+                "FROM publicacion " +
+                "WHERE Tipo_publicacion_Tipo_publicacion = 1 " +
+                "  AND YEAR(Fecha_publicacion) = YEAR(CURDATE());";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                String periodo = rs.getString("periodo");
+                int mascotasPerdidas = rs.getInt("mascotasPerdidas");
+                int mascotasEncontradas = rs.getInt("mascotasEncontradas");
+
+                MascotasPerdidasEncontradasDTO dto = new MascotasPerdidasEncontradasDTO(periodo, mascotasPerdidas, mascotasEncontradas);
+                lista.add(dto);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+    public Map<String, Integer> obtenerEstadisticasUsuarios() {
+        Map<String, Integer> estadisticasUsuarios = new HashMap<>();
+
+        String sql = "SELECT " +
+                "COUNT(CASE WHEN Rol_idRol = 1 AND Estado_usuario_idEstado_usuario = 2 THEN 1 END) AS usuariosRol1Baneados, " +
+                "COUNT(CASE WHEN Rol_idRol = 1 AND Estado_usuario_idEstado_usuario <> 2 THEN 1 END) AS usuariosRol1Activos, " +
+                "COUNT(CASE WHEN Rol_idRol = 2 THEN 1 END) AS usuariosRolalbergue " +
+                "FROM usuarios";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            if (rs.next()) {
+                estadisticasUsuarios.put("usuariosRol1Baneados", rs.getInt("usuariosRol1Baneados"));
+                estadisticasUsuarios.put("usuariosRol1Activos", rs.getInt("usuariosRol1Activos"));
+                estadisticasUsuarios.put("usuariosRolalbergue", rs.getInt("usuariosRolalbergue"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return estadisticasUsuarios;
+    }
+    public boolean insertarCoordinador(String nombre, String apellido, String dni, String telefono, String correo, String nombreZona) {
+        String getZonaIdQuery = "SELECT idZona FROM zona z JOIN distrito d ON z.idZona = d.Zona_idZona " +
+                "WHERE d.idDistrito = (SELECT Distrito_idDistrito FROM usuarios WHERE DNI = ? LIMIT 1) AND z.Nombre_Zona = ?";
+        String insertUserQuery = "INSERT INTO usuarios (Nombre, Apellido, DNI, Telefono, Correo, Distrito_idDistrito, Rol_idRol, Estado_usuario_idEstado_usuario, Fecha_registro) " +
+                "VALUES (?, ?, ?, ?, ?, ?, 3, 1, CURRENT_TIMESTAMP)";
+        Connection conn = null;
+        PreparedStatement psZona = null;
+        PreparedStatement psInsert = null;
+        ResultSet rs = null;
+
+        try {
+            conn = this.getConnection();
+            conn.setAutoCommit(false); // Inicia una transacción
+
+            // 1. Obtener el idZona relacionado
+            psZona = conn.prepareStatement(getZonaIdQuery);
+            psZona.setString(1, dni);
+            psZona.setString(2, nombreZona);
+            rs = psZona.executeQuery();
+            int idZona = 0;
+            if (rs.next()) {
+                idZona = rs.getInt("idZona");
+            } else {
+                return false; // Si no se encuentra la zona, se aborta la inserción
+            }
+
+            // 2. Insertar al nuevo coordinador con fecha actual
+            psInsert = conn.prepareStatement(insertUserQuery);
+            psInsert.setString(1, nombre);
+            psInsert.setString(2, apellido);
+            psInsert.setString(3, dni);
+            psInsert.setString(4, telefono);
+            psInsert.setString(5, correo);
+            psInsert.setInt(6, idZona);
+
+            int rowsInserted = psInsert.executeUpdate();
+            conn.commit();
+            return rowsInserted > 0;
+
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (psZona != null) psZona.close();
+                if (psInsert != null) psInsert.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 }

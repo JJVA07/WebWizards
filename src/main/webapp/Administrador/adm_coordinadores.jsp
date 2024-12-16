@@ -94,28 +94,26 @@
                     <div class="container-fluid d-flex align-items-center justify-content-center min-vh-100 mb-4">
                         <div class="col-lg-12">
                             <h2 class="mt-3">Creación de Coordinadores</h2>
-                            <form>
+                            <form action="<%= request.getContextPath() %>/AdministradorServlet?action=crearCoordinador" method="POST">
                                 <label for="nombre">Nombre:</label>
-                                <input type="text" id="nombre" name="nombre">
-                                
+                                <input type="text" id="nombre" name="nombre" required>
+
                                 <label for="apellido">Apellido:</label>
-                                <input type="text" id="apellido" name="apellido">
-                                
+                                <input type="text" id="apellido" name="apellido" required>
+
                                 <label for="dni">DNI:</label>
-                                <input type="text" id="dni" name="dni">
-                                
+                                <input type="text" id="dni" name="dni" required>
+
                                 <label for="telefono">Teléfono:</label>
-                                <input type="text" id="telefono" name="telefono">
-                                
+                                <input type="text" id="telefono" name="telefono" required>
+
                                 <label for="correo">Correo Electrónico:</label>
-                                <input type="email" id="correo" name="correo">
-                                
+                                <input type="email" id="correo" name="correo" required>
+
                                 <label for="zona">Zona Asignada:</label>
-                                <input type="text" id="zona" name="zona">
-                                
-                                <label for="fecha">Fecha de Asignación:</label>
-                                <input type="date" id="fecha" name="fecha">
-                                
+                                <input type="text" id="zona" name="zona" required>
+
+
                                 <button type="submit" class="btn btn-secondary btn-block w-100">Crear Coordinador</button>
                             </form>
                         </div>

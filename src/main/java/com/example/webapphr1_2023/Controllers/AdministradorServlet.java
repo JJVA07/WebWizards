@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "AdministradorServlet", urlPatterns = {"/AdministradorServlet"})
 @MultipartConfig
@@ -55,7 +56,12 @@ public class AdministradorServlet extends HttpServlet {
                 List<DonacionMesDTO> listaDonaciones = adm.obtenerDonacionesPorMes(albergueId);
                 request.setAttribute("listaDonaciones", listaDonaciones);
                 request.setAttribute("topDonantes", topDonantes);
+                // Mascotas Perdidas vs Encontradas
+                List<MascotasPerdidasEncontradasDTO> mascotasData = adm.obtenerMascotasPerdidasEncontradas();
+                request.setAttribute("mascotasData", mascotasData);
+                Map<String, Integer> estadisticasUsuarios = adm.obtenerEstadisticasUsuarios();
 
+                request.setAttribute("estadisticasUsuarios", estadisticasUsuarios);
                 // Redirigir a adm_indicadores.jsp
                 vista = "/Administrador/adm_indicadores.jsp";
                 rd = request.getRequestDispatcher(vista);
@@ -128,6 +134,34 @@ public class AdministradorServlet extends HttpServlet {
                 vista = "/Administrador/indicadores.jsp";
                 rd = request.getRequestDispatcher(vista);
                 rd.forward(request, response);
+                break;
+        }
+    }
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        AdministradorDao admi = new AdministradorDao();
+
+        switch (action) {
+            case "crearCoordinador":
+                String nombre = request.getParameter("nombre");
+                String apellido = request.getParameter("apellido");
+                String dni = request.getParameter("dni");
+                String telefono = request.getParameter("telefono");
+                String correo = request.getParameter("correo");
+                String zona = request.getParameter("zona");
+
+                boolean success = admi.insertarCoordinador(nombre, apellido, dni, telefono, correo, zona);
+
+                if (success) {
+                    request.setAttribute("mensaje", "Coordinador creado exitosamente.");
+                } else {
+                    request.setAttribute("mensaje", "Error al crear coordinador. Verifique los datos.");
+                }
+                request.getRequestDispatcher("gestion_coordinadores.jsp").forward(request, response);
+                break;
+
+            default:
+                response.sendRedirect("error.jsp");
                 break;
         }
     }
