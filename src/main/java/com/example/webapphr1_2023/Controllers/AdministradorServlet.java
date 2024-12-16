@@ -157,7 +157,7 @@ public class AdministradorServlet extends HttpServlet {
                 } else {
                     request.setAttribute("mensaje", "Error al crear coordinador. Verifique los datos.");
                 }
-                request.getRequestDispatcher("gestion_coordinadores.jsp").forward(request, response);
+                request.getRequestDispatcher("adm_coordinadores.jsp").forward(request, response);
                 break;
 
             default:
