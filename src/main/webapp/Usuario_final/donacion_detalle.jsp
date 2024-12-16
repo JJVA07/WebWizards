@@ -1,5 +1,5 @@
 <%@ page import="com.example.webapphr1_2023.Beans.Donaciones" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -10,8 +10,8 @@
         <meta name="author" content="" />
         <title>Detalle de Donación</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <link href="<%= request.getContextPath() %>/css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
     <body class="sb-nav-fixed" style="background-color: white;">
         <nav class="sb-topnav navbar navbar-expand navbar-dark" style="background-color: rgb(27, 94, 87);">
@@ -43,8 +43,9 @@
                             </div>
                             <div class="card-body">
                                 <%
+                                    // Obtener el objeto 'donacion' del request
                                     Donaciones donacion = (Donaciones) request.getAttribute("donacion");
-                                    if (donacion != null) {
+                                    if (donacion != null) { // Validar que la donación no sea nula
                                 %>
                                 <div class="row mb-3">
                                     <div class="col-md-4">
@@ -65,9 +66,15 @@
                                         <h5><strong>Cantidad:</strong></h5>
                                         <p><%= donacion.getCantidadDonacion() != null ? donacion.getCantidadDonacion() : "No especificado" %></p>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-4">
                                         <h5><strong>Lugar de Entrega:</strong></h5>
                                         <p><%= donacion.getPuntoEntrega() != null ? donacion.getPuntoEntrega() : "No especificado" %></p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h5><strong>Albergue Receptor:</strong></h5>
+                                        <p><%= donacion.getUsuarioAlbergue() != null && donacion.getUsuarioAlbergue().getNombreAlbergue() != null
+                                                ? donacion.getUsuarioAlbergue().getNombreAlbergue()
+                                                : "No especificado" %></p>
                                     </div>
                                 </div>
                                 <% } else { %>

@@ -3,6 +3,7 @@
 <%@ page import="com.example.webapphr1_2023.Beans.DonacionMesDTO" %>
 <%@ page import="com.example.webapphr1_2023.Beans.Usuarios" %>
 <%@ page import="com.example.webapphr1_2023.Beans.DonacionTopDTO" %>
+<%@ page import="com.example.webapphr1_2023.Beans.MascotasPerdidasEncontradasDTO" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -124,12 +125,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
-                            <div class="card-header">Mascotas Perdidas vs Encontradas
-                                <select id="selectPeriodo" class="form-select form-select-sm">
-                                    <option value="3meses">Últimos 3 meses</option>
-                                    <option value="anual">Anual</option>
-                                </select>
-                            </div>
+                            <div class="card-header">Mascotas Perdidas vs Encontradas</div>
                             <div class="card-body">
                                 <div class="chart-container">
                                     <canvas id="mascotasPerdidasEncontradasChart"></canvas>
@@ -138,6 +134,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Albergues registrados y Usuarios activos/baneados en gráfico circular -->
                 <div class="row">
@@ -201,8 +198,38 @@
     nombresUsuarios.append("]");
     cantidadesDonadas.append("]");
 %>
+<%
+    List<MascotasPerdidasEncontradasDTO> mascotasData = (List<MascotasPerdidasEncontradasDTO>) request.getAttribute("mascotasData");
 
+    StringBuilder labels = new StringBuilder("[");
+    StringBuilder mascotasPerdidas = new StringBuilder("[");
+    StringBuilder mascotasEncontradas = new StringBuilder("[");
 
+    if (mascotasData != null && !mascotasData.isEmpty()) {
+        for (int i = 0; i < mascotasData.size(); i++) {
+            MascotasPerdidasEncontradasDTO data = mascotasData.get(i);
+            labels.append("\"").append(data.getPeriodo()).append("\"");
+            mascotasPerdidas.append(data.getMascotasPerdidas());
+            mascotasEncontradas.append(data.getMascotasEncontradas());
+
+            if (i < mascotasData.size() - 1) {
+                labels.append(",");
+                mascotasPerdidas.append(",");
+                mascotasEncontradas.append(",");
+            }
+        }
+    }
+    labels.append("]");
+    mascotasPerdidas.append("]");
+    mascotasEncontradas.append("]");
+%>
+<%
+    // Recuperar valores del request
+    Map<String, Integer> estadisticasUsuarios = (Map<String, Integer>) request.getAttribute("estadisticasUsuarios");
+    int usuariosRol1Baneados = estadisticasUsuarios != null ? estadisticasUsuarios.get("usuariosRol1Baneados") : 0;
+    int usuariosRol1Activos = estadisticasUsuarios != null ? estadisticasUsuarios.get("usuariosRol1Activos") : 0;
+    int usuariosRolalbergue = estadisticasUsuarios != null ? estadisticasUsuarios.get("usuariosRolalbergue") : 0;
+%>
 <script>
     function filtrarDonaciones() {
         const albergueSeleccionado = document.getElementById("selectAlbergue").value;
@@ -250,19 +277,24 @@
     });
 
 // Mascotas Perdidas vs Encontradas
-    const mascotasPerdidasEncontradasChart = new Chart(document.getElementById('mascotasPerdidasEncontradasChart'), {
+    const labels = <%= labels.toString() %>;
+    const mascotasPerdidas = <%= mascotasPerdidas.toString() %>;
+    const mascotasEncontradas = <%= mascotasEncontradas.toString() %>;
+
+    const ctxm = document.getElementById('mascotasPerdidasEncontradasChart').getContext('2d');
+    new Chart(ctxm, {
         type: 'bar',
         data: {
-            labels: ['Enero', 'Febrero', 'Marzo'],
+            labels: labels, // Periodos dinámicos
             datasets: [
                 {
                     label: 'Mascotas Perdidas',
-                    data: [30, 40, 50],
+                    data: mascotasPerdidas, // Datos dinámicos
                     backgroundColor: '#f0e68c'  // Color amarillo suave
                 },
                 {
                     label: 'Mascotas Encontradas',
-                    data: [20, 25, 30],
+                    data: mascotasEncontradas, // Datos dinámicos
                     backgroundColor: '#87ceeb'  // Color azul cielo
                 }
             ]
@@ -276,20 +308,28 @@
             }
         }
     });
-
     // Albergues Registrados y Usuarios Activos vs Baneados - Gráfico Circular
     const alberguesUsuariosPieChart = new Chart(document.getElementById('alberguesUsuariosPieChart'), {
         type: 'pie',
         data: {
-            labels: ['Albergues Registrados', 'Usuarios Activos', 'Usuarios Baneados'],
+            labels: ['Usuarios Albergue', 'Usuarios Activos', 'Usuarios Baneados'],
             datasets: [{
                 label: 'Cantidad',
-                data: [15, 200, 10],
-                backgroundColor: ['#ffdab9', '#98fb98', '#ffb6c1'] // Colores suaves
+                data: [
+                    <%= usuariosRolalbergue %>,
+                    <%= usuariosRol1Activos %>,
+                    <%= usuariosRol1Baneados %>
+                ],
+                backgroundColor: ['#ffdab9', '#98fb98', '#ffb6c1'] // Colores personalizados
             }]
         },
         options: {
-            responsive: true
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
         }
     });
 </script>
