@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -14,7 +13,7 @@
         html, body {
             height: 100%;
             margin: 0;
-            background-image: url('assets/img/fondo_inicio.jpg');
+            background-image: url('<%= request.getContextPath() %>/assets/img/fondo_inicio.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -34,62 +33,62 @@
 </head>
 
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <div class="card shadow-lg border-0 rounded-lg">
-                    <div class="card-header">
-                        <h3 class="text-center font-weight-light my-2">Crear Cuenta de Usuario</h3>
-                    </div>
-                    <div class="card-body">
-                        <form>
-                            <!-- Nombre -->
-                            <div class="form-floating mb-3">
-                                <input class="form-control" id="inputNombre" type="text" placeholder="Juan" required />
-                                <label for="inputNombre">Nombre</label>
-                            </div>
-
-                            <!-- Apellidos -->
-                            <div class="form-floating mb-3">
-                                <input class="form-control" id="inputApellidos" type="text" placeholder="Pérez" required />
-                                <label for="inputApellidos">Apellidos</label>
-                            </div>
-
-                            <!-- Distrito -->
-                            <div class="form-floating mb-3">
-                                <input class="form-control" id="inputDistrito" type="text" placeholder="San Isidro" required />
-                                <label for="inputDistrito">Distrito</label>
-                            </div>
-
-                            <!-- Dirección -->
-                            <div class="form-floating mb-3">
-                                <input class="form-control" id="inputDireccion" type="text" placeholder="Av. Principal 123" required />
-                                <label for="inputDireccion">Dirección</label>
-                            </div>
-
-                            <!-- Correo Gmail -->
-                            <div class="form-floating mb-3">
-                                <input class="form-control" id="inputEmail" type="email" placeholder="nombre@gmail.com" required />
-                                <label for="inputEmail">Correo Electrónico (Gmail)</label>
-                            </div>
-
-                            <!-- Botón de enviar -->
-                            <div class="d-grid">
-                                <button class="btn btn-secondary btn-block" type="submit">Crear Cuenta</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="card-footer text-center py-3">
-                        <div class="small">
-                            <a class="small mb-2 forgot-password" href="inicio_sesion.html">¿Ya tienes una cuenta? Inicia sesión aquí</a>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header">
+                    <h3 class="text-center font-weight-light my-2">Crear Cuenta de Usuario</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Formulario que envía al servlet "/registrarUsuario" -->
+                    <form action="<%= request.getContextPath() %>/registrarUsuario" method="post">
+                        <!-- Nombre -->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="nombre" id="inputNombre" type="text" placeholder="Juan" required />
+                            <label for="inputNombre">Nombre</label>
                         </div>
+
+                        <!-- Apellidos -->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="apellidos" id="inputApellidos" type="text" placeholder="Pérez" required />
+                            <label for="inputApellidos">Apellidos</label>
+                        </div>
+
+                        <!-- Distrito -->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="distrito" id="inputDistrito" type="text" placeholder="San Isidro" required />
+                            <label for="inputDistrito">Distrito</label>
+                        </div>
+
+                        <!-- Dirección -->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="direccion" id="inputDireccion" type="text" placeholder="Av. Principal 123" required />
+                            <label for="inputDireccion">Dirección</label>
+                        </div>
+
+                        <!-- Correo Gmail -->
+                        <div class="form-floating mb-3">
+                            <input class="form-control" name="correo" id="inputEmail" type="email" placeholder="nombre@gmail.com" required />
+                            <label for="inputEmail">Correo Electrónico (Gmail)</label>
+                        </div>
+
+                        <!-- Botón de enviar -->
+                        <div class="d-grid">
+                            <button class="btn btn-secondary btn-block" type="submit">Crear Cuenta</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small">
+                        <a class="small mb-2 forgot-password" href="inicio_sesion.jsp">¿Ya tienes una cuenta? Inicia sesión aquí</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
-
 </html>
